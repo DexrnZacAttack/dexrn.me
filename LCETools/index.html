@@ -1,0 +1,139 @@
+<!--
+Copyright 2024 Dexrn ZacAttack
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Dexrn's Hell Hole > Legacy Console Edition file extractor</title>
+    <link id="theme" rel="stylesheet" href="../css/all.css">
+    <meta
+      content="Dexrn's Hell Hole > LCE Tools"
+      property="og:title" />
+    <meta content="LCE Tools" property="og:description" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <meta content="https://DexrnZacAttack.github.io" property="og:url" />
+    <meta content="#0078D7" data-react-helmet="true" name="theme-color" />
+    <meta charset="utf-8" />
+    <meta name="description"
+      content="Legacy Console Edition File Tools" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://raw.githubusercontent.com/DexrnZacAttack/DexrnZacAttack.github.io/main/assets/favicon.png" />
+  </head>
+  <body>
+    <!-- loading screen -->
+    <div class="loadingScreen">
+      <div class="loading">
+        <img id="lightLSpinner" src="../assets/loader.gif" />
+        <img id="darkLSpinner" src="../assets/loader-dark.gif" />
+      </div>
+    </div>
+    <!-- bg -->
+    <div class="bg" id="bg">
+      <!-- backbtn for main card -->
+      <div
+        class="topcard"
+        style="cursor: pointer"
+        id="back"
+        linkto="../">
+        <div class="back" id="backbtn"></div>
+      </div>
+      <!-- backbtn for subcard card -->
+      <div
+      class="topcard"
+      style="cursor: pointer;display: none;"
+      id="backSubCard"
+      linkto="../">
+      <div class="back" id="backsubbtn"></div>
+    </div>
+      <!-- backbtn for nbt card -->
+      <div
+        class="topcard"
+        style="cursor: pointer;display:none;"
+        id="backNBTBtn">
+        <div class="back" id="backNBT"></div>
+      </div>
+      <!-- NBT card -->
+      <div class="card" id="nbtCard"
+        style="height: 500px;display:none;flex-direction:column;">
+        <div class="cardTitle" id="lcee-nbt-path"></div>
+        <pre id="nbtData" style="overflow-y:auto;overflow-x:auto;"></pre>
+      </div>
+      <!-- save card -->
+      <div class="card" id="lceSaveCard"
+        style="height: 500px;display:none;flex-direction:column;">
+        <div class="cardTitle" id="lcet-save-path"></div>
+        <pre id="saveLog"></pre>
+        <div id="files"></div>
+        <div class="center">
+          <button class="button" id="CompModeBtn">Save type: Wii U, PS3, Xbox
+            360 (Decompressed)</button>
+          <label for="saveFileInput" class="button2"
+            id="lceSaveFileSelectBtn"></label>
+          <input
+            type="file"
+            id="saveFileInput"
+            style="display: none" />
+        </div>
+      </div>
+      <!-- file type select card -->
+      <div class="card" id="typeSelectCard"
+      style="height: 500px;display:flex;flex-direction:column;">
+      <div class="cardTitle" id="lcet-path"></div>
+      <div class="center" style="margin-top: unset !important">
+      <h3>NOTE: Most if not all of these tools' UX & UI are unfinished.</h3>
+      <h1>Select a tool</h1>
+      </div>
+      <button id="saveTypeButton" class="button">Save extractor</button>
+      <button id="msscmpTypeButton" class="button">MSSCMP extractor</button>
+      </div>
+      <!-- msscmp card -->
+      <div class="card" id="msscmpCard"
+        style="height: 500px;display:none;flex-direction:column;">
+        <div class="cardTitle" id="lcet-msscmp-path"></div>
+        <h3>YES THIS UI SUCKS, I WILL (hopefully) FIX THIS SOON™</h3> <!-- this whole update contains a lot of garbage code -->
+        <pre id="msscmpLog"></pre>
+        <div id="msscmpFiles"></div>
+        <div class="center" id="msscmpCenter">
+          <button class="button" id="EndianButton">Auto Detect</button>
+          <label for="msscmpFileInput" class="button2"
+            id="msscmpfileselectbtn"></label>
+          <input
+            type="file"
+            id="msscmpFileInput"
+            style="display: none" accept=".msscmp" />
+        </div>
+      </div>
+      <!-- credits "top"card -->
+      <div class="topcard" style="cursor: pointer;display:none" id="creditsCard">
+        <div class="back buttonRedirect"
+          linkto="https://github.com/zugebot/LegacyEditor"
+          style="text-align:center;font-weight: unset;font-family: unset;font-size:16px;opacity: 1;"><a>A
+            lot of the (de)compression code was ported from Zugebot
+            (jerrinth3glitch)'s LegacyEditor</a></h2>
+        <!-- Last update date -->
+        <p class="lastUpdated" id="lastUpdated"></p>
+      </div>
+    </body>
+    <script type="module" src="./index.ts"></script>
+  </html>

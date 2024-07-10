@@ -197,9 +197,12 @@ function setLang(langFilePath: string): void {
       checkIfExists("backNBT", data.backNBT);
       checkIfExists("backbtn2", data.BackButtonAlt);
       checkIfExists("qmghp-path", data.QMGHeaderParserPath);
-      checkIfExists("lcee-path", data.LCEExtractorPath);
+      checkIfExists("lcet-path", data.LCETypePath);
+      checkIfExists("lcet-save-path", data.LCEExtractorPath);
       checkIfExists("lcee-nbt-path", data.LCENBTPath);
-      checkIfExists("lcefileselectbtn", data.LCEFileSelectButton);
+      checkIfExists("lcet-msscmp-path", data.MSSCMPExtractorPath);
+      checkIfExists("lceSaveFileSelectBtn", data.LCEFileSelectButton);
+      checkIfExists("msscmpfileselectbtn", data.MSSCMPFileSelectButton);
       checkIfExists("fileselectbtn", data.FileSelectButton);
       checkIfExists("output", data.QMGHPOutputText);
       checkIfExists("qmgr-path", data.QMGResearchPath);

@@ -324,18 +324,26 @@ codeblock {
   box-shadow: 0 0 10px 5px var(--prim-bg-color);
 }
 
-#files {
+#files, #msscmpFiles {
+  max-height: 320px;
+  overflow-y: auto;
+  display: none;
   background-color: var(--prim-other-bg-color);
   backdrop-filter: blur(10px);
   border: var(--alt-border-size) solid var(--prim-moreopaque-border-color);
   border-radius: 10px;
 }
 
+
 .LCEFolder {
   background-color: var(--prim-other-bg-color);
   backdrop-filter: blur(10px);
   border: var(--alt-border-size) solid var(--prim-moreopaque-border-color);
   border-radius: 10px;
+}
+
+.LCEFileContainer {
+  order: -1; /* omfg if I knew about this sooner I could have NOT crashed peoples web browsers by manipulating the DOM 389479234798 times to try to sort some shit... */
 }
 
 .hidden {
@@ -545,12 +553,6 @@ a:hover {
 
 .bookname a {
   text-decoration: none !important;
-}
-
-#files {
-  max-height: 320px;
-  overflow-y: auto;
-  display: none;
 }
 
 *,
