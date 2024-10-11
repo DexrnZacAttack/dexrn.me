@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2024 DexrnZacAttack
+ * This file is part of DexrnZacAttack.github.io.
+ * https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ *
+ * Licensed under the MIT License. See LICENSE file for details.
+*/
+
 // for later
 
 // ensures that this file is a module (in TypeScript's eyes),
@@ -14,7 +22,7 @@ const conLog = console.log;
 
 export function log(string: string) {
     if (import.meta.env.DEV) {
-        conLog(string);
+        conLog(string ?? "dunno");
     }
 }
 

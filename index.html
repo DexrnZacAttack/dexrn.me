@@ -1,29 +1,16 @@
+<!DOCTYPE html>
+
 <!--
-Copyright 2024 Dexrn ZacAttack
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ - Copyright (c) 2024 DexrnZacAttack
+ - This file is part of DexrnZacAttack.github.io.
+ - https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ -
+ - Licensed under the MIT License. See LICENSE file for details.
 -->
 
-<!DOCTYPE html>
 <html>
 
-<head>
+  <head>
     <script defer type="module" src="./index.ts">
     </script>
     <title>Dexrn's Hell Hole</title>
@@ -31,147 +18,126 @@ SOFTWARE.
     <meta charset="utf-8">
     <meta name="theme-color" content="#72e5fc">
     <meta content="Dexrn's Hell Hole" property="og:title">
+    <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?version=4.8.0&features=default%2Ces6%2Cdom4%2Ces2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Ces2022%2Ces2023%2Ces5%2Ces7"></script>
     <meta content="What the FUCK am I doing" property="og:description">
     <meta name="google-site-verification" content="zTOV2xyqOUvRNx3t8ydqtB05rJY3X6BJ8VtAJlgXzMc" />
     <meta content="https://DexrnZacAttack.github.io" property="og:url">
     <meta content="https://raw.githubusercontent.com/DexrnZacAttack/DexrnZacAttack.github.io/main/assets/favicon.png"
-        property="og:image">
+      property="og:image">
     <meta content="#0078D7" data-react-helmet="true" name="theme-color">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
     <meta name="description" content="Dexrn ZacAttack's website">
     <link rel="icon" type="image/x-icon"
-        href="https://raw.githubusercontent.com/DexrnZacAttack/DexrnZacAttack.github.io/main/assets/favicon.png">
-</head>
+      href="https://raw.githubusercontent.com/DexrnZacAttack/DexrnZacAttack.github.io/main/assets/favicon.png">
+  </head>
 
-<body>
+  <body>
     <div class="loadingScreen" id="loadingScreen">
-        <div class="loading">
-            <img id="lightLSpinner" src="assets/loader.gif" alt="Loading...">
-            <img id="darkLSpinner" src="assets/loader-dark.gif" alt="Loading...">
-            <h1 class="loadingText hidden" id="loadingText"></h1>
-            <div class="lBG"></div>
-        </div>
+      <div class="loading">
+        <img id="lightLoadingSpinner" src="assets/loader.gif" alt="Loading...">
+        <img id="darkLoadingSpinner" src="assets/loader-dark.gif" alt="Loading...">
+        <h1 class="loadingText hidden" id="loadingText"></h1>
+        <div class="lBG"></div>
+      </div>
     </div>
     <div class="bg" id="homepage">
-        <div class="mainCardsContainer" id="mainCardsContainer" style="display:flex;flex-direction: column;">
-            <div id="tabs" style="display:flex;flex-direction: row;">
-                <button class="tabbuttonclicked" id="dcbutton" onclick="changeMainCard('Discord');">Discord</button>
-                <button class="tabbutton" id="bbutton" onclick="changeMainCard('Blog');" style="margin-left:10px;">Blog</button>
-                <!-- <button class="tabbutton" id="steambutton" style="align-self: baseline; margin-left:2%;" onclick="changeMainCard('Steam');">Steam</button> -->
-                <button class="tabbutton" id="settingsbtn" style="margin-right:0;margin-left:auto;"></button>
-            </div>
-            <!-- MAIN CARD -->
-            <div class="card" id="mainCard"
+      <div class="mainCardsContainer" id="mainCardsContainer" style="display:flex;flex-direction: column;">
+        <div id="tabs" style="display:flex;flex-direction: row;">
+          <button class="tabButtonClicked" id="discordTabButton" onclick="changeMainCard('Discord');">Discord</button>
+          <button class="tabbutton" id="blogTabButton" onclick="changeMainCard('Blog');" style="margin-left:10px;">Blog</button>
+          <!-- <button class="tabbutton" id="steambutton" style="align-self: baseline; margin-left:2%;" onclick="changeMainCard('Steam');">Steam</button> -->
+          <button class="tabbutton" id="settingsTabButton" style="margin-right:0;margin-left:auto;"></button>
+        </div>
+        <!-- MAIN CARD -->
+            <card id="mainCard"
                 style="width: 100%; border-top-left-radius: 0%; border-top-right-radius: 0%;">
-                <div class="cardTitle" id="discord-path"></div>
-                <div class="user-profile">
-                    <div class="Profile-pic">
+          <div class="cardTitle" id="discord-path"></div>
+          <div class="user-profile">
+            <div class="Profile-pic">
                         <img id="pfp" src="assets/loader.gif" alt>
-                    </div>
-                    <div class="user-info">
-                        <div id="username">Dexrn ZacAttack</div>
-                        <div id="customStatus"></div>
-                        <div id="onlineState"></div>
-                        <div id="platforms"></div>
-                        <div class="connections">
-                            <a title="YouTube" href="https://youtube.com/@DZac">
-                                <img class="connection-icon" src="assets/icons/youtube.png" alt="YouTube">
-                            </a>
-                            <a title="Discord" href="https://discord.com/users/485504221781950465/">
-                                <img class="connection-icon" src="assets/icons/discord.svg" alt="Discord">
-                            </a>
-                            <a title="GitHub" href="https://github.com/DexrnZacAttack/">
-                                <img class="connection-icon" src="assets/icons/github.svg" alt="GitHub">
-                            </a>
-                            <a title="Twitter" href="https://twitter.com/DexrnZacAttack/">
-                                <img class="connection-icon" src="assets/icons/twitter.png" alt="Twitter">
-                            </a>
-                            <a title="Steam" href="https://steamcommunity.com/id/Dexrn">
-                                <img class="connection-icon2" src="assets/icons/steam.png" alt="Steam">
-                            </a>
-                            <a title="Archive.org" href="https://archive.org/details/@dexrnzacattack">
-                                <img class="connection-icon2" src="assets/icons/archive.org.png" alt="Archive.org">
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <!-- BLOG CARD -->
-            <div class="card" id="blogCard"
-                style="width: 100%; border-top-left-radius: 0%; border-top-right-radius: 0%; display:none;">
+            <div class="user-info">
+              <div id="username">Dexrn ZacAttack</div>
+              <div id="customStatus"></div>
+              <div id="onlineState"></div>
+              <div id="platforms"></div>
+              <div class="connections">
+                <a title="YouTube" href="https://youtube.com/@DZac">
+                  <img class="connection-icon" src="assets/icons/youtube.png" alt="YouTube">
+                </a>
+                <a title="Discord" href="https://discord.com/users/485504221781950465/">
+                  <img class="connection-icon" src="assets/icons/discord.svg" alt="Discord">
+                </a>
+                <a title="GitHub" href="https://github.com/DexrnZacAttack/">
+                  <img class="connection-icon" src="assets/icons/github.svg" alt="GitHub">
+                </a>
+                <a title="Twitter" href="https://twitter.com/DexrnZacAttack/">
+                  <img class="connection-icon" src="assets/icons/twitter.png" alt="Twitter">
+                </a>
+              </div>
             </div>
+          </div>
+        </card>
+        <!-- BLOG CARD -->
+        <card id="blogCard"
+          style="width: 100%; border-top-left-radius: 0; border-top-right-radius: 0; display:none;">
+        </card>
+      </div>
+      <!-- DISCORD ACTIVITY CARD -->
+      <card class="activity" id="activityCard">
+        <div class="cardTitle" id="activity-path"></div>
+      </card>
+      <!-- ABOUT ME CARD -->
+      <card id="aboutCard">
+        <div class="cardTitle" id="about-path"></div>
+        <div class="about-me">
+          <ul style="list-style: none;padding:0">
+            <li style="list-style: none;padding:0" id="abm-1"></li>
+            <li style="list-style: none;padding:0" id="abm-2"></li>
+          </ul>
         </div>
-        <!-- DISCORD ACTIVITY CARD -->
-        <div class="activity card" id="activityCard">
-            <div class="cardTitle" id="activity-path"></div>
-            <div class="activities">
-                <div class="activityImages">
-                    <img id="activityImageBig" src="assets/loader.gif" alt>
-                    <img id="activityImageSmall" src="assets/loader.gif" alt>
-                    <img id="activityAlternateImageSmall" src="assets/loader.gif" alt>
-                </div>
-                <div class="activityInfo">
-                    <div id="activityName"></div>
-                    <div id="activityState"></div>
-                    <div id="activityDetail"></div>
-                    <div id="activityTimeElapsed"></div>
-                </div>
-            </div>
+      </card>
+      <!-- LINKS CARD -->
+      <card id="linksCard">
+        <div class="cardTitle" id="stuff-path"></div>
+        <div class="about-me">
+          <div class="bio">
+            <button class="button buttonRedirect" linkto="LCETools/" id="mainbtn-3"></button>
+            <button class="button buttonRedirect" linkto="QMGInfo/" id="mainbtn-1"></button>
+            <button class="button" id="mainbtn-2"></button>
+</div>
+          </div>
+        </card>
+            <!-- SETTINGS CARD -->
+      <div id="settings" style="height: 350px;">
+        <!-- why does this break with <topcard> instead of <div class="topcard"> -->
+        <div class="topcard" id="settingsclose" style="cursor: pointer; width: 300px; margin-bottom: 8px;">
+          <div class="back" id="backbtn"></div>
         </div>
-        <!-- ABOUT ME CARD -->
-        <div class="card" id="aboutCard">
-            <div class="cardTitle" id="about-path"></div>
-            <div class="about-me">
-                <ul>
-                    <li id="abm-1"></li>
-                    <li id="abm-2"></li>
-                </ul>
-            </div>
-        </div>
-        <!-- LINKS CARD -->
-        <div class="card" id="linksCard">
-            <div class="cardTitle" id="stuff-path"></div>
-            <div class="about-me">
-                <div class="bio">
-                    <button class="button buttonRedirect" linkto="LCETools/" id="mainbtn-3"></button>
-                    <!-- <button class="button buttonRedirect" linkto="KGM/" id="mainbtn-4"></button> -->
-                    <button class="button buttonRedirect" linkto="QMGInfo/" id="mainbtn-1"></button>
-                    <button class="button buttonRedirect" linkto="QMGBlog/" id="mainbtn-2"></button>
-                    <!-- <button class="button" linkto="MM2D/index.html" id="mainbtn-3"></button> -->
-                </div>
-            </div>
-        </div>
-        <!-- SETTINGS CARD -->
-        <div id="settings" style="height: 350px;">
-            <div class="topcard" style="cursor: pointer; width: 300px; margin-bottom: 8px;" id="settingsclose">
-                <div class="back" id="backbtn"></div>
-            </div>
-            <div class="card" style="width: 300px !important; height: 350px;">
-                <div class="cardTitle" id="settings-path"></div>
-                <div class="options"
-                    style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-                    <h3 id="languagetxt"></h3>
-                    <select id="language2" class="drpdwnbtn" name="language2">
-                        <option value="unselected" disabled selected id="selopt"></option>
-                        <option value="en-US">English</option>
-                        <option value="zh-CN">中文</option>
-                    </select>
-                    <h3 id="themetxt"></h3>
-                    <select id="themeoption" class="drpdwnbtn" name="themeoption">
-                        <option value="unselectedtheme" disabled selected id="selopt2"></option>
-                        <option value="default-dark" id="darkthmopt"></option>
-                        <option value="default-light" id="lightthmopt"></option>
-                    </select>
-                    <button class="buttonalt2" id="savebtn" style="position: absolute; bottom: 0;"></button>
-                </div>
-            </div>
-            <!-- Last update date -->
-            <p class="lastUpdated" id="lastUpdated"></p>
-        </div>
-    </div>
+        <card id="settingsDoNotHide" style="width: 300px !important; height: 350px;">
+          <div class="cardTitle" id="settings-path"></div>
+          <div class="options"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+            <h3 id="languagetxt"></h3>
+            <select id="language2" class="drpdwnbtn" name="language2">
+              <option value="unselected" disabled selected id="selopt"></option>
+              <option value="en-US">English</option>
+              <option value="zh-CN">中文</option>
+            </select>
+            <h3 id="themetxt"></h3>
+            <select id="themeOption" class="drpdwnbtn" name="themeOption">
+              <option value="unselectedtheme" disabled selected id="selopt2"></option>
+              <option value="default-dark" id="darkthmopt"></option>
+              <option value="default-light" id="lightthmopt"></option>
+            </select>
+            <button class="buttonalt2" id="saveBtn" style="position: absolute; bottom: 0;"></button>
+          </div>
+        </card>
+        <!-- Last update date -->
+        <p class="lastUpdated" id="lastUpdated"></p>
+      </div>
     </div>
     <a rel="me" href="https://wetdry.world/@zach" style="display:none;">Mastodon</a>
 
-</body>
-
+  </body>
 </html>

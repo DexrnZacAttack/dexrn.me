@@ -1,29 +1,17 @@
 /*
-Copyright 2024 Dexrn ZacAttack
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ * Copyright (c) 2024 DexrnZacAttack
+ * This file is part of DexrnZacAttack.github.io.
+ * https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ *
+ * Licensed under the MIT License. See LICENSE file for details.
 */
 
 import langEN from "../assets/lang/en-US.json?url";
 import langCN from "../assets/lang/zh-CN.json?url";
 
 export type Theme = "unselectedtheme" | "default-light" | "default-dark";
+
+type languages = "en-US" | "zh-CN";
 
 export function setTheme(theme: "default-light" | "default-dark") {
   var expirationDate = new Date("Fri, 31 Dec 9999 23:59:59 GMT");
@@ -97,12 +85,12 @@ const savedTheme = getThemeCookie("Theme");
 
 applyTheme(savedTheme);
 
-export function checkLang(syslang?: keyof LanyardLangNameMap): void {
+export function checkLang(syslang?: languages): void {
   setLang(getLangFilePath(syslang));
 }
 
-export function getLangFilePath(syslang?: keyof LanyardLangNameMap): string {
-  const lang = getLang();
+export function getLangFilePath(syslang?: languages): string {
+  const lang: languages | undefined | null = getLang();
   let langFilePath;
   if (lang) {
   switch (lang.toLowerCase()) {
@@ -129,41 +117,35 @@ export function getLangFilePath(syslang?: keyof LanyardLangNameMap): string {
 }
 
 
-checkLang();
-
-export function getLang(): keyof LanyardLangNameMap | undefined | null {
+export function getLang(): languages | undefined | null {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
     const [name, value] = cookie.trim().split("=");
     if (name === "lang") {
-      return value as keyof LanyardLangNameMap;
+      return value as languages;
     }
   } 
   return null;
 }
 
-export async function getTranslation(str: string): Promise<string> {
-  const langPath = getLangFilePath();
-  
-  return fetch(langPath)
-    .then((response) => {
-      if (!response.ok) {
-        return "fetch error";
-      }
-      return response.json();
-    })
-    .then((data) => {
-      if (data[str]) {
-        return data[str].toString();
-      } else {
-        return "string not found";
-      }
-    })
-    .catch((error) => {
-      console.error('Error fetching translations:', error);
-      return 'translation list error';
-    });
+export async function getTranslation(key: string): Promise<string> {
+    const langPath = getLangFilePath();
+    try {
+        const response = await fetch(langPath);
+        if (!response.ok) {
+            return "fetch error";
+        }
+        const data = await response.json();
+        function getNested(obj: any, path: string): any {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+        const translation = getNested(data, key);
+        return translation ? translation.toString() : `${key} (UNLOCALIZED)`;
+    } catch (error) {
+        return 'translation list error';
+    }
 }
+
 
 
 // Dexrn: Localization! (Kinda janky.)
@@ -171,55 +153,47 @@ function setLang(langFilePath: string): void {
   fetch(langFilePath)
     .then((response) => response.json())
     .then((data) => {
-      checkIfExists("loadingText", data.LoadingText);
-      checkIfExists("onlineState", data.Status2);
-      checkIfExists("activityName", data.ActivityName);
-      checkIfExists("activityState", data.ActivityState);
-      checkIfExists("activityDetail", data.ActivityDetail);
-      checkIfExists("activity-path", data.ActivityPath);
-      checkIfExists("discord-path", data.DiscordPath);
-      checkIfExists("steam-path", data.SteamPath);
-      checkIfExists("about-path", data.AboutPath);
-      checkIfExists("stuff-path", data.LinksPath);
-      checkIfExists("mainbtn-1", data.MainPageButton1);
-      checkIfExists("mainbtn-2", data.MainPageButton2);
-      checkIfExists("mainbtn-3", data.MainPageButton3);
-      checkIfExists("abm-1", data.AboutMeTxt1);
-      checkIfExists("abm-2", data.AboutMeTxt2);
-      checkIfExists("savebtn", data.SettingsSaveButton);
-      checkIfExists("settings-path", data.SettingsPath);
-      checkIfExists("backbtn", data.BackButton);
-      checkIfExists("languagetxt", data.LanguageText);
-      checkIfExists("settingsbtn", data.SettingsButton);
-      checkIfExists("ftlLanguageTxt", data.FirstTimeLoadLanguageText);
-      checkIfExists("ftlcbtn-1", data.FirstTimeLoadButton1);
-      checkIfExists("backbtn", data.BackButton);
-      checkIfExists("backNBT", data.backNBT);
-      checkIfExists("backbtn2", data.BackButtonAlt);
-      checkIfExists("qmghp-path", data.QMGHeaderParserPath);
-      checkIfExists("lcet-path", data.LCETypePath);
-      checkIfExists("lcet-save-path", data.LCEExtractorPath);
-      checkIfExists("lcee-nbt-path", data.LCENBTPath);
-      checkIfExists("lcet-msscmp-path", data.MSSCMPExtractorPath);
-      checkIfExists("lceSaveFileSelectBtn", data.LCEFileSelectButton);
-      checkIfExists("msscmpfileselectbtn", data.MSSCMPFileSelectButton);
-      checkIfExists("fileselectbtn", data.FileSelectButton);
-      checkIfExists("output", data.QMGHPOutputText);
-      checkIfExists("qmgr-path", data.QMGResearchPath);
-      checkIfExists("404msg", data.NotFoundErrorText);
-      checkIfExists("homebtn", data.HomeButton);
-      checkIfExists("403msg", data.ForbiddenErrorText);
-      checkIfExists("selopt", data.SelectOptionText);
-      checkIfExists("selopt2", data.SelectOptionText);
-      checkIfExists("darkthmopt", data.DarkThemeOption);
-      checkIfExists("lightthmopt", data.LightThemeOption);
-      checkIfExists("themetxt", data.ThemeText);
-      checkIfExists("ftlThemeTxt", data.FirstTimeLoadThemeText);
-      checkIfExists("blogbtntxt", data.BlogButtonText);
-      checkIfExists("bbutton", data.BlogText);
-      checkIfExists("stuff2-path", data.BlogPath);
-      checkIfExists("darkopt", data.InitialSetupDarkThemeOption);
-      checkIfExists("lightopt", data.InitialSetupLightThemeOption);
+      translateElement("activity-path", data.path.activity);
+      translateElement("discord-path", data.path.discord);
+      translateElement("steam-path", data.SteamPath);
+      translateElement("about-path", data.path.about);
+      translateElement("stuff-path", data.path.links);
+      translateElement("mainbtn-1", data.main.button1);
+      translateElement("mainbtn-2", data.main.button2);
+      translateElement("mainbtn-3", data.main.button3);
+      translateElement("abm-1", data.main.about.line1);
+      translateElement("abm-2", data.main.about.line2);
+      translateElement("saveBtn", data.settings.save);
+      translateElement("settings-path", data.path.settings);
+      translateElement("backbtn", data.base.back);
+      translateElement("languagetxt", data.settings.language);
+      translateElement("settingsTabButton", data.main.settings);
+      translateElement("backNBT", data.backNBT);
+      translateElement("backbtn2", data.base.backAlt);
+      translateElement("qmghp-path", data.path.qmghp);
+      translateElement("lcet-path", data.path.lceTools);
+      translateElement("lcet-save-path", data.path.lceExtractor);
+      translateElement("lcet-arc-path", data.path.arcExtractor);
+      translateElement("lcee-nbt-path", data.path.lceNbt);
+      translateElement("lcet-msscmp-path", data.path.msscmpExtractor);
+      translateElement("lceSaveFileSelectBtn", data.lcetools.save.selectFile);
+      translateElement("msscmpfileselectbtn", data.lcetools.msscmp.selectFile);
+      translateElement("arcFileSelectBtn", data.lcetools.arc.selectFile);
+      translateElement("fileselectbtn", data.qmghp.selectFile);
+      translateElement("goBack", data.error.goBack);
+      translateElement("output", data.qmghp.outputPlaceholder);
+      translateElement("qmgr-path", data.path.qmgResearch);
+      translateElement("404msg", data.error.notFound);
+      translateElement("homebtn", data.base.goHome);
+      translateElement("403msg", data.error.forbidden);
+      translateElement("selopt", data.settings.optionSelect);
+      translateElement("selopt2", data.settings.optionSelect);
+      translateElement("darkthmopt", data.settings.theme.dark);
+      translateElement("lightthmopt", data.settings.theme.light);
+      translateElement("themetxt", data.settings.theme.string);
+      translateElement("blogbtntxt", data.main.blog);
+      translateElement("blogTabButton", data.main.blog);
+      translateElement("stuff2-path", data.path.blog);
     })
     .catch((error) => console.error("Error whilst loading lang file:", error));
 }
@@ -235,8 +209,12 @@ export function getLocalization(langFilePath: string, code: string) {
   .catch((error) => console.error("Error whilst loading lang file:", error));
 }
 
-// Dexrn: This makes sure that the element exists before setting it... otherwise it will throw an error.
-function checkIfExists(elementId: string, value: string): void {
+/**
+ * Sets the text of the element to the string given.
+ * @param elementId Element to search for
+ * @param value String to set said element's textContent
+ */
+function translateElement(elementId: string, value: string): void {
   const element = document.getElementById(elementId);
   if (element) {
     element.textContent = value;

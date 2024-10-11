@@ -1,108 +1,23 @@
 /*
-Copyright 2024 Dexrn ZacAttack
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ * Copyright (c) 2024 DexrnZacAttack
+ * This file is part of DexrnZacAttack.github.io.
+ * https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ *
+ * Licensed under the MIT License. See LICENSE file for details.
 */
 
 // TODO: Create activities instead of only showing one at a time.
 
 import validator from 'validator';
-import langEN from "../assets/lang/en-US.json?url";
-import langCN from "../assets/lang/zh-CN.json?url";
+import {getTranslation} from "./settings.js";
 
 const USERID = "485504221781950465";
 const pfp: HTMLImageElement = document.querySelector("#pfp")!;
 const customStatus: HTMLDivElement = document.querySelector("#customStatus")!;
 const onlineState: HTMLDivElement = document.querySelector("#onlineState")!;
 const platforms: HTMLDivElement = document.querySelector("#platforms")!;
-const bigImage: HTMLImageElement = document.querySelector("#activityImageBig")!;
-const smallImage: HTMLImageElement = document.querySelector("#activityImageSmall")!;
-const activityName: HTMLDivElement = document.querySelector("#activityName")!;
-const smallImageAlt: HTMLImageElement = document.querySelector("#activityAlternateImageSmall")!;
-const activityState: HTMLDivElement = document.querySelector("#activityState")!;
-const activityDetail: HTMLDivElement = document.querySelector("#activityDetail")!;
-const timeElapsed: HTMLDivElement = document.querySelector("#activityTimeElapsed")!;
 var disc_platform: string[];
 var disc_isOffline: boolean;
-let localizedText: LocalizedText | null;
-
-// Dexrn: This is really, really janky.
-async function lanyardGetLang(): Promise<string | null> {
-  const cookie = document.cookie.split(";").find(cookie => cookie.trim().startsWith("lang="));
-  return cookie ? cookie.split("=")[1] ?? null : null;
-}
-
-/*
-async function createActivity(lyData: LanyardAPI) {
-  const {
-     activities,
-  } = lyData;
-  console.log(activities.length);
-}
-*/
-
-async function lanyardCheckLang(lang: string | null): Promise<string> {
-  let langPath: string;
-  switch (lang) {
-    case "zh-CN":
-      langPath = langCN;
-      break;
-    case "en-US":
-    default:
-      langPath = langEN;
-      break;
-  }
-  return langPath;
-}
-
-async function lanyardSetLang<T extends keyof LanyardLangNameMap>(langFilePath: string): Promise<LocalizedText<T> | null> {
-  try {
-    const response = await fetch(langFilePath);
-    const data: LanyardLang<T> = await response.json();
-
-    return {
-      // Dexrn: These are the language strings.
-      lyonline: data.OnlineText || "Online",
-      lydnd: data.DoNotDisturbText || "Do Not Disturb",
-      lyidle: data.IdleText || "Idle",
-      lyoffline: data.OfflineText || "Offline",
-      lyunknown: data.UnknownText || "Unknown",
-      lypin: data.PlatformsInUseText || "Clients:",
-      lyplatm: data.PlatformMobile || "Mobile",
-      lyplatd: data.PlatformDesktop || "Desktop",
-      lyplatw: data.PlatformWeb || "Web",
-      lytimee: data.TimeElapsedText || "Elapsed:",
-      lyna: data.NoActivityText || "No Activity",
-    };
-  } catch (error) {
-    console.error("Error whilst loading lang file:", error);
-    return null;
-  }
-}
-
-export async function actuallySetLanguage(): Promise<void> {
-  const lang = await lanyardGetLang();
-  const langFilePath = await lanyardCheckLang(lang);
-  try {
-    localizedText = await lanyardSetLang(langFilePath);
-  } catch { }
-}
 
 async function setAvatar(lyData: LanyardAPI): Promise<void> {
     const {
@@ -122,16 +37,16 @@ async function setAvatarFrame(lyData: LanyardAPI): Promise<void> {
   } = lyData;
 
   const statusMapping = {
-    online: { color: "#3ba45d", text: localizedText!.lyonline, isOffline: false },
-    dnd: { color: "#ed4245", text: localizedText!.lydnd, isOffline: false },
-    idle: { color: "#faa81a", text: localizedText!.lyidle, isOffline: false },
-    offline: { color: "#747e8c", text: localizedText!.lyoffline, isOffline: true },
-    default: { color: "#747e8c", text: localizedText!.lyunknown, isOffline: true }
+    online: { color: "#3ba45d", text: getTranslation("lanyard.status.online"), isOffline: false },
+    dnd: { color: "#ed4245", text: getTranslation("lanyard.status.dnd"), isOffline: false },
+    idle: { color: "#faa81a", text: getTranslation("lanyard.status.idle"), isOffline: false },
+    offline: { color: "#747e8c", text: getTranslation("lanyard.status.offline"), isOffline: true },
+    default: { color: "#747e8c", text: getTranslation("lanyard.status.unknown"), isOffline: true }
   };
 
   const { color, text, isOffline } = statusMapping[discord_status] || statusMapping.default;
-  if (onlineState.innerText !== text) {
-    onlineState.innerText = text;
+  if (onlineState.innerText !== await text) {
+    onlineState.innerText = await text;
     pfp.style.border = `2px solid ${color}`;
     pfp.style.boxShadow = `0 0 20px ${color}`;
     onlineState.style.cssText = `color: ${color}; opacity: ${isOffline ? 0.5 : 1};`;
@@ -139,16 +54,15 @@ async function setAvatarFrame(lyData: LanyardAPI): Promise<void> {
   }
   disc_isOffline = isOffline ?? false;
 
-  const platformarray = [];
-  if (active_on_discord_desktop) platformarray.push(localizedText!.lyplatd);
-  if (active_on_discord_mobile) platformarray.push(localizedText!.lyplatm);
-  if (active_on_discord_web) platformarray.push(localizedText!.lyplatw);
+  const onlinePlatforms = [];
+  if (active_on_discord_desktop) onlinePlatforms.push(await getTranslation("lanyard.platform.desktop"));
+  if (active_on_discord_mobile) onlinePlatforms.push(await getTranslation("lanyard.platform.mobile"));
+  if (active_on_discord_web) onlinePlatforms.push(await getTranslation("lanyard.platform.browser"));
 
-  disc_platform = platformarray;
-  if (!disc_isOffline && platforms.innerText !== `${localizedText!.lypin}${disc_platform}`)
-    platforms.innerText = `${localizedText!.lypin}${disc_platform}`;
+  disc_platform = onlinePlatforms;
+  if (!disc_isOffline && platforms.innerText !== `${await getTranslation("lanyard.platformsString")}${disc_platform}` && onlinePlatforms.length !== 0)
+    platforms.innerText = `${await getTranslation("lanyard.platformsString")}${disc_platform}`;
 }
-
 
 async function setStatus(lyData: LanyardAPI): Promise<void> {
   const {
@@ -172,13 +86,20 @@ async function setStatus(lyData: LanyardAPI): Promise<void> {
 
 }
 
-async function setActivityBigImage(lyData: LanyardAPI): Promise<void> {
-  const {
-    activities, spotify
-  } = lyData;
-  const mostRecent = activities.filter((m: { type: number; }) => m.type !== 4).shift();
+async function setActivityBigImage(activity: LanyardActivityLike, spotify: LanyardAPI["spotify"]): Promise<HTMLImageElement | undefined> {
+  let bigImage: HTMLImageElement;
+
+  if (!document.querySelector(`#activityImageBig_${activity.id}`)) {
+    bigImage = document.createElement("img");
+    bigImage.id = `activityImageBig_${activity.id}`;
+    bigImage.className = "activityImageBig";
+  } else {
+    bigImage = document.querySelector(`#activityImageBig_${activity.id}`)!;
+  }
+
+  const mostRecent = activity;
   if (mostRecent?.emoji && !mostRecent?.assets?.large_image) {
-    var ext = "webp";
+    let ext = "webp";
     mostRecent?.emoji?.animated === true ? ext = "gif" : ext = "webp";
     bigImage.style.display = "block";
     if (bigImage.src !== `https://cdn.discordapp.com/emojis/${validator.escape(mostRecent.emoji.id)}.${ext}?quality=lossless`)
@@ -201,29 +122,43 @@ async function setActivityBigImage(lyData: LanyardAPI): Promise<void> {
     bigImage.style.display = "block";
     if (bigImage.src !== imageLink)
       bigImage.src = imageLink;
-    bigImage.title = validator.escape(mostRecent.assets.large_text);
+    bigImage.title = validator.escape(mostRecent.assets.large_text ?? "");
   }
-
+  return document.querySelector(`#activityImageBig_${activity.id}`) ? undefined : bigImage;
 }
 
 
-async function setActivitySmallImage(lyData: LanyardAPI): Promise<void> {
-  const {
-    activities
-  } = lyData;
+async function setActivitySmallImage(activity: LanyardActivityLike): Promise<HTMLImageElement[]> {
+  const mostRecent = activity;
+  let smallImage: HTMLImageElement;
+  let smallImageAlt: HTMLImageElement;
 
-  const mostRecent = activities.filter((m: { type: number; }) => m.type !== 4).shift();
+  if (!document.querySelector(`#activityImageSmallAlt_${activity.id}`)) {
+    smallImageAlt = document.createElement("img");
+    smallImageAlt.id = `activityImageSmallAlt_${activity.id}`;
+    smallImageAlt.className = `activityImageSmallAlt`;
+  } else {
+    smallImageAlt = document.querySelector(`#activityImageSmallAlt_${activity.id}`)!;
+  }
+  
+  if (!document.querySelector(`#activityImageSmall_${activity.id}`)) {
+    smallImage = document.createElement("img");
+    smallImage.id = `activityImageSmall_${activity.id}`;
+    smallImage.className = `activityImageSmall`;
+  } else {
+    smallImage = document.querySelector(`#activityImageSmall_${activity.id}`)!;
+  }
+
+  const images: Array<HTMLImageElement> = [];
 
   if (
     !mostRecent ||
     !mostRecent?.assets?.small_image ||
     mostRecent.assets.small_image.includes("spotify")
   ) {
-    if (smallImage.style.display !== "none")
-      smallImage.style.display = "none";
-    if (smallImageAlt.style.display !== "none")
-      smallImageAlt.style.display = "none";
-    return;
+    smallImage.remove();
+    smallImageAlt.remove();
+    return images;
   }
 
   const imageLink = mostRecent.assets.small_image.includes("external")
@@ -236,101 +171,149 @@ async function setActivitySmallImage(lyData: LanyardAPI): Promise<void> {
       smallImageAlt.style.display = "block";
     if (smallImageAlt.src !== imageLink)
       smallImageAlt.src = imageLink;
-    if (smallImageAlt.title !== validator.escape(mostRecent.assets.small_text))
-      smallImageAlt.title = validator.escape(mostRecent.assets.small_text);
-    if (smallImage.style.display !== "none")
-      smallImage.style.display = "none";
+    if (smallImageAlt.title !== validator.escape(mostRecent.assets.small_text ?? ""))
+      smallImageAlt.title = validator.escape(mostRecent.assets.small_text ?? "");
+    images.push(smallImageAlt);
+    images.push(smallImage);
   } else {
-    if (smallImageAlt.style.display !== "none")
-      smallImageAlt.style.display = "none";
     if (smallImage.style.display !== "block")
       smallImage.style.display = "block";
     if (smallImage.src !== imageLink)
       smallImage.src = imageLink;
-    if (smallImage.title !== validator.escape(mostRecent.assets.small_text))
-      smallImage.title = validator.escape(mostRecent.assets.small_text);
+    if (smallImage.title !== validator.escape(mostRecent.assets.small_text ?? ""))
+      smallImage.title = validator.escape(mostRecent.assets.small_text ?? "");
+    images.push(smallImage);
   }
-
+  return images;
 }
 
-async function setActivityName(lyData: LanyardAPI): Promise<void> {
-  const {
-    activities
-  } = lyData;
-  const mostRecent = activities.filter((m: { type: number; }) => m.type !== 4).shift();
+async function setActivityName(activity: any): Promise<HTMLDivElement | undefined> {
+  let activityName: HTMLDivElement;
+
+  if (!document.querySelector(`#activityName_${activity.id}`)) {
+    activityName = document.createElement('div');
+    activityName.id = `activityName_${activity.id}`;
+    activityName.className = "activityName";
+  } else {
+    activityName = document.querySelector(`#activityName_${activity.id}`)!;
+  }
+  const mostRecent = activity;
   if (!mostRecent?.name) {
-    activityName.innerText = localizedText!.lyna;
+    activityName.innerText = await getTranslation("lanyard.activity.namePlaceholder");
     return;
   }
-  activityName.style.display = "block";
   activityName.innerText = validator.escape(mostRecent.name);
 
+  return document.querySelector(`#activityName_${activity.id}`) ? undefined : activityName;
 }
-async function setActivityState(lyData: LanyardAPI): Promise<void> {
-  const response = lyData;
-  const activities = response.activities.filter((m) => m.type !== 4);
-  if (!activities.length) {
-    activityState.style.display = "none";
+
+async function setActivityState(activity: any): Promise<HTMLDivElement | undefined> {
+  let activityState: HTMLDivElement;
+
+  if (!document.querySelector(`#activityState_${activity.id}`)) {
+    console.log("activityState doesn't exist");
+    activityState = document.createElement('div');
+    activityState.id = `activityState_${activity.id}`;
+    activityState.className = "activityState";
+  } else {
+    console.log("activityState already exists");
+    activityState = document.querySelector(`#activityState_${activity.id}`)!;
+  }
+
+  if (activity.length == 0) {
+    console.log("length 0");
     return;
   }
-  const mostRecent = activities.shift();
+  const mostRecent = activity;
   if (!mostRecent!.state) {
-    activityState.style.display = "none";
+    console.log("no state");
+    activityState.remove();
     return;
   }
 
-  activityState.style.display = "block";
   activityState.innerText = validator.escape(mostRecent!.state) ?? "";
-
+  return document.querySelector(`#activityState_${activity.id}`) ? undefined : activityState;
 }
 
-async function setTimestamp(lyData: LanyardAPI): Promise<void> {
-  const response = lyData;
-  const activities = response.activities.filter((m: { type: number; }) => m.type !== 4);
-  const mostRecent = activities.shift();
-  let created: number | undefined;
-  try {
-    created = mostRecent?.timestamps.start;
-  } catch {
-    timeElapsed.style.display = "none";
+async function setTimestamp(activity: any): Promise<HTMLDivElement | undefined> {
+  let timeElapsed: HTMLDivElement;
+
+  if (!document.querySelector(`#timeElapsed_${activity.id}`)) {
+    timeElapsed = document.createElement('div');
+    timeElapsed.id = `timeElapsed_${activity.id}`;
+    timeElapsed.className = "activityTimeElapsed";
+  } else {
+    timeElapsed = document.querySelector(`#timeElapsed_${activity.id}`)!;
   }
-  try {
-    const current = new Date().getTime();
-    const diff = current - created!;
 
-    const seconds = Math.floor(diff / 1000) % 60;
-    const minutes = Math.floor(diff / (1000 * 60)) % 60;
-    const hours = Math.floor(diff / (1000 * 60 * 60));
+  const created = activity?.timestamps?.start;
+  if (!created) {
+    timeElapsed.remove();
+    return undefined;
+  }
 
-    if (seconds) {
-      const formattime = `${hours.toString().padStart(2, "0")}:${minutes
-        .toString()
-        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-      timeElapsed.innerText = `${localizedText!.lytimee}` + formattime;
-      timeElapsed.style.display = "block";
-    } else {
-      timeElapsed.innerHTML = "";
-      timeElapsed.style.display = "none";
+  const updateTimestamp = async () => {
+    try {
+      const current = new Date().getTime();
+      const diff = current - created;
+
+      if (diff > 0) {
+        const seconds = Math.floor(diff / 1000) % 60;
+        const minutes = Math.floor(diff / (1000 * 60)) % 60;
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+
+        const formatTime = `${hours.toString().padStart(2, "0")}:${minutes
+            .toString()
+            .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        timeElapsed.innerText = `${formatTime}`;
+      } else {
+        timeElapsed.remove();
+      }
+    } catch {
+      timeElapsed.remove();
     }
-  } catch {
-    timeElapsed.innerHTML = "";
-    timeElapsed.style.display = "none";
+  };
+
+  updateTimestamp();
+
+  const interval = setInterval(updateTimestamp, 1000);
+
+  return new Promise<HTMLDivElement | undefined>((resolve) => {
+    const observer = new MutationObserver(() => {
+      if (!document.contains(timeElapsed)) {
+        clearInterval(interval);
+        resolve(undefined);
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+    resolve(timeElapsed);
+  });
+}
+
+async function setActivityDetails(activity: any): Promise<HTMLDivElement | undefined> {
+  let activityDetail: HTMLDivElement;
+
+  if (!document.querySelector(`#activityDetail_${activity.id}`)) {
+    activityDetail = document.createElement('div');
+    activityDetail.id = `activityDetail_${activity.id}`;
+    activityDetail.className = "activityDetail";
+  } else {
+    activityDetail = document.querySelector(`#activityDetail_${activity.id}`)!;
   }
 
-}
-async function setActivityDetails(lyData: LanyardAPI): Promise<void> {
-  const activities = lyData.activities.filter((m: { type: number; }) => m.type !== 4);
-  if (!activities.length) {
-    activityDetail.style.display = "none";
+  if (activity.length == 0) {
+    activityDetail.remove();
     return;
   }
-  const mostRecent = activities.shift();
+  const mostRecent = activity;
   if (!mostRecent!.details) {
-    activityDetail.style.display = "none";
+    activityDetail.remove();
     return;
   }
   activityDetail.style.display = "block";
   activityDetail.innerText = validator.escape(mostRecent!.details) ?? "";
+  return document.querySelector(`#activityDetail_${activity.id}`) ? undefined : activityDetail;
 }
 
 enum PID {
@@ -338,44 +321,152 @@ enum PID {
   HelloS2C,     // s --> c
   InitC2S,      // s <-- c
   HeartbeatC2S  // s <-- c
-};
+}
+
+interface LanyardPacket {
+  op: PID,
+  d: any
+}
+
+let activityIDs: string[] = [];
+
+async function handleActivity(data: LanyardAPI): Promise<void> {
+  const activityCard: HTMLDivElement = document.querySelector("#activityCard")!;
+  const noActivity = document.createElement("h1");
+  noActivity.innerText = await getTranslation("lanyard.noActivity");
+  noActivity.id = "noActivity";
+  noActivity.className = "activities";
+  noActivity.style.paddingLeft = "10px";
+  noActivity.style.marginBottom = "unset";
+  noActivity.style.marginTop = "unset";
+
+  const activityIDsNew = new Set<string>();
+  for (const activity of data.activities) {
+    activityIDsNew.add(activity.id);
+  }
+
+  for (const id of activityIDs) {
+    if (!activityIDsNew.has(id)) {
+      const activityElement = document.querySelector(`#activity_${id}`);
+      if (activityElement) {
+        activityElement.remove();
+      }
+    }
+  }
+
+  activityIDs = Array.from(activityIDsNew);
+
+  if (data.activities.length === 0 && !document.querySelector('#noActivity'))
+    document.querySelector("#activityCard")!.appendChild(noActivity);
+  else if (document.querySelector("#noActivity"))
+    document.querySelector("#activityCard")!.removeChild(noActivity);
 
 
-await actuallySetLanguage();
+  for (const activity of data.activities) {
 
-const ws = await new WebSocket("wss://api.lanyard.rest/socket");
+    let activityElement: HTMLElement | null;
+    let activityImages: HTMLElement | null;
+    let activityInfo: HTMLElement | null;
+
+    if (!document.querySelector(`#activity_${activity.id}`)) {
+      activityElement = document.createElement('div');
+      activityElement.id = `activity_${activity.id}`;
+      activityElement.className = "activities";
+
+      activityImages = document.createElement("div");
+      activityImages.id = `activityImages_${activity.id}`;
+      activityImages.className = "activityImages";
+
+      activityInfo = document.createElement("div");
+      activityInfo.id = `activityInfo_${activity.id}`;
+      activityInfo.className = "activityInfo";
+    } else {
+      activityElement = document.querySelector(`#activity_${activity.id}`);
+      activityImages = document.querySelector(`#activityImages_${activity.id}`);
+      activityInfo = document.querySelector(`#activityInfo_${activity.id}`);
+    }
+
+    if (activityElement && activityImages && activityInfo) {
+      activityElement.appendChild(activityImages);
+      activityElement.appendChild(activityInfo);
+      if (activityCard) {
+        activityCard.appendChild(activityElement);
+      }
+    }
+
+
+
+    const activityBigImage = await setActivityBigImage(activity, data.spotify);
+    if (activityBigImage)
+      activityImages!.appendChild(activityBigImage);
+
+    const activitySmallImages = await setActivitySmallImage(activity);
+    for (const image of activitySmallImages) {
+      activityImages!.appendChild(image);
+    }
+    const activityName = await setActivityName(activity);
+    if (activityName)
+      activityInfo!.appendChild(activityName);
+
+    const activityState = await setActivityState(activity);
+    if (activityState)
+      activityInfo!.appendChild(activityState);
+
+    const activityDetails = await setActivityDetails(activity);
+    if (activityDetails)
+      activityInfo!.appendChild(activityDetails);
+
+    const activityTimestamp = await setTimestamp(activity);
+    if (activityTimestamp)
+      activityInfo!.appendChild(activityTimestamp);
+
+    const activityPathElement = document.querySelector("#activity-path") as HTMLDivElement;
+    const activityCardPadding = parseInt(window.getComputedStyle(activityCard).padding, 10);
+    const activityPathPaddingBottom = parseInt(window.getComputedStyle(activityPathElement).paddingBottom, 10);
+
+    const totalSize = activityInfo!.offsetHeight
+        + activityPathElement.offsetHeight
+        + activityCardPadding * 2
+        + activityPathPaddingBottom
+        + 10
+        + 10
+        + 15;
+
+    if (activityCard!.style.maxHeight !== totalSize + "px") {
+      activityCard!.style.maxHeight = totalSize + "px";
+    }
+  }
+}
+
+const ws = new WebSocket("wss://api.lanyard.rest/socket");
 ws.onmessage = async function (res)  { 
   try {
-    const data = JSON.parse(res.data);
-    switch (data.op) {
+    const packet: LanyardPacket = JSON.parse(res.data);
+    switch (packet.op) {
       // relogic style
       case PID.HelloS2C:
         ws.send(JSON.stringify({
           op: PID.InitC2S,
           d: { subscribe_to_id: USERID }
         }));
-        const { hb } = data.d;
+        const heartbeat = (packet.d).heartbeat_interval;
         setInterval(() => {
             ws.send(JSON.stringify({ op: PID.HeartbeatC2S }));
-        }, hb);
+        }, heartbeat);
         break;
       case PID.EventBW:
             console.log("init")
-            setAvatar(data.d);
-            setStatus(data.d);
-            setAvatarFrame(data.d);
-            setActivityBigImage(data.d);
-            setActivitySmallImage(data.d);
-            setActivityName(data.d);
-            setActivityState(data.d);
-            setActivityDetails(data.d);
-            setTimestamp(data.d);
+            await setAvatar(packet.d);
+            await setStatus(packet.d);
+            await setAvatarFrame(packet.d);
+            await handleActivity(packet.d);
             break;
       default:
-        console.log(`RECIEVED UNKNOWN PACKET! ID: ${data.d || "UNKNOWN"}`)
+        console.log(`RECEIVED UNKNOWN PACKET! ID: ${packet.d || "UNKNOWN"}`);
+        break;
     }
   } catch (e) {
-    console.log(`LANYARD THREW ERROR ${e}`)
+    console.log(e);
   }
 };
 

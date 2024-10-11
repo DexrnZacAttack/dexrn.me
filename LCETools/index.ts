@@ -1,14 +1,20 @@
+/*
+ * Copyright (c) 2024 DexrnZacAttack
+ * This file is part of DexrnZacAttack.github.io.
+ * https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ *
+ * Licensed under the MIT License. See LICENSE file for details.
+*/
+
 import "../js/settings.js"; // sets theme and lang
 import "../js/background.js"; // this sets an 'onload' handler
-import "../js/fadeout.js"; // this sets a 'DOMContentLoaded' handler
+import "../js/fade.js"; // this sets a 'DOMContentLoaded' handler
 import "../js/LCEE-Core.js"; // component setup
 import "../js/modules/common.js"; // common setup
 
-// TODO: FIX THE HOT BURNING TRASH CAN CODE THAT I HAVE MADE
-
 import { stringify } from "nbtify";
-import { compressionModes, endianButtonSelect, readMSSCMPFile, switchCompressionMode, switchMsscmpEndian } from '../js/LCEE-Core.js';
-import { fadeBG } from '../js/background.js';
+import { compressionModes, endianButtonSelect, readARCFile, readMSSCMPFile, switchCompressionMode, switchMsscmpEndian } from '../js/LCEE-Core.js';
+import { loadBG } from '../js/background.js';
 import { setVer } from '../js/ver.js';
 import { readSaveFile } from "../js/LCEE-Core.js";
 
@@ -42,7 +48,7 @@ function showSelectCard() {
   const allVisibleElements = getAllElements(GetType.visible);
     // hide all visible elements
   allVisibleElements.forEach(element => {
-      if (!["bg"].includes(element.id) && !["body", "head", "html"].includes(element.tagName.toLowerCase()) && ["backSubCard", "lceSaveCard", "msscmpCard", "creditsCard"].includes(element.id))
+      if (!["bg"].includes(element.id) && !["body", "head", "html"].includes(element.tagName.toLowerCase()) && ["backSubCard", "lceSaveCard", "msscmpCard", "creditsCard", "arcCard"].includes(element.id))
           element.style.display = "none";
   });
   (document.querySelector("#back") as HTMLDivElement).style.display = "flex";
@@ -53,11 +59,12 @@ document.querySelector('#CompModeBtn')!.addEventListener('click', selectCompress
 document.querySelector('#EndianButton')!.addEventListener('click', selectEndianness);
 document.querySelector('#backNBTBtn')!.addEventListener('click', hideNBTCard);
 document.querySelector('#backSubCard')!.addEventListener('click', showSelectCard);
-(document.querySelector('#backNBT')! as HTMLDivElement).innerText = await getTranslation("BackButton");
-(document.querySelector('#backsubbtn')! as HTMLDivElement).innerText = await getTranslation("BackButton");
-(document.querySelector("#saveLog") as HTMLDivElement).innerText = await getTranslation("lceSaveLogText");
-(document.querySelector("#msscmpLog") as HTMLDivElement).innerText = await getTranslation("msscmpExtractorLogText");
-fadeBG(true);
+(document.querySelector('#backNBT')! as HTMLDivElement).innerText = await getTranslation("base.back");
+(document.querySelector('#backsubbtn')! as HTMLDivElement).innerText = await getTranslation("base.back");
+(document.querySelector("#saveLog") as HTMLDivElement).innerText = await getTranslation("lcetools.save.outputPlaceholder");
+(document.querySelector("#arcLog") as HTMLDivElement).innerText = await getTranslation("lcetools.arc.outputPlaceholder");
+(document.querySelector("#msscmpLog") as HTMLDivElement).innerText = await getTranslation("lcetools.msscmp.outputPlaceholder");
+loadBG(true);
 setVer("le");
 
 
@@ -84,7 +91,19 @@ function selectMSSCMP() {
   (document.querySelector("#msscmpCard") as HTMLDivElement).style.display = "flex";
 }
 
+function selectARC() {
+  const allVisibleElements = getAllElements(GetType.visible);
+    // hide all visible elements
+  allVisibleElements.forEach(element => {
+      if (!["bg"].includes(element.id) && !["body", "head", "html"].includes(element.tagName.toLowerCase()) && ["typeSelectCard", "back"].includes(element.id))
+          element.style.display = "none";
+  });
+  (document.querySelector("#backSubCard") as HTMLDivElement).style.display = "flex";
+  (document.querySelector("#arcCard") as HTMLDivElement).style.display = "flex";
+}
+
 document.querySelector('#saveTypeButton')!.addEventListener('click', selectSG);
+document.querySelector('#arcTypeButton')!.addEventListener('click', selectARC);
 document.querySelector('#msscmpTypeButton')!.addEventListener('click', selectMSSCMP);
 
 export function showNBTCard(data: NBTData | undefined): void {
@@ -121,6 +140,7 @@ function onFileSelected(this: HTMLInputElement): void {
 }
 
 (document.getElementById("msscmpFileInput")!).addEventListener("change", onMSSCMPFileSelected);
+(document.getElementById("arcFileInput")!).addEventListener("change", onARCFileSelected);
 
 function onMSSCMPFileSelected(this: HTMLInputElement): void {
   const file = this.files![0];
@@ -128,6 +148,17 @@ function onMSSCMPFileSelected(this: HTMLInputElement): void {
     const reader = new FileReader();
     reader.onload = function () {
       readMSSCMPFile(file, file.name);
+    };
+    reader.readAsArrayBuffer(file);
+  }
+}
+
+function onARCFileSelected(this: HTMLInputElement): void {
+  const file = this.files![0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      readARCFile(file, file.name);
     };
     reader.readAsArrayBuffer(file);
   }

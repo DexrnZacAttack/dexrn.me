@@ -1,29 +1,11 @@
 /*
-Copyright 2024 Dexrn ZacAttack
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ * Copyright (c) 2024 DexrnZacAttack
+ * This file is part of DexrnZacAttack.github.io.
+ * https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ *
+ * Licensed under the MIT License. See LICENSE file for details.
 */
-
-// Dexrn -----
-// It is currently 10/20/2023 4:25 AM (PST) at the time of writing this.
-// Saw that vlOd made a header parser in C# and decided to make one in JS so that people who don't run Windows can run this straight in their browser.
-// This script is JANK.
+import { bReader } from "binaryio.js";
 
 const unknownversions = [
     'IM', 'QC', 'QW', 'IF', 'IT', 'PF', 'AU', 'NQ'
@@ -119,6 +101,8 @@ document.addEventListener("drop", (e) => {
 
 function readfile(data: Uint8Array) {
 
+    const reader = new bReader(data, true);
+
     // Dexrn: if the file doesn't have at least 12 bytes, it can't even fit the header lmao
     if (data.length < 12) {
         document.getElementById('output')!.textContent = `Invalid file: File is too small, Must be atleast 12 bytes in length.\n` +
@@ -127,12 +111,13 @@ function readfile(data: Uint8Array) {
     }
 
     // Dexrn: Check if the first 2 bytes are QM or QG or one of the unknown ones
-    const magic = String.fromCharCode(data[0] ?? 0, data[1] ?? 0);
-    const magicraw = (data[0] ?? 0).toString(16).padStart(2, '0') + ' ' + (data[1] ?? 0).toString(16).padStart(2, '0');
+    const magic = reader.readString8(2);
+    reader.setPos(0);
+    const magicraw = reader.readUShort().toString(16).toUpperCase().padStart(2, '0');
 
-    if (!magictypes.includes(magic) && magicraw !== '14 00') {
+    if (!magictypes.includes(magic) && magicraw !== '1400') {
         document.getElementById('output')!.textContent = `Invalid file: Invalid magic.\n` +
-            `Expected one of: QM, QG, IM, QC, QW, '14 00', got "${magic}" (${magicraw}) instead.`;
+            `Expected one of: QM, QG, IM, QC, QW, '1400', got "${magic}" (${magicraw}) instead.`;
         throw new Error("Invalid file: Invalid magic");
     }
     
@@ -140,43 +125,49 @@ function readfile(data: Uint8Array) {
     // Dexrn: THE JANKNESS STARTS HERE!
     // Dexrn: parse
     let majorversion, minorversion, revision;
-    let offset = 0;
-    const type = data[3];
+    reader.setPos(3);
+    const type = reader.readByte();
     const format = magic;
-    const framecount = ((data[16] ?? 0) | ((data[17] ?? 0) << 8));
-    const currentFramecount = ((data[18] ?? 0) | ((data[19] ?? 0) << 8));
-    const delayTime = ((data[20] ?? 0) | ((data[21] ?? 0) << 8));
-    const noRepeat = data[22];
-    const padding = (data[10]);
-    const encmode = (data[5] ?? 0).toString(16).padStart(2, '0');
+    reader.setPos(16);
+    const framecount = reader.readUShort();
+    const currentFramecount = reader.readUShort();
+    const delayTime = reader.readUShort();
+    const noRepeat = reader.readByte();
+    reader.setPos(10);
+    const padding = reader.readByte();
+    reader.setPos(5);
+    const encmode = reader.readByte().toString(16).padStart(2, '0');
     // let sprfiletype;
 
     let flags;
-    let flag1;
-    let flag2;
+    let flag1Str;
+    let flag2Str;
     let qual;
-    let flag1noraw;
+    let flag1;
     if (magic === 'QG' || magic === 'IM' || magic === 'QC' || magicraw === '14 00' || magic === 'QW' || magic === 'SP') {
-        flags = (data[5] ?? 0).toString(16).padStart(2, '0');
-        qual = data[6];
-        majorversion = data[2];
-        minorversion = data[3];
-        revision = data[4];
+        reader.setPos(2);
+        majorversion = reader.readByte();
+        minorversion = reader.readByte();
+        revision = reader.readByte();
+        flags = reader.readByte().toString(16).padStart(2, '0');
+        qual = reader.readByte();
     } else if (magic === 'QM') {
         // Dexrn: this is jank
-        flag1 = (data[4] ?? 0).toString(16).padStart(2, '0');
-        flag1noraw = data[4];
-        flag2 = (data[5] ?? 0).toString(16).padStart(2, '0');
-        majorversion = data[2];
-        offset = -1; // Dexrn: Offset because I originally had this and don't want to redo this yet.
+        reader.setPos(2);
+        majorversion = reader.readByte();
+        reader.setPos(4);
+        flag1 = reader.readByte();
+        flag1Str = flag1.toString(16).padStart(2, '0').toUpperCase();
+        flag2Str = reader.readByte().toString(16).padStart(2, '0');
     }   
 
-    const width = ((data[7 + offset] ?? 0) | ((data[8 + offset] ?? 0) << 8));
-    const height = ((data[9 + offset] ?? 0) | ((data[10 + offset] ?? 0) << 8));
+    reader.setPos(6);
+    const width = reader.readUShort();
+    const height = reader.readUShort();
 
     let animated: 0 | 1;
     if (magic == "QM") {
-        if (((flag1noraw ?? 0) >> 7) !== 0)
+        if (((flag1 ?? 0) >> 7) !== 0)
             animated = 1;
         else
             animated = 0;
@@ -196,10 +187,11 @@ function readfile(data: Uint8Array) {
 
 
     let alphapos: number;
+    reader.setPos(12);
     if ((majorversion ?? 0) > 11 && animated != 0 && currentFramecount <= 2) {
-        alphapos = ((data[12] ?? 0) | ((data[13] ?? 0) << 8)) << 2;
+        alphapos = reader.readUShort() << 2;
     } else {
-        alphapos = ((data[12] ?? 0) | ((data[13] ?? 0) << 8));
+        alphapos = reader.readUShort();
     }
 
     // Dexrn: pixel format detection
@@ -285,8 +277,8 @@ function readfile(data: Uint8Array) {
             `Transparent: ${transparency}\n` +
             `Bits Per Pixel (BPP): ${bpp}\n` +
             `Raw Type: ${raw_type}\n` +
-            `Flag 1 (raw): ${flag1}\n` +
-            `Flag 2 (raw): ${flag2}\n` +
+            `Flag 1 (raw): ${flag1Str}\n` +
+            `Flag 2 (raw): ${flag2Str}\n` +
             `Width: ${width}\n` +
             `Height: ${height}\n` +
             `Padding: ${padding}\n` +
@@ -304,8 +296,8 @@ function readfile(data: Uint8Array) {
             `Transparent: ${transparency}\n` +
             `Bits Per Pixel (BPP): ${bpp}\n` +
             `Raw Type: ${raw_type}\n` +
-            `Flag 1 (raw): ${flag1}\n` +
-            `Flag 2 (raw): ${flag2}\n` +
+            `Flag 1 (raw): ${flag1Str}\n` +
+            `Flag 2 (raw): ${flag2Str}\n` +
             `Width: ${width}\n` +
             `Height: ${height}\n` +
             `Padding: ${padding}\n` +

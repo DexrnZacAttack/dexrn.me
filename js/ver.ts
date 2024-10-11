@@ -1,41 +1,32 @@
 /*
-Copyright 2024 Dexrn ZacAttack
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ * Copyright (c) 2024 DexrnZacAttack
+ * This file is part of DexrnZacAttack.github.io.
+ * https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ *
+ * Licensed under the MIT License. See LICENSE file for details.
 */
+
+export interface Version {
+    version: string;
+    date: Date;
+};
 
 /**
  * Retrieves version info for the specified file.
  * @param type The file to return info for.
  * @returns A JSON string containing the version and date information.
  */
-function getVer(type: string): string {
+export function getVer(type?: string): Version {
     switch (type) {
         case "le":
-            // LCE Savegame Extractor
-            return JSON.stringify({ "version": "1.1.33", "date": "04/17/2024"});
+            // LCE Extractor
+            return { "version": "1.2.00", "date": new Date(1728655681160)};
         case "qd":
             // QMG Header Parser
-            return JSON.stringify({ "version": "1.2.10", "date": "12/21/2023"});
+            return { "version": "1.2.20", "date": new Date(1728655681160)};
         case "default":
         default:
-            return JSON.stringify({ "version": "1.4.00", "date": "07/04/2024"});
+            return { "version": "1.5.00", "date": new Date(1728655681160)};
     }
 }
 
@@ -44,7 +35,18 @@ function getVer(type: string): string {
  * @param type The file to use the information from when setting the info.
  */
 export function setVer(type: string): void {
-    let json = JSON.parse(getVer(type));
-    document.getElementById('lastUpdated')!.innerText = `v${json["version"]} (${json["date"]})`;
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    };
+
+    const formatter = new Intl.DateTimeFormat(navigator.language, options);
+    const ver = getVer(type);
+    document.getElementById('lastUpdated')!.innerText = `v${ver.version} (${formatter.format(ver.date)})`;
 }
 

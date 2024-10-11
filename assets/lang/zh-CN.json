@@ -1,62 +1,86 @@
 {
-    "LoadingText": "等待背景加载中...",
-    "ActivityName": "加载中...",
-    "ActivityState": "加载中...",
-    "ActivityDetail": "加载中...",
-    "Status2": "加载中...",
-    "ActivityPath": "@Dexrn > 活动",
-    "DiscordPath": "@Dexrn > 主页",
-    "AboutPath": "@Dexrn > 关于",
-    "LinksPath": "@Dexrn > 随机内容",
-    "MainPageButton1": "QMG头部解析器",
-    "MainPageButton2": "QMG研究",
-    "MainPageButton3": "LCE保存文件提取器",
-    "AboutMeTxt1": "🚮 职业傻瓜",
-    "AboutMeTxt2": "🥱 我很无聊。",
-    "BackButton": "<-- 返回",
-    "QMGHeaderParserPath": "@Dexrn > QMG头部解析器",
-    "LCEExtractorPath": "@Dexrn > LCE工具 > 保存文件提取器",
-    "LCENBTPath": "@Dexrn > LCE保存文件提取器 > NBT查看器",
-    "LCEFileSelectButton": "选择一个保存文件",
-    "FileSelectButton": "选择一个 .qmg 文件",
-    "QMGHPOutputText": "请选择一个文件。",
-    "SettingsSaveButton": "保存",
-    "SettingsPath": "@Dexrn > 设置",
-    "LanguageText": "语言",
-    "MSSCMPExtractorPath": "@Dexrn > LCE工具 > MSSCMP提取器",
-    "LCETypePath": "@Dexrn > LCE工具",
-    "MSSCMPFileSelectButton": "选择一个.msscmp文件",
-    "lceSaveLogText": "请选择一个保存文件。",
-    "msscmpExtractorLogText": "请选择一个MSSCMP文件。",
-    "SettingsButton": "设置",
-    "FirstTimeLoadLanguageText": "选择语言",
-    "FirstTimeLoadButton1": "确认",
-    "QMGResearchPath": "@Dexrn > QMG研究",
-    "NotFoundErrorText": "您看起来迷失了方向... 您确定这是正确的页面吗？",
-    "BackButtonAlt": "返回",
-    "HomeButton": "首页",
-    "ForbiddenErrorText": "嘿！你不应该在这里！",
-    "OnlineText": "在线",
-    "IdleText": "离开",
-    "DoNotDisturbText": "请勿打扰",
-    "OfflineText": "离线",
-    "UnknownText": "未知",
-    "NoActivityText": "无活动",
-    "LightThemeOption": "亮",
-    "DarkThemeOption": "暗",
-    "SelectOptionText": "选择一个选项",
-    "ThemeText": "主题",
-    "FirstTimeLoadThemeText": "选择一个主题",
-    "PlatformsInUseText": "正在使用的平台：",
-    "PlatformMobile": " 移动",
-    "PlatformDesktop": "桌面",
-    "PlatformWeb": " 网络",
-    "TimeElapsedText": "已经过时间：",
-    "BlogButtonText": "博客",
-    "BlogPath": "@Dexrn > 博客",
-    "BlogText": "博客",
-    "InitialSetupDarkThemeOption": "深色",
-    "InitialSetupLightThemeOption": "浅色",
-    "BlogNoPosts": "未找到博客文章。",
-    "UniversalLoading": "加载中..."
+    "base": {
+        "back": "<-- 返回",
+        "backAlt": "返回",
+        "goHome": "首页",
+        "loading": "加载中..."
+    },
+    "lanyard": {
+        "activity": {
+            "namePlaceholder": "加载中...",
+            "statePlaceholder": "加载中...",
+            "detailPlaceholder": "加载中...",
+            "statusPlaceholder": "加载中..."
+        },
+        "status": {
+            "online": "在线",
+            "idle": "离开",
+            "dnd": "请勿打扰",
+            "offline": "离线",
+            "unknown": "未知"
+        },
+        "noActivity": "无活动",
+        "platformsString": "正在使用的平台：",
+        "platform": {
+            "mobile": " 移动",
+            "desktop": "桌面",
+            "browser": " 网络"
+        },
+        "timeElapsed": "已经过时间："
+    },
+    "path": {
+        "activity": "@Dexrn > 活动",
+        "about": "@Dexrn > 关于",
+        "links": "@Dexrn > 随机内容",
+        "qmghp": "@Dexrn > QMG头部解析器",
+        "lceExtractor": "@Dexrn > LCE工具 > 保存文件提取器",
+        "msscmpExtractor": "@Dexrn > LCE工具 > MSSCMP提取器",
+        "lceTools": "@Dexrn > LCE工具",
+        "lceNbt": "@Dexrn > LCE保存文件提取器 > NBT查看器",
+        "settings": "@Dexrn > 设置",
+        "qmgResearch": "@Dexrn > QMG研究",
+        "discord": "@Dexrn > 主页",
+        "blog": "@Dexrn > 博客"
+    },
+    "main": {
+        "button1": "QMG头部解析器",
+        "button2": "QMG研究",
+        "button3": "LCE保存文件提取器",
+        "about": {
+            "line1": "🚮 职业傻瓜",
+            "line2": "🥱 我很无聊。"
+        },
+        "settings": "设置",
+        "blog": "博客"
+    },
+    "lcetools": {
+        "save": {
+            "selectFile": "选择一个保存文件",
+            "outputPlaceholder": "请选择一个保存文件。"
+        },
+        "msscmp": {
+            "selectFile": "选择一个.msscmp文件",
+            "outputPlaceholder": "请选择一个MSSCMP文件。"
+        }
+    },
+    "qmghp": {
+        "selectFile": "选择一个 .qmg 文件",
+        "outputPlaceholder": "请选择一个文件。"
+    },
+    "settings": {
+        "save": "保存",
+        "language": "语言",
+        "theme": {
+            "light": "亮",
+            "dark": "暗"
+        },
+        "optionSelect": "选择一个选项"
+    },
+    "error": {
+        "notFound": "您看起来迷失了方向... 您确定这是正确的页面吗？",
+        "forbidden": "嘿！你不应该在这里！"
+    },
+    "blog": {
+        "noPosts": "未找到博客文章。"
+    }
 }

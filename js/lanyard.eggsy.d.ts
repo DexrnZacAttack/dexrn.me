@@ -27,10 +27,11 @@ declare interface LanyardAPI {
       listening_to_spotify: boolean;
     };
     success: boolean;
-  
+
   declare type LanyardActivity = LanyardActivityLike | LanyardActivity4;
-  
+
   declare interface LanyardActivityLike {
+      id: string;
     name: string;
     type: number;
     application_id: string;
@@ -59,25 +60,4 @@ declare interface LanyardAPI {
     // not completely sure about it being specifically a `string`.
     // just an educated guess
     state: string;
-  }
-  
-  declare type LanyardLang<K extends keyof LanyardLangNameMap = keyof LanyardLangNameMap> = LanyardLangNameMap[K];
-  
-  declare interface LanyardLangNameMap {
-    "en-US": typeof import("../assets/lang/en-US.json");
-    "zh-CN": typeof import("../assets/lang/zh-CN.json");
-  }
-  
-  declare interface LocalizedText<K extends keyof LanyardLangNameMap = keyof LanyardLangNameMap> {
-    lyonline: LanyardLang<K>["OnlineText"];
-    lydnd: LanyardLang<K>["DoNotDisturbText"];
-    lyidle: LanyardLang<K>["IdleText"];
-    lyoffline: LanyardLang<K>["OfflineText"];
-    lyunknown: LanyardLang<K>["UnknownText"];
-    lypin: LanyardLang<K>["PlatformsInUseText"];
-    lyplatm: LanyardLang<K>["PlatformMobile"];
-    lyplatd: LanyardLang<K>["PlatformDesktop"];
-    lyplatw: LanyardLang<K>["PlatformWeb"];
-    lytimee: LanyardLang<K>["TimeElapsedText"];
-    lyna: LanyardLang<K>["NoActivityText"];
   }

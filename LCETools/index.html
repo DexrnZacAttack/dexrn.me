@@ -1,23 +1,9 @@
 <!--
-Copyright 2024 Dexrn ZacAttack
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ - Copyright (c) 2024 DexrnZacAttack
+ - This file is part of DexrnZacAttack.github.io.
+ - https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ -
+ - Licensed under the MIT License. See LICENSE file for details.
 -->
 
 <!DOCTYPE html>
@@ -44,48 +30,46 @@ SOFTWARE.
     <!-- loading screen -->
     <div class="loadingScreen">
       <div class="loading">
-        <img id="lightLSpinner" src="../assets/loader.gif" />
-        <img id="darkLSpinner" src="../assets/loader-dark.gif" />
+        <img id="lightLoadingSpinner" src="../assets/loader.gif" alt="Loading..."/>
+        <img id="darkLoadingSpinner" src="../assets/loader-dark.gif" alt="Loading..."/>
+        <h1 class="loadingText hidden" id="loadingText"></h1>
       </div>
     </div>
     <!-- bg -->
     <div class="bg" id="bg">
       <!-- backbtn for main card -->
-      <div
-        class="topcard"
+      <topcard
         style="cursor: pointer"
         id="back"
         linkto="../">
         <div class="back" id="backbtn"></div>
-      </div>
+      </topcard>
       <!-- backbtn for subcard card -->
-      <div
-      class="topcard"
+      <topcard
       style="cursor: pointer;display: none;"
       id="backSubCard"
       linkto="../">
       <div class="back" id="backsubbtn"></div>
-    </div>
+      </topcard>
       <!-- backbtn for nbt card -->
-      <div
-        class="topcard"
+      <topcard
         style="cursor: pointer;display:none;"
         id="backNBTBtn">
         <div class="back" id="backNBT"></div>
-      </div>
+      </topcard>
       <!-- NBT card -->
-      <div class="card" id="nbtCard"
+      <card id="nbtCard"
         style="height: 500px;display:none;flex-direction:column;">
         <div class="cardTitle" id="lcee-nbt-path"></div>
         <pre id="nbtData" style="overflow-y:auto;overflow-x:auto;"></pre>
-      </div>
+      </card>
       <!-- save card -->
-      <div class="card" id="lceSaveCard"
+      <card id="lceSaveCard"
         style="height: 500px;display:none;flex-direction:column;">
         <div class="cardTitle" id="lcet-save-path"></div>
         <pre id="saveLog"></pre>
         <div id="files"></div>
-        <div class="center">
+        <div class="center" id="saveCenter">
           <button class="button" id="CompModeBtn">Save type: Wii U, PS3, Xbox
             360 (Decompressed)</button>
           <label for="saveFileInput" class="button2"
@@ -95,9 +79,9 @@ SOFTWARE.
             id="saveFileInput"
             style="display: none" />
         </div>
-      </div>
+      </card>
       <!-- file type select card -->
-      <div class="card" id="typeSelectCard"
+      <card id="typeSelectCard"
       style="height: 500px;display:flex;flex-direction:column;">
       <div class="cardTitle" id="lcet-path"></div>
       <div class="center" style="margin-top: unset !important">
@@ -105,15 +89,16 @@ SOFTWARE.
       <h1>Select a tool</h1>
       </div>
       <button id="saveTypeButton" class="button">Save extractor</button>
+      <button id="arcTypeButton" class="button">ARC extractor</button>
       <button id="msscmpTypeButton" class="button">MSSCMP extractor</button>
-      </div>
+      </card>
       <!-- msscmp card -->
-      <div class="card" id="msscmpCard"
+      <card id="msscmpCard"
         style="height: 500px;display:none;flex-direction:column;">
         <div class="cardTitle" id="lcet-msscmp-path"></div>
         <h3>YES THIS UI SUCKS, I WILL (hopefully) FIX THIS SOON™</h3> <!-- this whole update contains a lot of garbage code -->
         <pre id="msscmpLog"></pre>
-        <div id="msscmpFiles"></div>
+        <div id="msscmpFiles" class="basicContainer"></div>
         <div class="center" id="msscmpCenter">
           <button class="button" id="EndianButton">Auto Detect</button>
           <label for="msscmpFileInput" class="button2"
@@ -123,17 +108,33 @@ SOFTWARE.
             id="msscmpFileInput"
             style="display: none" accept=".msscmp" />
         </div>
-      </div>
+      </card>
       <!-- credits "top"card -->
-      <div class="topcard" style="cursor: pointer;display:none" id="creditsCard">
+      <topcard style="cursor: pointer;display:none" id="creditsCard">
         <div class="back buttonRedirect"
           linkto="https://github.com/zugebot/LegacyEditor"
           style="text-align:center;font-weight: unset;font-family: unset;font-size:16px;opacity: 1;"><a>A
             lot of the (de)compression code was ported from Zugebot
-            (jerrinth3glitch)'s LegacyEditor</a></h2>
-        <!-- Last update date -->
-        <p class="lastUpdated" id="lastUpdated"></p>
+            (jerrinth3glitch)'s LegacyEditor</a>
+        </div>
+      </topcard>
+      <!-- arc card -->
+      <card id="arcCard"
+      style="height: 500px;display:none;flex-direction:column;">
+      <div class="cardTitle" id="lcet-arc-path"></div>
+      <pre id="arcLog"></pre>
+      <div id="arcFiles" class="basicContainer"></div>
+      <div class="center" id="arcCenter">
+        <label for="arcFileInput" class="button2"
+          id="arcFileSelectBtn"></label>
+        <input
+          type="file"
+          id="arcFileInput"
+          style="display: none" accept=".arc" />
       </div>
+    </card>
+      <!-- Last update date -->
+      <p class="lastUpdated" id="lastUpdated"></p>
     </body>
     <script type="module" src="./index.ts"></script>
   </html>
