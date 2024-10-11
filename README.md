@@ -1,5 +1,9 @@
 
-# DexrnZacAttack.github.io
+## DexrnZacAttack.github.io
 
-### Big thanks to [Offroaders123](https://github.com/offroaders123) for making it possible for me to get my site to use Node, Vite and TS!
-### I am still learning Web Development, so the code might not look good or be efficient.
+Just my personal site that I work on whenever I am bored or dream up something...
+I also host some stuff such as a Minecraft LCE Save extractor, MSSCMP extractor, ARC extractor, oh and my blog.
+
+## Credits
+
+[Offroaders123](https://github.com/offroaders123) - The person that taught me a bunch of stuff about TS and got me to where I am now, they also setup Vite for my site :)

@@ -1,64 +1,93 @@
 {
-    "LoadingText": "Waiting for the background to load...",
-    "ActivityName": "Loading...",
-    "ActivityState": "Loading...",
-    "ActivityDetail": "Loading...",
-    "Status2": "Loading...",
-    "ActivityPath": "@Dexrn > Activity",
-    "AboutPath": "@Dexrn > About",
-    "LinksPath": "@Dexrn > Random shit",
-    "MainPageButton1": "QMG Header Parser",
-    "MainPageButton2" : "QMG Research",
-    "MainPageButton3" : "LCE Save Extractor",
-    "AboutMeTxt1": "🚮 Professional Dumbass",
-    "AboutMeTxt2": "🥱 I am very bored.",
-    "BackButton": "<-- Back",
-    "QMGHeaderParserPath": "@Dexrn > QMG Header Parser",
-    "LCEExtractorPath": "@Dexrn > LCE Tools > Save Extractor",
-    "MSSCMPExtractorPath": "@Dexrn > LCE Tools > MSSCMP Extractor",
-    "LCETypePath": "@Dexrn > LCE Tools",
-    "LCENBTPath": "@Dexrn > LCE Tools > Save Extractor > NBT Viewer",
-    "LCEFileSelectButton": "Select a save",
-    "MSSCMPFileSelectButton": "Select a .msscmp file",
-    "FileSelectButton": "Select a .qmg File",
-    "QMGHPOutputText": "Please select a QMG file.",
-    "lceSaveLogText": "Please select a save file.",
-    "msscmpExtractorLogText": "Please select an MSSCMP file.",
-    "SettingsSaveButton": "Save",
-    "SettingsPath": "@Dexrn > Settings",
-    "LanguageText": "Language",
-    "SettingsButton": "Settings",
-    "FirstTimeLoadLanguageText": "Choose a language",
-    "FirstTimeLoadButton1": "Confirm",
-    "QMGResearchPath": "@Dexrn > QMG Research",
-    "NotFoundErrorText": "You look lost... Are you sure this is the right page?",
-    "BackButtonAlt": "Go back",
-    "HomeButton": "Home",
-    "ForbiddenErrorText": "Hey! You're not supposed to be here!",
-    "OnlineText": "Online",
-    "IdleText": "Idle",
-    "DoNotDisturbText": "Do not disturb",
-    "OfflineText": "Offline",
-    "UnknownText": "Unknown",
-    "NoActivityText": "No activity",
-    "LightThemeOption": "Light",
-    "DarkThemeOption": "Dark",
-    "SelectOptionText": "Select an option",
-    "ThemeText": "Theme",
-    "FirstTimeLoadThemeText": "Choose a theme",
-    "PlatformsInUseText": "Platforms in use:",
-    "PlatformMobile": " Mobile",
-    "PlatformDesktop": " Desktop",
-    "PlatformWeb": " Web",
-    "TimeElapsedText": "Time elapsed: ",
-    "BlogButtonText": "Blog",
-    "DiscordPath": "@Dexrn > Home",
-    "SteamPath": "@Dexrn > Steam",
-    "BlogPath": "@Dexrn > Blog",
-    "BlogText": "Blog",
-    "InitialSetupDarkThemeOption": "Dark",
-    "InitialSetupLightThemeOption": "Light",
-    "BlogNoPosts": "No posts found.",
-    "UniversalLoading": "Loading..."
+    "base": {
+        "back": "<-- Back",
+        "backAlt": "Go back",
+        "goHome": "Home",
+        "loading": "Loading..."
+    },
+    "lanyard": {
+        "activity": {
+            "namePlaceholder": "Loading...",
+            "statePlaceholder": "Loading...",
+            "detailPlaceholder": "Loading...",
+            "statusPlaceholder": "Loading..."
+        },
+        "status": {
+            "online": "Online",
+            "idle": "Idle",
+            "dnd": "Do not disturb",
+            "offline": "Offline",
+            "unknown": "Unknown"
+        },
+        "noActivity": "No activity",
+        "platformsString": "Platforms in use:",
+        "platform": {
+            "mobile": " Mobile",
+            "desktop": " Desktop",
+            "browser": " Web"
+        },
+        "timeElapsed": "Time elapsed: "
+    },
+    "path": {
+        "activity": "@Dexrn > Activity",
+        "about": "@Dexrn > About",
+        "links": "@Dexrn > Projects",
+        "qmghp": "@Dexrn > QMG Header Parser",
+        "lceExtractor": "@Dexrn > LCE Tools > Save Extractor",
+        "arcExtractor": "@Dexrn > LCE Tools > ARC Extractor",
+        "msscmpExtractor": "@Dexrn > LCE Tools > MSSCMP Extractor",
+        "lceTools": "@Dexrn > LCE Tools",
+        "lceNbt": "@Dexrn > LCE Tools > Save Extractor > NBT Viewer",
+        "settings": "@Dexrn > Settings",
+        "qmgResearch": "@Dexrn > QMG Research",
+        "discord": "@Dexrn > Home",
+        "blog": "@Dexrn > Blog"
+    },
+    "main": {
+        "button1": "QMG Header Parser",
+        "button2": "QMG Research",
+        "button3": "LCE Tools",
+        "about": {
+            "line1": "🚮 Professional Dumbass",
+            "line2": "🥱 I am very bored."
+        },
+        "settings": "Settings",
+        "blog": "Blog"
+    },
+    "lcetools": {
+        "save": {
+            "selectFile": "Select a save",
+            "outputPlaceholder": "Please select a save file."
+        },
+        "arc": {
+            "selectFile": "Select an ARC file",
+            "outputPlaceholder": "Please select an ARC file."
+        },
+        "msscmp": {
+            "selectFile": "Select a .msscmp file",
+            "outputPlaceholder": "Please select an MSSCMP file."
+        }
+    },
+    "qmghp": {
+        "selectFile": "Select a .qmg File",
+        "outputPlaceholder": "Please select a QMG file."
+    },
+    "settings": {
+        "save": "Save",
+        "language": "Language",
+        "theme": {
+            "light": "Light",
+            "dark": "Dark",
+            "string": "Theme"
+        },
+        "optionSelect": "Select an option"
+    },
+    "error": {
+        "notFound": "You look lost... Are you sure this is the right page?",
+        "goBack": "Back",
+        "forbidden": "Hey! You're not supposed to be here!"
+    },
+    "blog": {
+        "noPosts": "No posts found."
+    }
 }
-  

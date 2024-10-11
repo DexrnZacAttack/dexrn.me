@@ -1,73 +1,100 @@
+/*
+ * Copyright (c) 2024 DexrnZacAttack
+ * This file is part of DexrnZacAttack.github.io.
+ * https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ *
+ * Licensed under the MIT License. See LICENSE file for details.
+*/
+
 import JSZip from "jszip";
 import { readNBTfromFile, isReadable } from "./modules/NBT.js";
 import { showNBTCard } from "../LCETools/index.js";
 import { downloadZip } from "./LCEE-Core.js";
-import { index, msscmpFile } from "liblce";
 
 // todo: don't use 2 functions to do the same stuff, am just doing this to get SOMETHING working as someone seems to want to use this.
 
-export async function renderSave(files: index[], origFileName: string): Promise<void> {
+export interface Container {
+  name: string,
+  data: Uint8Array
+}
+
+function genRandString(len: number) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < len; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+export async function renderBasicContainer(files: Container[], origFileName: string, container: HTMLDivElement, center: HTMLDivElement): Promise<void> {
   let downloadZipBtn: HTMLButtonElement = document.querySelector("#downloadArchiveButton")!;
   downloadZipBtn?.remove();
-  const filesDiv: HTMLDivElement = document.querySelector("#files")!;
-  const center: HTMLDivElement = document.querySelector(".center")!;
   (document.querySelector("#saveLog") as HTMLDivElement)!.style.display = "none";
-  filesDiv.innerHTML = "";
-  filesDiv.style.display = "none";
-  const lceRoot = document.createElement("div");
-  lceRoot.id = "lceRoot";
-  document.getElementById("files")!.appendChild(lceRoot);
+  container.innerHTML = "";
+  container.style.display = "none";
+  const filesRoot = document.createElement("div");
+  filesRoot.id = `filesRoot_${genRandString(20)}`;
+  container!.appendChild(filesRoot);
   var zip = new JSZip();
-  for (const file of files) {
-    console.log(file.name);
-    const blobUrl = URL.createObjectURL(file.data);
+
+  if (!Array.isArray(files) || files.length === 0) {
+    console.log(files);
+    container.innerText = "Read 0 files.";
+    container.style.display = "flex";
+    return;
+  }
+
+  for (const containerFile of files) {
+    console.log(containerFile.name);
+    const blobUrl = URL.createObjectURL(new File([containerFile.data], containerFile.name));
     
-    const LCEFileContainer = document.createElement("div");
-    LCEFileContainer.className = "LCEFileContainer";
-    LCEFileContainer.style.display = "flex";
-    LCEFileContainer.style.flexDirection = "row";
-    LCEFileContainer.style.backgroundColor = "rgba(50, 50, 50, 0.5)";
-    LCEFileContainer.style.marginBottom = "10px";
+    const fileContainer = document.createElement("div");
+    fileContainer.className = "fileContainer";
+    fileContainer.style.display = "flex";
+    fileContainer.style.flexDirection = "row";
+    fileContainer.style.backgroundColor = "rgba(50, 50, 50, 0.5)";
+    fileContainer.style.marginBottom = "10px";
   
-    const lceFile = document.createElement("a");
-    lceFile.className = "LCEFile";
-    lceFile.href = blobUrl;
-    lceFile.download = file.name;
+    const cFile = document.createElement("a");
+    cFile.className = "cFile";
+    cFile.href = blobUrl;
+    cFile.download = containerFile.name;
   
-    const filePathSegments = file.name.split("/");
+    const filePathSegments = containerFile.name.includes("/") ? containerFile.name.split("/") : containerFile.name.split("\\");
     const fileName = filePathSegments.pop();
-    lceFile.innerText = fileName ?? "Unknown";
+    cFile.innerText = fileName ?? "Unknown";
   
-    let parentFolder = filesDiv; 
+    let parentFolder = container; 
   
     filePathSegments.forEach((part, index) => {
-      const folderId = "LCEFolder_" + filePathSegments.slice(0, index + 1).join("_");
-      let lceFolder = document.getElementById(folderId);
+      const folderId = "folder_" + filePathSegments.slice(0, index + 1).join("_");
+      let folder = document.getElementById(folderId);
       
-      if (!lceFolder) {
-        lceFolder = document.createElement("div");
-        lceFolder.className = "LCEFolder";
-        lceFolder.id = folderId;
+      if (!folder) {
+        folder = document.createElement("div");
+        folder.className = "folder";
+        folder.id = folderId;
   
         const folderName = document.createElement("h3");
         folderName.innerText = part;
-        folderName.className = "LCEFolderName";
+        folderName.className = "folderName";
   
-        lceFolder.appendChild(folderName);
-        parentFolder.appendChild(lceFolder);
+        folder.appendChild(folderName);
+        parentFolder.appendChild(folder);
       }
   
-      parentFolder = lceFolder as HTMLDivElement;
+      parentFolder = folder as HTMLDivElement;
     });
   
-    parentFolder.appendChild(LCEFileContainer);
-    lceFile.download = fileName!;
-    LCEFileContainer.appendChild(lceFile);
+    parentFolder.appendChild(fileContainer);
+    cFile.download = fileName!;
+    fileContainer.appendChild(cFile);
   
-    if ((await isReadable(file)) == true) {
+    if ((await isReadable(containerFile)) == true) {
       var viewNBTButton = document.createElement("button");
       viewNBTButton.onclick = async () => {
-        showNBTCard(await readNBTfromFile(file));
+        showNBTCard(await readNBTfromFile(containerFile));
       };
       
       viewNBTButton.innerText = "View NBT";
@@ -76,12 +103,12 @@ export async function renderSave(files: index[], origFileName: string): Promise<
       viewNBTButton.style.marginTop = "unset";
       viewNBTButton.style.marginBottom = "unset";
       viewNBTButton.style.marginLeft = "auto";
-      LCEFileContainer.appendChild(viewNBTButton);
+      fileContainer.appendChild(viewNBTButton);
     }
 
-    zip.file(file.name, file.data);
-    filesDiv.style.display = "flex";
-    filesDiv.style.flexDirection = "column";
+    zip.file(containerFile.name, containerFile.data);
+    container.style.display = "flex";
+    container.style.flexDirection = "column";
   }  
 
   downloadZipBtn = document.createElement("button");
@@ -93,81 +120,5 @@ export async function renderSave(files: index[], origFileName: string): Promise<
   downloadZipBtn.innerText = "Download all";
   downloadZipBtn.className = "button";
   downloadZipBtn.id = "downloadArchiveButton";
-  center.appendChild(downloadZipBtn);
-}
-
-// literally other function copy pasted LMFAO
-export async function renderMSSCMP(files: msscmpFile[], origFileName: string): Promise<void> {
-  let downloadZipBtn: HTMLButtonElement = document.querySelector("#msscmpDownloadArchiveButton")!;
-  downloadZipBtn?.remove();
-  const filesDiv: HTMLDivElement = document.querySelector("#msscmpFiles")!;
-  const center = document.querySelector("#msscmpCenter")!;
-  (document.querySelector("#msscmpLog") as HTMLDivElement)!.style.display = "none";
-  filesDiv.innerHTML = "";
-  filesDiv.style.display = "none";
-  const lceMSSCMPRoot = document.createElement("div");
-  lceMSSCMPRoot.id = "lceMSSCMPRoot";
-  document.getElementById("msscmpFiles")!.appendChild(lceMSSCMPRoot);
-  var zip = new JSZip();
-  for (const file of files) {
-    console.log(file.file.name);
-    const blobUrl = URL.createObjectURL(file.file);
-    
-    const LCEFileContainer = document.createElement("div");
-    LCEFileContainer.className = "LCEFileContainer";
-    LCEFileContainer.style.display = "flex";
-    LCEFileContainer.style.flexDirection = "row";
-    LCEFileContainer.style.backgroundColor = "rgba(50, 50, 50, 0.5)";
-    LCEFileContainer.style.marginBottom = "10px";
-  
-    const lceFile = document.createElement("a");
-    lceFile.className = "LCEFile";
-    lceFile.href = blobUrl;
-    lceFile.download = file.file.name;
-  
-    const filePathSliceNDiced = file.file.name.split("/");
-    const fileName = filePathSliceNDiced.pop();
-    lceFile.innerText = fileName ?? "Unknown";
-  
-    let parentFolder = filesDiv; 
-  
-    filePathSliceNDiced.forEach((part, index) => {
-      const folderId = "LCEFolder_" + filePathSliceNDiced.slice(0, index + 1).join("_");
-      let lceFolder = document.getElementById(folderId);
-      
-      if (!lceFolder) {
-        lceFolder = document.createElement("div");
-        lceFolder.className = "LCEFolder";
-        lceFolder.id = folderId;
-  
-        const folderName = document.createElement("h3");
-        folderName.innerText = part;
-        folderName.className = "LCEFolderName";
-  
-        lceFolder.appendChild(folderName);
-        parentFolder.appendChild(lceFolder);
-      }
-  
-      parentFolder = lceFolder as HTMLDivElement;
-    });
-  
-    parentFolder.appendChild(LCEFileContainer);
-    lceFile.download = fileName!;
-    LCEFileContainer.appendChild(lceFile);
-  
-    zip.file(file.file.name, file.file);
-    filesDiv.style.display = "flex";
-    filesDiv.style.flexDirection = "column";
-  }  
-
-  downloadZipBtn = document.createElement("button");
-
-  downloadZipBtn.onclick = async () => {
-    await downloadZip(zip, origFileName);
-  };
-
-  downloadZipBtn.innerText = "Download all";
-  downloadZipBtn.className = "button";
-  downloadZipBtn.id = "msscmpDownloadArchiveButton";
   center.appendChild(downloadZipBtn);
 }

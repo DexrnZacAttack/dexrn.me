@@ -1,31 +1,18 @@
 /*
-Copyright 2024 Dexrn ZacAttack
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ * Copyright (c) 2024 DexrnZacAttack
+ * This file is part of DexrnZacAttack.github.io.
+ * https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ *
+ * Licensed under the MIT License. See LICENSE file for details.
 */
 
-import { renderMSSCMP, renderSave } from "./LCEE-GUI.js";
+import { renderBasicContainer, Container } from "./LCEE-GUI.js";
 import {
   readSave,
   decompressVitaRLE,
-  index,
-  readMSSCMP
+  SaveIndex,
+  readMSSCMP,
+  readARC
 } from "liblce";
 
 import type JSZip from "jszip";
@@ -101,6 +88,24 @@ export async function downloadZip(zip: JSZip, name: string): Promise<void> {
   }
 }
 
+export async function readARCFile(data: File, name: string): Promise<void> {
+  try {
+    const arc = await readARC(data);
+    const container: Container[] = await Promise.all(
+      arc.fileIndex.map(async (file) => {
+        return {
+          name: file.name,
+          data: new Uint8Array(await file.data.arrayBuffer()),
+        };
+      })
+    );
+    
+    await renderBasicContainer(container, name, document.getElementById("arcFiles") as HTMLDivElement, document.getElementById("arcCenter") as HTMLDivElement);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export async function readMSSCMPFile(data: File, name: string): Promise<void> {
   const fileMagicReader = new Uint8Array(await data.arrayBuffer());
   const fileMagic = new TextDecoder("utf-8").decode(
@@ -120,7 +125,17 @@ export async function readMSSCMPFile(data: File, name: string): Promise<void> {
   
   if (endiannessAllowedMagic.includes(fileMagic)) {
     try {
-      await renderMSSCMP(await readMSSCMP(data, littleEndian), name);
+      const msscmp = await readMSSCMP(data, littleEndian);
+      const container: Container[] = await Promise.all(
+        msscmp.map(async (file) => {
+          return {
+            name: file.fileName + ".binka",
+            data: new Uint8Array(await file.file.arrayBuffer()),
+          };
+        })
+      );
+      
+      await renderBasicContainer(container, name, document.getElementById("msscmpFiles") as HTMLDivElement, document.getElementById("msscmpCenter") as HTMLDivElement);
     } catch (e) {
       console.log(e);
     }
@@ -133,7 +148,7 @@ export async function readMSSCMPFile(data: File, name: string): Promise<void> {
 export async function readSaveFile(data: File, sgName: string): Promise<void> {
     try {
       const fileArray = new Uint8Array(await data.arrayBuffer());
-      let saveFiles: index[] = [];
+      let saveFiles: SaveIndex[] = [];
       if (!littleEndian) {
         if (
           new TextDecoder()
@@ -162,7 +177,16 @@ export async function readSaveFile(data: File, sgName: string): Promise<void> {
         console.error("No data received...");
       }
 
-      await renderSave(saveFiles, sgName);
+      const container: Container[] = await Promise.all(
+        saveFiles.map(async (file) => {
+          return {
+            name: file.name,
+            data: new Uint8Array(await file.data.arrayBuffer()),
+          };
+        })
+      );
+      
+      await renderBasicContainer(container, sgName, document.getElementById("files") as HTMLDivElement, document.getElementById("saveCenter") as HTMLDivElement);
     } catch (e) {
       console.error(e);
     }
