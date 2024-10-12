@@ -170,19 +170,19 @@ function setLang(langFilePath: string): void {
       translateElement("settingsTabButton", data.main.settings);
       translateElement("backNBT", data.backNBT);
       translateElement("backbtn2", data.base.backAlt);
-      translateElement("qmghp-path", data.path.qmghp);
-      translateElement("lcet-path", data.path.lceTools);
-      translateElement("lcet-save-path", data.path.lceExtractor);
-      translateElement("lcet-arc-path", data.path.arcExtractor);
-      translateElement("lcee-nbt-path", data.path.lceNbt);
-      translateElement("lcet-msscmp-path", data.path.msscmpExtractor);
+      translateElement("qmghpPath", data.path.qmghp);
+      translateElement("lcetPath", data.path.lceTools);
+      translateElement("lcetSavePath", data.path.lceExtractor);
+      translateElement("lcetArcPath", data.path.arcExtractor);
+      translateElement("lceeNbtPath", data.path.lceNbt);
+      translateElement("lcetMsscmpPath", data.path.msscmpExtractor);
       translateElement("lceSaveFileSelectBtn", data.lcetools.save.selectFile);
       translateElement("msscmpfileselectbtn", data.lcetools.msscmp.selectFile);
       translateElement("arcFileSelectBtn", data.lcetools.arc.selectFile);
       translateElement("fileselectbtn", data.qmghp.selectFile);
       translateElement("goBack", data.error.goBack);
       translateElement("output", data.qmghp.outputPlaceholder);
-      translateElement("qmgr-path", data.path.qmgResearch);
+      translateElement("qmgrPath", data.path.qmgResearch);
       translateElement("404msg", data.error.notFound);
       translateElement("homebtn", data.base.goHome);
       translateElement("403msg", data.error.forbidden);
@@ -193,7 +193,7 @@ function setLang(langFilePath: string): void {
       translateElement("themetxt", data.settings.theme.string);
       translateElement("blogbtntxt", data.main.blog);
       translateElement("blogTabButton", data.main.blog);
-      translateElement("stuff2-path", data.path.blog);
+      translateElement("stuff2Path", data.path.blog);
     })
     .catch((error) => console.error("Error whilst loading lang file:", error));
 }
