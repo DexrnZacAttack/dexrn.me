@@ -17,5 +17,6 @@
     "allowUnreachableCode": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true
-  }
+  },
+  "include": ["vite.config.ts", "src"]
 }

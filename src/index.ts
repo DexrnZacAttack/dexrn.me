@@ -10,14 +10,14 @@
 // import-based function calls. Ideally modules don't add side-effects, rather
 // they can export functionality that can be called from the module that imports it.
 
-import "./js/settings.js"; // sets theme and lang
-import "./js/modules/msgbox.js"; // unused? not used yet, at least
-import "./js/modules/common.js"; // common setup
-import "./js/lanyard.js"; // common setup
+import "../js/settings.js"; // sets theme and lang
+import "../js/modules/msgbox.js"; // unused? not used yet, at least
+import "../js/modules/common.js"; // common setup
+import "../js/lanyard.js"; // common setup
 // import "./js/steam.js"; // unused
-import "./js/background.js"; // this sets an 'onload' handler
-import "./js/fade.js"; // this sets a 'DOMContentLoaded' handler
-import "./js/expandable.js"; // component setup
+import "../js/background.js"; // this sets an 'onload' handler
+import "../js/fade.js"; // this sets a 'DOMContentLoaded' handler
+import "../js/expandable.js"; // component setup
 
 doubleImportTest(new URL(import.meta.url).href);
 
