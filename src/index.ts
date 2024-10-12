@@ -62,15 +62,15 @@ function init() {
 }
 
 init();
-const aboutCard: HTMLElement = document.querySelector("#aboutCard")!,
-    linksCard: HTMLElement = document.querySelector("#linksCard")!,
-    abm: HTMLElement = document.querySelector("#blogCard")!,
-    toggleButton: HTMLElement = document.getElementById("settingsTabButton")!,
-    settingsPage: HTMLElement = document.getElementById("settings")!,
-    activityCard: HTMLElement = document.querySelector("#activityCard")!,
-    closeSettingsTabButton: HTMLElement = document.getElementById("settingsclose")!,
-    tabContainer: HTMLElement = document.getElementById("mainCardsContainer")!,
-    saveBtn: HTMLElement = document.getElementById("saveBtn")!;
+// const aboutCard: HTMLElement = aboutCard,
+//     linksCard: HTMLElement = linksCard,
+const abm: HTMLElement = blogCard,
+    toggleButton: HTMLElement = settingsTabButton,
+    settingsPage: HTMLElement = settings,
+    // activityCard: HTMLElement = activityCard,
+    closeSettingsTabButton: HTMLElement = settingsclose,
+    tabContainer: HTMLElement = mainCardsContainer;
+    // saveBtn: HTMLElement = saveBtn;
 settingsPage.style.display = "none";
 
 function settingsExitHandler() {
@@ -103,12 +103,12 @@ toggleButton.addEventListener("click", function () {
 
 setCurTab(CurrentTab.DISCORD);
 
-document.getElementById("saveBtn")!.addEventListener("click", function () {
+saveBtn.addEventListener("click", function () {
     var selectedLanguage = (
-        document.getElementById("language2") as HTMLInputElement
+        language2 as HTMLInputElement
     ).value;
     var selectedTheme: Theme = (
-        document.getElementById("themeOption") as HTMLSelectElement
+        themeOption as HTMLSelectElement
     ).value as Theme;
     if (selectedLanguage !== getLang() && selectedLanguage !== "unselected") {
         const expires = new Date("Fri, 31 Dec 9999 23:59:59 GMT").toUTCString();
@@ -141,7 +141,7 @@ async function blogTabHandler(): Promise<(HTMLDivElement | HTMLBRElement)[]> {
     });
 
     const blogTabChildren: (HTMLDivElement | HTMLBRElement)[] = [];
-    const blogTabBody = document.querySelector("#blogCard")!;
+    const blogTabBody = blogCard;
     blogTabBody.innerHTML = "";
     const loadingText = document.createElement("h1");
     loadingText.innerText = await getTranslation("base.loading");
@@ -253,8 +253,8 @@ async function viewBlog(title: string, content: string) {
     });
 
     // show the blog
-    document.querySelector("#homepage")!.appendChild(backBar);
-    document.querySelector("#homepage")!.appendChild(blogPage);
+    homepage.appendChild(backBar);
+    homepage.appendChild(blogPage);
 }
 
 document.querySelector('#mainbtn-2')!.addEventListener('click', async () => {
