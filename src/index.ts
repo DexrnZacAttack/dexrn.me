@@ -257,7 +257,7 @@ async function viewBlog(title: string, content: string) {
     homepage.appendChild(blogPage);
 }
 
-document.querySelector('#mainbtn-2')!.addEventListener('click', async () => {
+document.querySelector('#mainbtn2')!.addEventListener('click', async () => {
     await viewSinglePost("QMG");
 });
 document.querySelector('#blogTabButton')!.addEventListener('click', await blogTabHandler);

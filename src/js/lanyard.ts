@@ -420,7 +420,7 @@ async function handleActivity(data: LanyardAPI): Promise<void> {
     if (activityTimestamp)
       activityInfo!.appendChild(activityTimestamp);
 
-    const activityPathElement = document.querySelector("#activity-path") as HTMLDivElement;
+    const activityPathElement = document.querySelector("#activityPath") as HTMLDivElement;
     const activityCardPadding = parseInt(window.getComputedStyle(activityCard).padding, 10);
     const activityPathPaddingBottom = parseInt(window.getComputedStyle(activityPathElement).paddingBottom, 10);
 

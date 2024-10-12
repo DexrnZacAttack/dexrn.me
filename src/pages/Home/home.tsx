@@ -37,7 +37,7 @@ export default function Home() {
           </div>
           {/* <!-- MAIN CARD --> */}
           <Card id="mainCard" style={{width: "100%", borderTopLeftRadius: "0%", borderTopRightRadius: "0%"}}>
-            <div className="cardTitle" id="discord-path"></div>
+            <div className="cardTitle" id="discordPath"></div>
             <div className="user-profile">
               <div className="Profile-pic">
                           <img id="pfp" src={loader}/>
@@ -69,27 +69,27 @@ export default function Home() {
         </div>
         {/* <!-- DISCORD ACTIVITY CARD --> */}
         <Card className="activity" id="activityCard">
-          <div className="cardTitle" id="activity-path"></div>
+          <div className="cardTitle" id="activityPath"></div>
         </Card>
         {/* <!-- ABOUT ME CARD --> */}
         <Card id="aboutCard">
-          <div className="cardTitle" id="about-path"></div>
+          <div className="cardTitle" id="aboutPath"></div>
           <div className="about-me">
             <ul style={{listStyle: "none", padding: 0}}>
-              <li style={{listStyle: "none", padding: 0}} id="abm-1"></li>
-              <li style={{listStyle: "none", padding: 0}} id="abm-2"></li>
+              <li style={{listStyle: "none", padding: 0}} id="abm1"></li>
+              <li style={{listStyle: "none", padding: 0}} id="abm2"></li>
             </ul>
           </div>
         </Card>
         {/* <!-- LINKS CARD --> */}
         <Card id="linksCard">
-          <div className="cardTitle" id="stuff-path"></div>
+          <div className="cardTitle" id="stuffPath"></div>
           <div className="about-me">
             <div className="bio">
               {/* linkto is from the fade.ts, for showing an animation on click. */}
-              <button className="button buttonRedirect" data-linkto="LCETools/" id="mainbtn-3"></button>
-              <button className="button buttonRedirect" data-linkto="QMGInfo/" id="mainbtn-1"></button>
-              <button className="button" id="mainbtn-2"></button>
+              <button className="button buttonRedirect" data-linkto="LCETools/" id="mainbtn3"></button>
+              <button className="button buttonRedirect" data-linkto="QMGInfo/" id="mainbtn1"></button>
+              <button className="button" id="mainbtn2"></button>
     </div>
             </div>
           </Card>
@@ -100,7 +100,7 @@ export default function Home() {
             <div className="back" id="backbtn"></div>
           </TopCard>
           <Card id="settingsDoNotHide" style={{width: "auto", height: "350px"}}>
-            <div className="cardTitle" id="settings-path"></div>
+            <div className="cardTitle" id="settingsPath"></div>
             <div className="options"
               style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center"}}>
               <h3 id="languagetxt"></h3>

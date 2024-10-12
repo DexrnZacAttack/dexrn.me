@@ -153,18 +153,18 @@ function setLang(langFilePath: string): void {
   fetch(langFilePath)
     .then((response) => response.json())
     .then((data) => {
-      translateElement("activity-path", data.path.activity);
-      translateElement("discord-path", data.path.discord);
-      translateElement("steam-path", data.SteamPath);
-      translateElement("about-path", data.path.about);
-      translateElement("stuff-path", data.path.links);
-      translateElement("mainbtn-1", data.main.button1);
-      translateElement("mainbtn-2", data.main.button2);
-      translateElement("mainbtn-3", data.main.button3);
-      translateElement("abm-1", data.main.about.line1);
-      translateElement("abm-2", data.main.about.line2);
+      translateElement("activityPath", data.path.activity);
+      translateElement("discordPath", data.path.discord);
+      translateElement("steamPath", data.SteamPath);
+      translateElement("aboutPath", data.path.about);
+      translateElement("stuffPath", data.path.links);
+      translateElement("mainbtn1", data.main.button1);
+      translateElement("mainbtn2", data.main.button2);
+      translateElement("mainbtn3", data.main.button3);
+      translateElement("abm1", data.main.about.line1);
+      translateElement("abm2", data.main.about.line2);
       translateElement("saveBtn", data.settings.save);
-      translateElement("settings-path", data.path.settings);
+      translateElement("settingsPath", data.path.settings);
       translateElement("backbtn", data.base.back);
       translateElement("languagetxt", data.settings.language);
       translateElement("settingsTabButton", data.main.settings);
