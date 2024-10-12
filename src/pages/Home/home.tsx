@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import Card from "../../components/Card.js";
 import TopCard from "../../components/TopCard.js";
+import loader from "/src/assets/loader.gif";
+import loaderDark from "/src/assets/loader-dark.gif";
+import youtube from "/src/assets/icons/youtube.png";
+import discord from "/src/assets/icons/discord.svg";
+import github from "/src/assets/icons/github.svg";
+import twitter from "/src/assets/icons/twitter.png";
 
 async function loadHomeScript(): Promise<void> {
   await import("../../index.js");
@@ -15,8 +21,8 @@ export default function Home() {
     <>
       <div className="loadingScreen" id="loadingScreen">
         <div className="loading">
-          <img id="lightLoadingSpinner" src="/src/assets/loader.gif" alt="Loading..."/>
-          <img id="darkLoadingSpinner" src="/src/assets/loader-dark.gif" alt="Loading..."/>
+          <img id="lightLoadingSpinner" src={loader} alt="Loading..."/>
+          <img id="darkLoadingSpinner" src={loaderDark} alt="Loading..."/>
           <h1 className="loadingText hidden" id="loadingText"></h1>
           <div className="lBG"></div>
         </div>
@@ -34,7 +40,7 @@ export default function Home() {
             <div className="cardTitle" id="discord-path"></div>
             <div className="user-profile">
               <div className="Profile-pic">
-                          <img id="pfp" src="/src/assets/loader.gif"/>
+                          <img id="pfp" src={loader}/>
               </div>
               <div className="user-info">
                 <div id="username">Dexrn ZacAttack</div>
@@ -43,16 +49,16 @@ export default function Home() {
                 <div id="platforms"></div>
                 <div className="connections">
                   <a title="YouTube" href="https://youtube.com/@DZac">
-                    <img className="connection-icon" src="/src/assets/icons/youtube.png" alt="YouTube"/>
+                    <img className="connection-icon" src={youtube} alt="YouTube"/>
                   </a>
                   <a title="Discord" href="https://discord.com/users/485504221781950465/">
-                    <img className="connection-icon" src="/src/assets/icons/discord.svg" alt="Discord"/>
+                    <img className="connection-icon" src={discord} alt="Discord"/>
                   </a>
                   <a title="GitHub" href="https://github.com/DexrnZacAttack/">
-                    <img className="connection-icon" src="/src/assets/icons/github.svg" alt="GitHub"/>
+                    <img className="connection-icon" src={github} alt="GitHub"/>
                   </a>
                   <a title="Twitter" href="https://twitter.com/DexrnZacAttack/">
-                    <img className="connection-icon" src="/src/assets/icons/twitter.png" alt="Twitter"/>
+                    <img className="connection-icon" src={twitter} alt="Twitter"/>
                   </a>
                 </div>
               </div>
