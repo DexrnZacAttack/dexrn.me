@@ -105,7 +105,7 @@ setCurTab(CurrentTab.DISCORD);
 
 saveBtn.addEventListener("click", function () {
     var selectedLanguage = (
-        language2 as HTMLInputElement
+        language2
     ).value;
     var selectedTheme: Theme = (
         themeOption as HTMLSelectElement

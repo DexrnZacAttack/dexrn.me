@@ -25,8 +25,8 @@ declare interface LanyardAPI {
       active_on_discord_desktop: boolean;
       active_on_discord_mobile: boolean;
       listening_to_spotify: boolean;
-    };
-    success: boolean;
+      success: boolean;
+    }
 
   declare type LanyardActivity = LanyardActivityLike | LanyardActivity4;
 
