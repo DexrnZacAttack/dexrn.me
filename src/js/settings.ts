@@ -183,9 +183,9 @@ function setLang(langFilePath: string): void {
       translateElement("goBack", data.error.goBack);
       translateElement("output", data.qmghp.outputPlaceholder);
       translateElement("qmgrPath", data.path.qmgResearch);
-      translateElement("404msg", data.error.notFound);
+      translateElement("_404msg", data.error.notFound);
       translateElement("homebtn", data.base.goHome);
-      translateElement("403msg", data.error.forbidden);
+      translateElement("_403msg", data.error.forbidden);
       translateElement("selopt", data.settings.optionSelect);
       translateElement("selopt2", data.settings.optionSelect);
       translateElement("darkthmopt", data.settings.theme.dark);
