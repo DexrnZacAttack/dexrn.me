@@ -11,7 +11,7 @@
 // they can export functionality that can be called from the module that imports it.
 
 import "./js/settings.js"; // sets theme and lang
-import "./js/modules/msgbox.js"; // unused? not used yet, at least
+import MsgBox from "./components/MsgBox.js"; // unused? not used yet, at least
 import "./js/modules/common.js"; // common setup
 import "./js/lanyard.js"; // common setup
 // import "./js/steam.js"; // unused

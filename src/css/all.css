@@ -269,7 +269,12 @@ codeblock {
   background-color: var(--prim-reading-bg-color);
 }
 
-.msgbox {
+/*
+  This was `.msgbox` previously, it didn't
+  seem to match the component so I changed
+  it to the element selector.
+*/
+#msgbox {
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
