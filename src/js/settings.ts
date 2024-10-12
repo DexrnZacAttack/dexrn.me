@@ -85,13 +85,13 @@ const savedTheme = getThemeCookie("Theme");
 
 applyTheme(savedTheme);
 
-export function checkLang(syslang?: languages): void {
-  setLang(getLangFilePath(syslang));
+export async function checkLang(syslang?: languages): Promise<void> {
+  await setLang(getLangFilePath(syslang));
 }
 
 export function getLangFilePath(syslang?: languages): string {
   const lang: languages | undefined | null = getLang();
-  let langFilePath;
+  let langFilePath: string;
   if (lang) {
   switch (lang.toLowerCase()) {
     case "zh-cn":
@@ -149,10 +149,10 @@ export async function getTranslation(key: string): Promise<string> {
 type LangMappings = typeof import("../assets/lang/en-US.json") | typeof import("../assets/lang/zh-CN.json");
 
 // Dexrn: Localization! (Kinda janky.)
-function setLang(langFilePath: string): void {
-  fetch(langFilePath)
-    .then((response) => response.json() as Promise<LangMappings>)
-    .then((data) => {
+async function setLang(langFilePath: string): Promise<void> {
+  try {
+    const response: Response = await fetch(langFilePath);
+    const data: LangMappings = await response.json();
       translateElement(activityPath, data.path.activity);
       translateElement(discordPath, data.path.discord);
       translateElement(steamPath, data.SteamPath);
@@ -194,8 +194,9 @@ function setLang(langFilePath: string): void {
       translateElement(blogbtntxt, data.main.blog);
       translateElement(blogTabButton, data.main.blog);
       translateElement(stuff2Path, data.path.blog);
-    })
-    .catch((error) => console.error("Error whilst loading lang file:", error));
+  } catch (error) {
+    console.error("Error whilst loading lang file:", error);
+  }
 }
 
 export function getLocalization(langFilePath: string, code: string) {
