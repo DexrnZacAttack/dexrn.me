@@ -3,6 +3,7 @@
     "module": "NodeNext",
     "target": "ESNext",
     "isolatedModules": true,
+    "jsx": "react-jsx",
     "resolveJsonModule": true,
     "types": [
       "vite/client"
