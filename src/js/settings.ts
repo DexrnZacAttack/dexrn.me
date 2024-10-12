@@ -146,54 +146,54 @@ export async function getTranslation(key: string): Promise<string> {
     }
 }
 
-
+type LangMappings = typeof import("../assets/lang/en-US.json") | typeof import("../assets/lang/zh-CN.json");
 
 // Dexrn: Localization! (Kinda janky.)
 function setLang(langFilePath: string): void {
   fetch(langFilePath)
-    .then((response) => response.json())
+    .then((response) => response.json() as Promise<LangMappings>)
     .then((data) => {
-      translateElement("activityPath", data.path.activity);
-      translateElement("discordPath", data.path.discord);
-      translateElement("steamPath", data.SteamPath);
-      translateElement("aboutPath", data.path.about);
-      translateElement("stuffPath", data.path.links);
-      translateElement("mainbtn1", data.main.button1);
-      translateElement("mainbtn2", data.main.button2);
-      translateElement("mainbtn3", data.main.button3);
-      translateElement("abm1", data.main.about.line1);
-      translateElement("abm2", data.main.about.line2);
-      translateElement("saveBtn", data.settings.save);
-      translateElement("settingsPath", data.path.settings);
-      translateElement("backbtn", data.base.back);
-      translateElement("languagetxt", data.settings.language);
-      translateElement("settingsTabButton", data.main.settings);
-      translateElement("backNBT", data.backNBT);
-      translateElement("backbtn2", data.base.backAlt);
-      translateElement("qmghpPath", data.path.qmghp);
-      translateElement("lcetPath", data.path.lceTools);
-      translateElement("lcetSavePath", data.path.lceExtractor);
-      translateElement("lcetArcPath", data.path.arcExtractor);
-      translateElement("lceeNbtPath", data.path.lceNbt);
-      translateElement("lcetMsscmpPath", data.path.msscmpExtractor);
-      translateElement("lceSaveFileSelectBtn", data.lcetools.save.selectFile);
-      translateElement("msscmpfileselectbtn", data.lcetools.msscmp.selectFile);
-      translateElement("arcFileSelectBtn", data.lcetools.arc.selectFile);
-      translateElement("fileselectbtn", data.qmghp.selectFile);
-      translateElement("goBack", data.error.goBack);
-      translateElement("output", data.qmghp.outputPlaceholder);
-      translateElement("qmgrPath", data.path.qmgResearch);
-      translateElement("_404msg", data.error.notFound);
-      translateElement("homebtn", data.base.goHome);
-      translateElement("_403msg", data.error.forbidden);
-      translateElement("selopt", data.settings.optionSelect);
-      translateElement("selopt2", data.settings.optionSelect);
-      translateElement("darkthmopt", data.settings.theme.dark);
-      translateElement("lightthmopt", data.settings.theme.light);
-      translateElement("themetxt", data.settings.theme.string);
-      translateElement("blogbtntxt", data.main.blog);
-      translateElement("blogTabButton", data.main.blog);
-      translateElement("stuff2Path", data.path.blog);
+      translateElement(activityPath, data.path.activity);
+      translateElement(discordPath, data.path.discord);
+      translateElement(steamPath, data.SteamPath);
+      translateElement(aboutPath, data.path.about);
+      translateElement(stuffPath, data.path.links);
+      translateElement(mainbtn1, data.main.button1);
+      translateElement(mainbtn2, data.main.button2);
+      translateElement(mainbtn3, data.main.button3);
+      translateElement(abm1, data.main.about.line1);
+      translateElement(abm2, data.main.about.line2);
+      translateElement(saveBtn, data.settings.save);
+      translateElement(settingsPath, data.path.settings);
+      translateElement(backbtn, data.base.back);
+      translateElement(languagetxt, data.settings.language);
+      translateElement(settingsTabButton, data.main.settings);
+      translateElement(backNBT, data.backNBT);
+      translateElement(backbtn2, data.base.backAlt);
+      translateElement(qmghpPath, data.path.qmghp);
+      translateElement(lcetPath, data.path.lceTools);
+      translateElement(lcetSavePath, data.path.lceExtractor);
+      translateElement(lcetArcPath, data.path.arcExtractor);
+      translateElement(lceeNbtPath, data.path.lceNbt);
+      translateElement(lcetMsscmpPath, data.path.msscmpExtractor);
+      translateElement(lceSaveFileSelectBtn, data.lcetools.save.selectFile);
+      translateElement(msscmpfileselectbtn, data.lcetools.msscmp.selectFile);
+      translateElement(arcFileSelectBtn, data.lcetools.arc.selectFile);
+      translateElement(fileselectbtn, data.qmghp.selectFile);
+      translateElement(goBack, data.error.goBack);
+      translateElement(output, data.qmghp.outputPlaceholder);
+      translateElement(qmgrPath, data.path.qmgResearch);
+      translateElement(_404msg, data.error.notFound);
+      translateElement(homebtn, data.base.goHome);
+      translateElement(_403msg, data.error.forbidden);
+      translateElement(selopt, data.settings.optionSelect);
+      translateElement(selopt2, data.settings.optionSelect);
+      translateElement(darkthmopt, data.settings.theme.dark);
+      translateElement(lightthmopt, data.settings.theme.light);
+      translateElement(themetxt, data.settings.theme.string);
+      translateElement(blogbtntxt, data.main.blog);
+      translateElement(blogTabButton, data.main.blog);
+      translateElement(stuff2Path, data.path.blog);
     })
     .catch((error) => console.error("Error whilst loading lang file:", error));
 }
@@ -214,9 +214,6 @@ export function getLocalization(langFilePath: string, code: string) {
  * @param elementId Element to search for
  * @param value String to set said element's textContent
  */
-function translateElement(elementId: string, value: string): void {
-  const element = document.getElementById(elementId);
-  if (element) {
-    element.textContent = value;
-  } 
+function translateElement(element: Element, value: string): void {
+  element.textContent = value;
 }
