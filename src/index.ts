@@ -10,14 +10,14 @@
 // import-based function calls. Ideally modules don't add side-effects, rather
 // they can export functionality that can be called from the module that imports it.
 
-import "../js/settings.js"; // sets theme and lang
-import "../js/modules/msgbox.js"; // unused? not used yet, at least
-import "../js/modules/common.js"; // common setup
-import "../js/lanyard.js"; // common setup
+import "./js/settings.js"; // sets theme and lang
+import "./js/modules/msgbox.js"; // unused? not used yet, at least
+import "./js/modules/common.js"; // common setup
+import "./js/lanyard.js"; // common setup
 // import "./js/steam.js"; // unused
-import "../js/background.js"; // this sets an 'onload' handler
-import "../js/fade.js"; // this sets a 'DOMContentLoaded' handler
-import "../js/expandable.js"; // component setup
+import "./js/background.js"; // this sets an 'onload' handler
+import "./js/fade.js"; // this sets a 'DOMContentLoaded' handler
+import "./js/expandable.js"; // component setup
 
 doubleImportTest(new URL(import.meta.url).href);
 
@@ -135,10 +135,12 @@ async function viewSinglePost(title: string) {
         await viewBlog(blog.title, blog.body);
 }
 
-async function blogTabHandler() {
+async function blogTabHandler(): Promise<(HTMLDivElement | HTMLBRElement)[]> {
     document.querySelectorAll("#blogPostPreview").forEach(element => {
         element.remove()
     });
+
+    const blogTabChildren: (HTMLDivElement | HTMLBRElement)[] = [];
     const blogTabBody = document.querySelector("#blogCard")!;
     blogTabBody.innerHTML = "";
     const loadingText = document.createElement("h1");
@@ -169,8 +171,8 @@ async function blogTabHandler() {
             blogDate.className = "blogDate";
             blogElement.appendChild(blogTitle);
             blogElement.appendChild(blogDate);
-            blogTabBody.appendChild(blogElement);
-            blogTabBody.appendChild(document.createElement("br"));
+            blogTabChildren.push(blogElement);
+            blogTabChildren.push(document.createElement("br"));
             blogElement.addEventListener('click', async function () {
                 await viewBlog(blog.title, blog.body);
             });
@@ -181,6 +183,7 @@ async function blogTabHandler() {
     } else {
         loadingText.remove();
     }
+    return blogTabChildren;
 }
 
 interface elementVisibility {

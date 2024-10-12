@@ -26,7 +26,7 @@ export function getVer(type?: string): Version {
             return { "version": "1.2.20", "date": new Date(1728655681160)};
         case "default":
         default:
-            return { "version": "1.5.00", "date": new Date(1728655681160)};
+            return { "version": "1.6.00", "date": new Date(1728655681160)};
     }
 }
 
