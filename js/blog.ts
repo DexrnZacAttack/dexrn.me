@@ -46,10 +46,7 @@ export async function fetchBlogList(): Promise<Post[]> {
                 }
             })).json();
 
-            if (!response.ok) {
-                throw new Error(`${response.status}`);
-            }
-            const blogPost: Post = await response.json();
+            const blogPost: Post = await response;
             posts.push(blogPost);
         } catch (error) {
             console.error(`Couldn't get post 'https://dexrn.duckdns.org${post.postURL}'`, error);

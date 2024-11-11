@@ -52,10 +52,8 @@
       <div class="back" id="backsubbtn"></div>
       </topcard>
       <!-- backbtn for nbt card -->
-      <topcard
-        style="cursor: pointer;display:none;"
-        id="backNBTBtn">
-        <div class="back" id="backNBT"></div>
+      <topcard style="cursor: pointer;display:none;" id="backNBTBtn">
+        <div id="backNBT" class="back"></div>
       </topcard>
       <!-- NBT card -->
       <card id="nbtCard"
@@ -72,7 +70,7 @@
         <div class="center" id="saveCenter">
           <button class="button" id="CompModeBtn">Save type: Wii U, PS3, Xbox
             360 (Decompressed)</button>
-          <label for="saveFileInput" class="button2"
+          <label for="saveFileInput" class="button"
             id="lceSaveFileSelectBtn"></label>
           <input
             type="file"
@@ -88,9 +86,9 @@
       <h3>NOTE: Most if not all of these tools' UX & UI are unfinished.</h3>
       <h1>Select a tool</h1>
       </div>
-      <button id="saveTypeButton" class="button">Save extractor</button>
-      <button id="arcTypeButton" class="button">ARC extractor</button>
-      <button id="msscmpTypeButton" class="button">MSSCMP extractor</button>
+      <button id="saveTypeButton" class="button nogrow">Save extractor</button>
+      <button id="arcTypeButton" class="button nogrow">ARC extractor</button>
+      <button id="msscmpTypeButton" class="button nogrow">MSSCMP extractor</button>
       </card>
       <!-- msscmp card -->
       <card id="msscmpCard"
@@ -101,7 +99,7 @@
         <div id="msscmpFiles" class="basicContainer"></div>
         <div class="center" id="msscmpCenter">
           <button class="button" id="EndianButton">Auto Detect</button>
-          <label for="msscmpFileInput" class="button2"
+          <label for="msscmpFileInput" class="button"
             id="msscmpfileselectbtn"></label>
           <input
             type="file"
@@ -125,7 +123,7 @@
       <pre id="arcLog"></pre>
       <div id="arcFiles" class="basicContainer"></div>
       <div class="center" id="arcCenter">
-        <label for="arcFileInput" class="button2"
+        <label for="arcFileInput" class="button"
           id="arcFileSelectBtn"></label>
         <input
           type="file"
