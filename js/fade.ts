@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   buttons.forEach((button) => {
+    if (button.classList.contains("noLink"))
+      return;
+
     button.addEventListener("click", (e) => {
       e.preventDefault();
       handleClick(button);

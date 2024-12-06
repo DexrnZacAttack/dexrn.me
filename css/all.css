@@ -32,6 +32,7 @@ body, button {
   background-color: var(--prim-control-color);
   border-radius: 10px;
   border: var(--prim-border-size) solid var(--prim-border-color);
+  cursor: pointer;
 }
 
 .blogTitlePreview {
@@ -182,9 +183,21 @@ body {
 
 /* Button pseudo classes */
 
+
 .button:hover {
   box-shadow: 0 0 32px 0 var(--prim-hover-color);
   transform: scale(1.1);
+}
+
+.button.nogrow:hover {
+  box-shadow: 0 0 32px 0 var(--prim-hover-color);
+  transform: none !important;
+}
+
+.button:active {
+  box-shadow: 0 0 0px 0 var(--prim-hover-color);
+  background-color: var(--prim-hover-color);
+  transform: scale(0.9) !important;
 }
 
 .button2:hover {
@@ -213,11 +226,6 @@ body {
 
 .back:hover {
   opacity: 1;
-}
-
-.button:active {
-  box-shadow: 0 0 32px 0 var(--prim-hover-color);
-  transform: scale(0.8);
 }
 
 .buttonalt:active {
@@ -412,7 +420,7 @@ a:hover {
   color: var(--prim-text-color);
   background-color: transparent;
   backdrop-filter: blur(1000px);
-  transition: transform 0.3s ease;
+  transition: box-shadow 0.2s ease, transform 0.1s ease, background-color 0.3s ease;
   padding: 12px 20px;
   text-align: center;
   text-decoration: none;

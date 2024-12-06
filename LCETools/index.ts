@@ -14,15 +14,20 @@ import "../js/modules/common.js"; // common setup
 
 import { stringify } from "nbtify";
 import { compressionModes, endianButtonSelect, readARCFile, readMSSCMPFile, switchCompressionMode, switchMsscmpEndian } from '../js/LCEE-Core.js';
-import { loadBG } from '../js/background.js';
+import { loadBG, showError } from '../js/background.js';
 import { setVer } from '../js/ver.js';
 import { readSaveFile } from "../js/LCEE-Core.js";
 
 import type { NBTData } from "nbtify";
 import { doubleImportTest, getAllElements, GetType } from "../js/modules/common.js";
-import { getTranslation } from "../js/settings.js";
 
 doubleImportTest(new URL(import.meta.url).href);
+
+let currentCard = "";
+
+if (compressionModes == undefined) {
+  showError("compressionModes is undefined! If you are in a dev env, you need to restart Vite.");
+}
 
 let selectedCompressionMode = compressionModes.commonBig;
 function selectCompressionMode(): void {
@@ -59,11 +64,6 @@ document.querySelector('#CompModeBtn')!.addEventListener('click', selectCompress
 document.querySelector('#EndianButton')!.addEventListener('click', selectEndianness);
 document.querySelector('#backNBTBtn')!.addEventListener('click', hideNBTCard);
 document.querySelector('#backSubCard')!.addEventListener('click', showSelectCard);
-(document.querySelector('#backNBT')! as HTMLDivElement).innerText = await getTranslation("base.back");
-(document.querySelector('#backsubbtn')! as HTMLDivElement).innerText = await getTranslation("base.back");
-(document.querySelector("#saveLog") as HTMLDivElement).innerText = await getTranslation("lcetools.save.outputPlaceholder");
-(document.querySelector("#arcLog") as HTMLDivElement).innerText = await getTranslation("lcetools.arc.outputPlaceholder");
-(document.querySelector("#msscmpLog") as HTMLDivElement).innerText = await getTranslation("lcetools.msscmp.outputPlaceholder");
 loadBG(true);
 setVer("le");
 
@@ -78,6 +78,7 @@ function selectSG() {
   (document.querySelector("#backSubCard") as HTMLDivElement).style.display = "flex";
   (document.querySelector("#lceSaveCard") as HTMLDivElement).style.display = "flex";
   (document.querySelector("#creditsCard") as HTMLDivElement).style.display = "flex";
+  currentCard = "lceSaveCard";
 }
 
 function selectMSSCMP() {
@@ -89,6 +90,7 @@ function selectMSSCMP() {
   });
   (document.querySelector("#backSubCard") as HTMLDivElement).style.display = "flex";
   (document.querySelector("#msscmpCard") as HTMLDivElement).style.display = "flex";
+  currentCard = "msscmpCard";
 }
 
 function selectARC() {
@@ -100,6 +102,7 @@ function selectARC() {
   });
   (document.querySelector("#backSubCard") as HTMLDivElement).style.display = "flex";
   (document.querySelector("#arcCard") as HTMLDivElement).style.display = "flex";
+  currentCard = "arcCard";
 }
 
 document.querySelector('#saveTypeButton')!.addEventListener('click', selectSG);
@@ -108,20 +111,20 @@ document.querySelector('#msscmpTypeButton')!.addEventListener('click', selectMSS
 
 export function showNBTCard(data: NBTData | undefined): void {
     if (data == undefined)
-        throw new Error("Data is undefined!");
+      throw new Error("Data is undefined!");
 
-        document.getElementById("backSubCard")!.style.display = "none";
-        document.getElementById("lceSaveCard")!.style.display = "none";
-        document.getElementById("nbtCard")!.style.display = "flex";
-        document.getElementById("backNBTBtn")!.style.display = "block";
-        document.getElementById("nbtData")!.innerText = stringify(data, { space: 2 });
+      document.getElementById("backSubCard")!.style.display = "none";
+      document.getElementById(currentCard)!.style.display = "none";
+      document.getElementById("nbtCard")!.style.display = "flex";
+      document.getElementById("backNBTBtn")!.style.display = "block";
+      document.getElementById("nbtData")!.innerText = stringify(data, { space: 2 });
 }
 
 export function hideNBTCard(): void {
     if (document.getElementById("nbtCard")!.style.display !== "none") {
         document.getElementById("backNBTBtn")!.style.display = "none";
         document.getElementById("backSubCard")!.style.display = "flex";
-        document.getElementById("lceSaveCard")!.style.display = "flex";
+        document.getElementById(currentCard)!.style.display = "flex";
         document.getElementById("nbtCard")!.style.display = "none";
     }
 }

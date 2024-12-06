@@ -6,7 +6,7 @@
  * Licensed under the MIT License. See LICENSE file for details.
 */
 
-import {checkLang} from "./settings.js";
+import { setLang } from "./settings.js";
 import { getVer } from "./ver.js";
 
 const bgElement: HTMLDivElement = document.querySelector(".bg")!;
@@ -67,6 +67,15 @@ enum loadingCode {
     OTHER_FAIL
 }
 
+export function showError(str: string) {
+    try {
+        (document.getElementById("lightLoadingSpinner")!).style.display = "none";
+        (document.getElementById("darkLoadingSpinner")!).style.display = "none";
+    } catch {}
+    showLoadingText();
+    setLoadingText(str);
+}
+
 async function beginLoading(): Promise<loadingCode> {
     const bg = new Image();
     bg.src = bgElement.style.backgroundImage.slice(5, -2);
@@ -74,30 +83,30 @@ async function beginLoading(): Promise<loadingCode> {
     setLoadingText("Translating...");
     let localizationLoad: Promise<void>;
     try {
-        localizationLoad = Promise.resolve(checkLang());
+        localizationLoad = Promise.resolve(setLang());
     } catch (error) {
         console.error(error);
         return loadingCode.LOCALIZATION_FAIL;
     }
 
     setLoadingText("Loading background...");
-    const imageLoad = new Promise<loadingCode>((resolve) => {
+    const imageLoad = new Promise<loadingCode>((resolve, reject) => {
         bg.onload = () => resolve(loadingCode.SUCCESS);
-        bg.onerror = () => resolve(loadingCode.BG_FAIL);
+        bg.onerror = () => reject(loadingCode.BG_FAIL);
+        bg.onabort = () => reject(loadingCode.BG_FAIL);
     });
 
     const result = await Promise.allSettled([localizationLoad, imageLoad]);
 
     if (result[0].status === 'rejected') {
-        setLoadingText('Failed to load the translations, try refreshing the page.');
+        showError('Failed to load the translations, try refreshing the page.');
         return loadingCode.LOCALIZATION_FAIL;
     }
 
     if (result[1].status === 'fulfilled')
         return result[1].value;
     else
-        setLoadingText('Failed to load the background, try refreshing the page.');
-
+    showError('Failed to load the background, try refreshing the page.\nIf that doesn\'t work, then your system is likely not resolving the domain (dexrn.duckdns.org) correctly, try going to this site directly until it loads.');
     return loadingCode.OTHER_FAIL;
 }
 
@@ -128,7 +137,7 @@ export async function loadBG(shouldLoadBg: boolean | Event): Promise<void> {
             }, 1000);
         
             holdTimeout = setTimeout(() => {
-                setLoadingText("Loading skipped.");
+                showError("Loading skipped.");
                 clearInterval(countdownInterval);
                 fadeLoadingScreen();
                 document.removeEventListener('touchstart', touch); 
@@ -161,6 +170,7 @@ export async function loadBG(shouldLoadBg: boolean | Event): Promise<void> {
                 }
             })
         } else {
+            showError("Failed to find the background element (.bg), try refreshing the page.");
             throw new ReferenceError("Failed to find the background element (.bg), try refreshing the page.");
         }
     } else {

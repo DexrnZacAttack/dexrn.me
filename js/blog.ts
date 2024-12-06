@@ -39,17 +39,13 @@ export async function fetchBlogList(): Promise<Post[]> {
         const post: PostInfo = postName[Object.keys(postName)[0]!];
         
         try {
-            const response = await (await fetch(`https://dexrn.duckdns.org${post.postURL}`, {
+            const blogPost = await (await fetch(`https://dexrn.duckdns.org${post.postURL}`, {
                 method: "GET", 
                 headers: {
                     "dzVersion": `${curVer.version};${curVer.date.getTime()}`
                 }
-            })).json();
+            })).json() as Post;
 
-            if (!response.ok) {
-                throw new Error(`${response.status}`);
-            }
-            const blogPost: Post = await response.json();
             posts.push(blogPost);
         } catch (error) {
             console.error(`Couldn't get post 'https://dexrn.duckdns.org${post.postURL}'`, error);

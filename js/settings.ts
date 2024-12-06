@@ -6,21 +6,71 @@
  * Licensed under the MIT License. See LICENSE file for details.
 */
 
-import langEN from "../assets/lang/en-US.json?url";
-import langCN from "../assets/lang/zh-CN.json?url";
+import langEN from "../assets/lang/en-US.json";
+import langCN from "../assets/lang/zh-CN.json";
 
-export type Theme = "unselectedtheme" | "default-light" | "default-dark";
+export type Theme = undefined | "default-light" | "default-dark";
+export type Language = undefined | "en-US" | "zh-CN";
 
-type languages = "en-US" | "zh-CN";
+export class Settings {
+  public language: Language;
+  public theme: Theme;
+  public static readonly instance = Settings.load();
 
-export function setTheme(theme: "default-light" | "default-dark") {
-  var expirationDate = new Date("Fri, 31 Dec 9999 23:59:59 GMT");
-  document.cookie = `Theme=${theme}; expires=${expirationDate.toUTCString()}; path=/`;
+  constructor(language: Language, theme: Theme) {
+    this.language = language;
+    this.theme = theme;
+  }
 
-  applyTheme(theme);
+  /** Loads all settings from Local Storage */
+  public static load(): Settings {
+    return new Settings(
+      localStorage.getItem("language") as Language || navigator.language as Language,
+      localStorage.getItem("theme") as Theme
+    )
+  }
+
+  /** Sets all settings in Local Storage */
+  public set(): void {
+    Object.keys(this).forEach(field => {
+      localStorage.setItem(field, this[field as keyof this] as string);
+    });
+  }
+
+  /** Sets a setting in Local Storage */
+  public setSetting<S extends keyof this>(setting: S): void {
+    if (!(setting in this))
+      throw new Error(`Setting ${setting as string} was not found.`);
+
+    localStorage.setItem(setting as string, this[setting as keyof this] as string);
+  }
+
+  /** Loads a setting from Local Storage */
+  public loadSetting<S extends keyof this>(setting: S): void {
+    const val = localStorage.getItem(setting as string);
+    if (!val)
+      throw new Error(`Setting ${setting as string} does not exist in the browser's storage.`);
+
+    if (!(setting in this))
+      throw new Error(`Setting ${setting as string} was not found.`);
+
+    (this as any)[setting] = val;
+  }
 }
 
-function applyTheme(theme: Theme): void {
+export let lang = getLang(Settings.instance.language);
+
+export function getLang(lang: Language) {
+  switch (lang) {
+    default:
+    case "en-US":
+      return langEN;
+    case "zh-CN":
+      return langCN;
+  }
+}
+
+export function applyTheme(theme: Theme): void {
   const root = document.documentElement;
   switch (theme) {
     case "default-light":
@@ -69,154 +119,35 @@ function applyTheme(theme: Theme): void {
   }
 }
 
-export function getThemeCookie<K extends string>(name: K): K extends "Theme" ? Theme : string {
-  const cookies = document.cookie.split(";");
-  for (const cookie of cookies) {
-    const [cookieName, cookieValue] = cookie.trim().split("=");
-    if (cookieName === name) {
-      // @ts-expect-error - type inference, TS overloads would work better to solve this
-      return cookieValue;
-    }
-  }
-  return "unselectedtheme";
-}
-
-const savedTheme = getThemeCookie("Theme");
-
-applyTheme(savedTheme);
-
-export function checkLang(syslang?: languages): void {
-  setLang(getLangFilePath(syslang));
-}
-
-export function getLangFilePath(syslang?: languages): string {
-  const lang: languages | undefined | null = getLang();
-  let langFilePath;
-  if (lang) {
-  switch (lang.toLowerCase()) {
-    case "zh-cn":
-      langFilePath = langCN;
-      break;
-    case "en-us":
-    default:
-      langFilePath = langEN;
-      break;
-  }} else if (syslang) {
-    switch (syslang.toLowerCase()) {
-      case "zh-cn":
-        langFilePath = langCN;
-        break;
-      case "en-us":
-      default:
-        langFilePath = langEN;
-        break;
-    }} else {
-      langFilePath = langEN;
-    }
-  return langFilePath;
-}
-
-
-export function getLang(): languages | undefined | null {
-  const cookies = document.cookie.split(";");
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split("=");
-    if (name === "lang") {
-      return value as languages;
-    }
-  } 
-  return null;
+export function loadSettings() {
+  lang = getLang(Settings.instance.language)
+  setLang();
+  applyTheme(Settings.instance.theme);
 }
 
 export async function getTranslation(key: string): Promise<string> {
-    const langPath = getLangFilePath();
     try {
-        const response = await fetch(langPath);
-        if (!response.ok) {
-            return "fetch error";
-        }
-        const data = await response.json();
         function getNested(obj: any, path: string): any {
             return path.split('.').reduce((acc, part) => acc && acc[part], obj);
         }
-        const translation = getNested(data, key);
+        const translation = getNested(lang, key);
         return translation ? translation.toString() : `${key} (UNLOCALIZED)`;
     } catch (error) {
         return 'translation list error';
     }
 }
 
-
-
 // Dexrn: Localization! (Kinda janky.)
-function setLang(langFilePath: string): void {
-  fetch(langFilePath)
-    .then((response) => response.json())
-    .then((data) => {
-      translateElement("activity-path", data.path.activity);
-      translateElement("discord-path", data.path.discord);
-      translateElement("steam-path", data.SteamPath);
-      translateElement("about-path", data.path.about);
-      translateElement("stuff-path", data.path.links);
-      translateElement("mainbtn-1", data.main.button1);
-      translateElement("mainbtn-2", data.main.button2);
-      translateElement("mainbtn-3", data.main.button3);
-      translateElement("abm-1", data.main.about.line1);
-      translateElement("abm-2", data.main.about.line2);
-      translateElement("saveBtn", data.settings.save);
-      translateElement("settings-path", data.path.settings);
-      translateElement("backbtn", data.base.back);
-      translateElement("languagetxt", data.settings.language);
-      translateElement("settingsTabButton", data.main.settings);
-      translateElement("backNBT", data.backNBT);
-      translateElement("backbtn2", data.base.backAlt);
-      translateElement("qmghp-path", data.path.qmghp);
-      translateElement("lcet-path", data.path.lceTools);
-      translateElement("lcet-save-path", data.path.lceExtractor);
-      translateElement("lcet-arc-path", data.path.arcExtractor);
-      translateElement("lcee-nbt-path", data.path.lceNbt);
-      translateElement("lcet-msscmp-path", data.path.msscmpExtractor);
-      translateElement("lceSaveFileSelectBtn", data.lcetools.save.selectFile);
-      translateElement("msscmpfileselectbtn", data.lcetools.msscmp.selectFile);
-      translateElement("arcFileSelectBtn", data.lcetools.arc.selectFile);
-      translateElement("fileselectbtn", data.qmghp.selectFile);
-      translateElement("goBack", data.error.goBack);
-      translateElement("output", data.qmghp.outputPlaceholder);
-      translateElement("qmgr-path", data.path.qmgResearch);
-      translateElement("404msg", data.error.notFound);
-      translateElement("homebtn", data.base.goHome);
-      translateElement("403msg", data.error.forbidden);
-      translateElement("selopt", data.settings.optionSelect);
-      translateElement("selopt2", data.settings.optionSelect);
-      translateElement("darkthmopt", data.settings.theme.dark);
-      translateElement("lightthmopt", data.settings.theme.light);
-      translateElement("themetxt", data.settings.theme.string);
-      translateElement("blogbtntxt", data.main.blog);
-      translateElement("blogTabButton", data.main.blog);
-      translateElement("stuff2-path", data.path.blog);
-    })
-    .catch((error) => console.error("Error whilst loading lang file:", error));
-}
-
-export function getLocalization(langFilePath: string, code: string) {
-  fetch(langFilePath)
-  .then((response) => response.json())
-  .then((data) => {
-    if (data[code]) {
-      return data[code];
-    }
-  })
-  .catch((error) => console.error("Error whilst loading lang file:", error));
-}
-
-/**
- * Sets the text of the element to the string given.
- * @param elementId Element to search for
- * @param value String to set said element's textContent
- */
-function translateElement(elementId: string, value: string): void {
-  const element = document.getElementById(elementId);
-  if (element) {
-    element.textContent = value;
-  } 
+export function setLang(): void {
+      document.querySelectorAll("[data-tlkey]").forEach(e => {
+        let key = e.getAttribute('data-tlkey')!;
+        // start off as the entire lang obj
+        let translation = lang;
+        // traverse until we hit the final translation
+        for (let part of key.split('.')) {
+            translation = (translation as any)[part] || key;
+        }
+        // eeeee
+        e.textContent = translation as unknown as string;
+      })
 }
