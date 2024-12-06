@@ -10,7 +10,7 @@ import "../js/settings.js"; // sets theme and lang
 import "../js/background.js"; // this sets an 'onload' handler
 
 import { loadBG } from "../js/background.js";
-import { checkLang } from "../js/settings.js";
+import { loadSettings } from "../js/settings.js";
 
 loadBG(false);
-checkLang();
+loadSettings();

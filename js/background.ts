@@ -6,7 +6,7 @@
  * Licensed under the MIT License. See LICENSE file for details.
 */
 
-import {checkLang} from "./settings.js";
+import { setLang } from "./settings.js";
 import { getVer } from "./ver.js";
 
 const bgElement: HTMLDivElement = document.querySelector(".bg")!;
@@ -83,7 +83,7 @@ async function beginLoading(): Promise<loadingCode> {
     setLoadingText("Translating...");
     let localizationLoad: Promise<void>;
     try {
-        localizationLoad = Promise.resolve(checkLang());
+        localizationLoad = Promise.resolve(setLang());
     } catch (error) {
         console.error(error);
         return loadingCode.LOCALIZATION_FAIL;
@@ -109,8 +109,7 @@ async function beginLoading(): Promise<loadingCode> {
         return result[1].value;
     else
         showError('Failed to load the background, try refreshing the page.\nIf that doesn\'t work, then your system is likely not resolving the domain (dexrn.duckdns.org) correctly, try going to this site directly until it loads.');
-
-    return loadingCode.OTHER_FAIL;
+        return loadingCode.OTHER_FAIL;
 }
 
 const fadeLoadingScreen = function () {

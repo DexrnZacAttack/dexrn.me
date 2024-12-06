@@ -20,7 +20,6 @@ import { readSaveFile } from "../js/LCEE-Core.js";
 
 import type { NBTData } from "nbtify";
 import { doubleImportTest, getAllElements, GetType } from "../js/modules/common.js";
-import { getTranslation } from "../js/settings.js";
 
 doubleImportTest(new URL(import.meta.url).href);
 
@@ -65,11 +64,6 @@ document.querySelector('#CompModeBtn')!.addEventListener('click', selectCompress
 document.querySelector('#EndianButton')!.addEventListener('click', selectEndianness);
 document.querySelector('#backNBTBtn')!.addEventListener('click', hideNBTCard);
 document.querySelector('#backSubCard')!.addEventListener('click', showSelectCard);
-(document.querySelector('#backNBT')! as HTMLDivElement).innerText = await getTranslation("base.back");
-(document.querySelector('#backsubbtn')! as HTMLDivElement).innerText = await getTranslation("base.back");
-(document.querySelector("#saveLog") as HTMLDivElement).innerText = await getTranslation("lcetools.save.outputPlaceholder");
-(document.querySelector("#arcLog") as HTMLDivElement).innerText = await getTranslation("lcetools.arc.outputPlaceholder");
-(document.querySelector("#msscmpLog") as HTMLDivElement).innerText = await getTranslation("lcetools.msscmp.outputPlaceholder");
 loadBG(true);
 setVer("le");
 

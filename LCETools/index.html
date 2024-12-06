@@ -42,36 +42,38 @@
         style="cursor: pointer"
         id="back"
         linkto="../">
-        <div class="back" id="backbtn"></div>
+        <div class="back" data-tlkey="base.back"></div>
       </topcard>
       <!-- backbtn for subcard card -->
       <topcard
       style="cursor: pointer;display: none;"
       id="backSubCard"
       linkto="../">
-      <div class="back" id="backsubbtn"></div>
+      <div class="back" data-tlkey="base.back"></div>
       </topcard>
       <!-- backbtn for nbt card -->
-      <topcard style="cursor: pointer;display:none;" id="backNBTBtn">
-        <div id="backNBT" class="back"></div>
+      <topcard
+        style="cursor: pointer;display:none;"
+        id="backNBTBtn">
+        <div class="back" data-tlkey="lang.backNBT"></div>
       </topcard>
       <!-- NBT card -->
       <card id="nbtCard"
         style="height: 500px;display:none;flex-direction:column;">
-        <div class="cardTitle" id="lcee-nbt-path"></div>
+        <div class="cardTitle" data-tlkey="path.lceNbt"></div>
         <pre id="nbtData" style="overflow-y:auto;overflow-x:auto;"></pre>
       </card>
       <!-- save card -->
       <card id="lceSaveCard"
         style="height: 500px;display:none;flex-direction:column;">
-        <div class="cardTitle" id="lcet-save-path"></div>
-        <pre id="saveLog"></pre>
+        <div class="cardTitle" data-tlkey="path.lceExtractor"></div>
+        <pre id="saveLog" data-tlkey="lcetools.save.outputPlaceholder"></pre>
         <div id="files"></div>
         <div class="center" id="saveCenter">
           <button class="button" id="CompModeBtn">Save type: Wii U, PS3, Xbox
             360 (Decompressed)</button>
           <label for="saveFileInput" class="button"
-            id="lceSaveFileSelectBtn"></label>
+            id="lceSaveFileSelectBtn" data-tlkey="lcetools.save.selectFile"></label>
           <input
             type="file"
             id="saveFileInput"
@@ -81,7 +83,7 @@
       <!-- file type select card -->
       <card id="typeSelectCard"
       style="height: 500px;display:flex;flex-direction:column;">
-      <div class="cardTitle" id="lcet-path"></div>
+      <div class="cardTitle" data-tlkey="path.lceTools"></div>
       <div class="center" style="margin-top: unset !important">
       <h3>NOTE: Most if not all of these tools' UX & UI are unfinished.</h3>
       <h1>Select a tool</h1>
@@ -93,14 +95,14 @@
       <!-- msscmp card -->
       <card id="msscmpCard"
         style="height: 500px;display:none;flex-direction:column;">
-        <div class="cardTitle" id="lcet-msscmp-path"></div>
+        <div class="cardTitle" data-tlkey="path.msscmpExtractor"></div>
         <h3>YES THIS UI SUCKS, I WILL (hopefully) FIX THIS SOON™</h3> <!-- this whole update contains a lot of garbage code -->
-        <pre id="msscmpLog"></pre>
+        <pre id="msscmpLog" data-tlkey="lcetools.msscmp.outputPlaceholder"></pre>
         <div id="msscmpFiles" class="basicContainer"></div>
         <div class="center" id="msscmpCenter">
           <button class="button" id="EndianButton">Auto Detect</button>
           <label for="msscmpFileInput" class="button"
-            id="msscmpfileselectbtn"></label>
+            id="msscmpfileselectbtn" data-tlkey="lcetools.msscmp.selectFile"></label>
           <input
             type="file"
             id="msscmpFileInput"
@@ -119,12 +121,12 @@
       <!-- arc card -->
       <card id="arcCard"
       style="height: 500px;display:none;flex-direction:column;">
-      <div class="cardTitle" id="lcet-arc-path"></div>
-      <pre id="arcLog"></pre>
+      <div class="cardTitle" data-tlkey="path.arcExtractor"></div>
+      <pre id="arcLog" data-tlkey="lcetools.arc.outputPlaceholder"></pre>
       <div id="arcFiles" class="basicContainer"></div>
       <div class="center" id="arcCenter">
         <label for="arcFileInput" class="button"
-          id="arcFileSelectBtn"></label>
+          id="arcFileSelectBtn" data-tlkey="lcetools.arc.selectFile"></label>
         <input
           type="file"
           id="arcFileInput"

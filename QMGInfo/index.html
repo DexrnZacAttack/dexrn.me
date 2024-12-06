@@ -43,13 +43,13 @@
           linkto="../"
           
         >
-          <div class="back" id="backbtn"></div>
+          <div class="back" data-tlkey="base.back"></div>
         </topcard>
         <card style="height: 500px;display:flex;flex-direction:column;">
-          <div class="cardTitle" id="qmghp-path"></div>
-          <pre id="output" style="overflow-y:auto;overflow-x:auto;"></pre>
+          <div class="cardTitle" data-tlkey="path.qmghp"></div>
+          <pre id="output" data-tlkey="qmghp.outputPlaceholder" style="overflow-y:auto;overflow-x:auto;"></pre>
           <div class="center">
-            <label for="fileInput" class="button noLink" id="fileselectbtn"></label>
+            <label for="fileInput" class="button noLink" id="fileselectbtn" data-tlkey="qmghp.selectFile"></label>
             <input
               type="file"
               id="fileInput"

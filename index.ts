@@ -23,19 +23,22 @@ doubleImportTest(new URL(import.meta.url).href);
 
 import {loadBG, startLoadingTimer} from "./js/background.js";
 import {
+    Language,
+    Settings,
     Theme,
-    checkLang,
-    getLang,
-    getThemeCookie,
+    applyTheme,
+    // getThemeCookie,
     getTranslation,
-    setTheme,
+    loadSettings
 } from "./js/settings.js";
 import {CurrentTab, curTab, setCurTab} from "./js/tabs.js";
 import {setVer} from "./js/ver.js";
 import {fetchBlogList} from "./js/blog.js";
-import {marked, parse, Renderer} from "marked";
+import {marked, parse, Renderer, Token} from "marked";
 import {v1} from "uuid";
 import {getAllElements, GetType, doubleImportTest} from "./js/modules/common.js";
+
+let settings = Settings.instance;
 
 marked.setOptions({
     gfm: true,
@@ -44,7 +47,9 @@ marked.setOptions({
 
 const renderer = new Renderer();
 
-renderer.heading = (text: string, level: number) => {
+renderer.heading = ({ tokens, depth }: { tokens: Token[], depth: number }) => {
+    const text = tokens.map(token => token.type === 'text' ? token.text : '').join('');
+    const level = depth + 1;
     if (level === 1 || level === 2) {
         return `<h${level} style="margin-bottom:0;">${text}</h${level}><hr />`;
     }
@@ -57,6 +62,8 @@ marked.setOptions({
 
 function init() {
     // thx actuallyaridan
+    applyTheme(settings.theme);
+    settings.set();
     startLoadingTimer();
     loadBG(true);
 }
@@ -104,26 +111,10 @@ toggleButton.addEventListener("click", function () {
 setCurTab(CurrentTab.DISCORD);
 
 document.getElementById("saveBtn")!.addEventListener("click", function () {
-    var selectedLanguage = (
-        document.getElementById("language2") as HTMLInputElement
-    ).value;
-    var selectedTheme: Theme = (
-        document.getElementById("themeOption") as HTMLSelectElement
-    ).value as Theme;
-    if (selectedLanguage !== getLang() && selectedLanguage !== "unselected") {
-        const expires = new Date("Fri, 31 Dec 9999 23:59:59 GMT").toUTCString();
-        document.cookie =
-            "lang=" + selectedLanguage + "; expires=" + expires + "; path=/";
-        checkLang();
-    } else {
-    }
-    if (
-        selectedTheme !== getThemeCookie("Theme") &&
-        selectedTheme !== "unselectedtheme"
-    ) {
-        setTheme(selectedTheme);
-    } else {
-    }
+    settings.language = ((document.getElementById("language2") as HTMLInputElement).value as Language);
+    settings.theme = ((document.getElementById("themeOption") as HTMLSelectElement).value as Theme);
+    settings.set();
+    loadSettings();
 });
 
 setVer("default");

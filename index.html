@@ -44,14 +44,14 @@
       <div class="mainCardsContainer" id="mainCardsContainer" style="display:flex;flex-direction: column;">
         <div id="tabs" style="display:flex;flex-direction: row;">
           <button class="tabButtonClicked" id="discordTabButton" onclick="changeMainCard('Discord');">Discord</button>
-          <button class="tabbutton" id="blogTabButton" onclick="changeMainCard('Blog');" style="margin-left:10px;">Blog</button>
+          <button class="tabbutton" id="blogTabButton" onclick="changeMainCard('Blog');" style="margin-left:10px;" data-tlkey="main.blog"></button>
           <!-- <button class="tabbutton" id="steambutton" style="align-self: baseline; margin-left:2%;" onclick="changeMainCard('Steam');">Steam</button> -->
-          <button class="tabbutton" id="settingsTabButton" style="margin-right:0;margin-left:auto;"></button>
+          <button class="tabbutton" id="settingsTabButton" data-tlkey="main.settings" style="margin-right:0;margin-left:auto;"></button>
         </div>
         <!-- MAIN CARD -->
             <card id="mainCard"
                 style="width: 100%; border-top-left-radius: 0%; border-top-right-radius: 0%;">
-          <div class="cardTitle" id="discord-path"></div>
+          <div class="cardTitle" data-tlkey="path.discord"></div>
           <div class="user-profile">
             <div class="Profile-pic">
                         <img id="pfp" src="assets/loader.gif" alt>
@@ -85,52 +85,52 @@
       </div>
       <!-- DISCORD ACTIVITY CARD -->
       <card class="activity" id="activityCard">
-        <div class="cardTitle" id="activity-path"></div>
+        <div class="cardTitle" data-tlkey="path.activity" id="activity-path"></div>
       </card>
       <!-- ABOUT ME CARD -->
       <card id="aboutCard">
-        <div class="cardTitle" id="about-path"></div>
+        <div class="cardTitle" data-tlkey="path.about"></div>
         <div class="about-me">
           <ul style="list-style: none;padding:0">
-            <li style="list-style: none;padding:0" id="abm-1"></li>
-            <li style="list-style: none;padding:0" id="abm-2"></li>
+            <li style="list-style: none;padding:0" data-tlkey="main.about.line1"></li>
+            <li style="list-style: none;padding:0" data-tlkey="main.about.line2"></li>
           </ul>
         </div>
       </card>
       <!-- LINKS CARD -->
       <card id="linksCard">
-        <div class="cardTitle" id="stuff-path"></div>
+        <div class="cardTitle" data-tlkey="path.links"></div>
         <div class="about-me">
           <div class="bio">
-            <button class="button buttonRedirect" linkto="LCETools/" id="mainbtn-3"></button>
-            <button class="button buttonRedirect" linkto="QMGInfo/" id="mainbtn-1"></button>
-            <button class="button" id="mainbtn-2"></button>
-</div>
+            <button class="button buttonRedirect" linkto="LCETools/" data-tlkey="main.button3"></button>
+            <button class="button buttonRedirect" linkto="QMGInfo/" data-tlkey="main.button1"></button>
+            <button class="button" id="mainbtn-2" data-tlkey="main.button2"></button>
           </div>
-        </card>
-            <!-- SETTINGS CARD -->
+        </div>
+      </card>
+      <!-- SETTINGS CARD -->
       <div id="settings" style="height: 350px;">
         <!-- why does this break with <topcard> instead of <div class="topcard"> -->
         <div class="topcard" id="settingsclose" style="cursor: pointer; width: 300px; margin-bottom: 8px;">
-          <div class="back" id="backbtn"></div>
+          <div class="back" data-tlkey="base.back"></div>
         </div>
         <card id="settingsDoNotHide" style="width: 300px !important; height: 350px;">
-          <div class="cardTitle" id="settings-path"></div>
+          <div class="cardTitle" data-tlkey="path.settings"></div>
           <div class="options"
             style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-            <h3 id="languagetxt"></h3>
+            <h3 data-tlkey="settings.language"></h3>
             <select id="language2" class="drpdwnbtn" name="language2">
-              <option value="unselected" disabled selected id="selopt"></option>
+              <option value="unselected" disabled selected id="selopt" data-tlkey="settings.optionSelect"></option>
               <option value="en-US">English</option>
               <option value="zh-CN">中文</option>
             </select>
-            <h3 id="themetxt"></h3>
+            <h3 data-tlkey="settings.theme.string"></h3>
             <select id="themeOption" class="drpdwnbtn" name="themeOption">
-              <option value="unselectedtheme" disabled selected id="selopt2"></option>
-              <option value="default-dark" id="darkthmopt"></option>
-              <option value="default-light" id="lightthmopt"></option>
+              <option value="unselectedtheme" disabled selected id="selopt2" data-tlkey="settings.optionSelect"></option>
+              <option value="default-dark" id="darkthmopt" data-tlkey="settings.theme.dark"></option>
+              <option value="default-light" id="lightthmopt" data-tlkey="settings.theme.light"></option>
             </select>
-            <button class="button" id="saveBtn" style="position: absolute; bottom: 0;"></button>
+            <button class="button" id="saveBtn" data-tlkey="settings.save" style="position: absolute; bottom: 0;"></button>
           </div>
         </card>
         <!-- Last update date -->

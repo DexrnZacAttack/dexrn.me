@@ -191,7 +191,7 @@ body {
 
 .button.nogrow:hover {
   box-shadow: 0 0 32px 0 var(--prim-hover-color);
-  transform: none;
+  transform: none !important;
 }
 
 .button:active {
