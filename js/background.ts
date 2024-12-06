@@ -103,11 +103,13 @@ async function beginLoading(): Promise<loadingCode> {
         return loadingCode.LOCALIZATION_FAIL;
     }
 
+    console.log(result[1].status);
+
     if (result[1].status === 'fulfilled')
         return result[1].value;
     else
-    showError('Failed to load the background, try refreshing the page.\nIf that doesn\'t work, then your system is likely not resolving the domain (dexrn.duckdns.org) correctly, try going to this site directly until it loads.');
-    return loadingCode.OTHER_FAIL;
+        showError('Failed to load the background, try refreshing the page.\nIf that doesn\'t work, then your system is likely not resolving the domain (dexrn.duckdns.org) correctly, try going to this site directly until it loads.');
+        return loadingCode.OTHER_FAIL;
 }
 
 const fadeLoadingScreen = function () {

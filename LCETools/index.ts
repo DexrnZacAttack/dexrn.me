@@ -182,3 +182,5 @@ document.addEventListener("drop", (e) => {
     reader.readAsArrayBuffer(file);
   }
 });
+
+(document.querySelector('#backNBT')! as HTMLDivElement).innerText = await getTranslation("base.back");
