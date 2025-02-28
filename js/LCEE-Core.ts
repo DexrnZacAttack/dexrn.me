@@ -6,13 +6,17 @@
  * Licensed under the MIT License. See LICENSE file for details.
 */
 
-import { renderBasicContainer, Container } from "./LCEE-GUI.js";
+import {Container, renderBasicContainer} from "./LCEE-GUI.js";
 import {
-  readSave,
+  CompressionTypes,
+  compressSave,
   decompressVitaRLE,
-  SaveIndex,
+  readARC,
   readMSSCMP,
-  readARC
+  readSave,
+  Savegame,
+  SaveIndex,
+  writeSave
 } from "liblce";
 
 import type JSZip from "jszip";
@@ -34,7 +38,7 @@ export enum endianButtonSelect {
   autoDetect,
   big,
   little
-};
+}
 
 export function switchCompressionMode(mode: compressionModes): void {
   switch (mode) {
@@ -99,7 +103,7 @@ export async function readARCFile(data: File, name: string): Promise<void> {
         };
       })
     );
-    
+
     await renderBasicContainer(container, name, document.getElementById("arcFiles") as HTMLDivElement, document.getElementById("arcCenter") as HTMLDivElement);
   } catch (e) {
     console.log(e);
@@ -116,13 +120,13 @@ export async function readMSSCMPFile(data: File, name: string): Promise<void> {
     case true:
       endiannessAllowedMagic = ["KNAB"];
       break;
-    case false: 
+    case false:
       endiannessAllowedMagic = ["BANK"];
       break;
     case undefined:
       break;
   }
-  
+
   if (endiannessAllowedMagic.includes(fileMagic)) {
     try {
       const msscmp = await readMSSCMP(data, littleEndian);
@@ -134,7 +138,7 @@ export async function readMSSCMPFile(data: File, name: string): Promise<void> {
           };
         })
       );
-      
+
       await renderBasicContainer(container, name, document.getElementById("msscmpFiles") as HTMLDivElement, document.getElementById("msscmpCenter") as HTMLDivElement);
     } catch (e) {
       console.log(e);
@@ -149,6 +153,8 @@ export async function readSaveFile(data: File, sgName: string): Promise<void> {
     try {
       const fileArray = new Uint8Array(await data.arrayBuffer());
       let saveFiles: SaveIndex[] = [];
+      let save: Savegame;
+
       if (!littleEndian) {
         if (
           new TextDecoder()
@@ -161,9 +167,10 @@ export async function readSaveFile(data: File, sgName: string): Promise<void> {
       }
       if (data) {
         if (!vita) {
-          saveFiles = (await readSave(data, littleEndian)).fileIndex;
+          save = await readSave(data, littleEndian);
+          saveFiles = save.fileIndex;
         } else {
-          saveFiles = (
+          save = (
             await readSave(
               new File(
                 [new Blob([decompressVitaRLE(fileArray.slice(8))])],
@@ -171,7 +178,8 @@ export async function readSaveFile(data: File, sgName: string): Promise<void> {
               ),
               littleEndian
             )
-          ).fileIndex;
+          );
+          saveFiles = save.fileIndex;
         }
       } else {
         console.error("No data received...");
@@ -185,8 +193,54 @@ export async function readSaveFile(data: File, sgName: string): Promise<void> {
           };
         })
       );
-      
-      await renderBasicContainer(container, sgName, document.getElementById("files") as HTMLDivElement, document.getElementById("saveCenter") as HTMLDivElement);
+
+      document.querySelector("#lceSaveFileDownloadModifiedButton")!.addEventListener("click", async () => {
+        // dexrn comes back to 2098348092834 year old project and wonders what the fuck he was doing
+        // am here to make save file creator for now then polish it Never:tm:
+        // jk entire site rewrite in progress tho (slowly)
+
+        // WHY DO I HAVE TO RECREATE THE SAVE FILE
+        const thing = await compressSave(new Uint8Array(await (await writeSave(saveFiles.map(something => something.data), littleEndian)).arrayBuffer()), CompressionTypes.zlib, littleEndian);
+        // dumb way to do it but it just needs to work
+        thing[4] = thing[0]!;
+        thing[5] = thing[1]!;
+        thing[6] = thing[2]!;
+        thing[7] = thing[3]!;
+
+        thing[0] = 0;
+        thing[1] = 0;
+        thing[2] = 0;
+        thing[3] = 0;
+
+        const file: Blob = new File([thing.buffer], "savegame.dat");
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(file);
+        link.download = `savegame.dat`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      })
+
+      document.querySelector("#lceSaveAddFileButton")!.addEventListener("click", async () => {
+        (document.querySelector("#fileInput") as HTMLInputElement)!.addEventListener("change", async () => {
+          const file = (document.querySelector("#fileInput") as HTMLInputElement)!.files![0]!;
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function () {
+
+            };
+            reader.readAsArrayBuffer(file);
+            console.log(file.name);
+
+            var shit = saveFiles.map(something => something.data);
+            shit.push(file);
+
+            save = await readSave(await writeSave(shit, littleEndian), littleEndian);
+            saveFiles = save.fileIndex;
+          }
+        })
+      });
+
+      await renderBasicContainer(container, save!, sgName, document.getElementById("files") as HTMLDivElement, document.getElementById("saveCenter") as HTMLDivElement);
     } catch (e) {
       console.error(e);
     }

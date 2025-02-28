@@ -57,6 +57,7 @@
     "lcetools": {
         "save": {
             "selectFile": "Select a save",
+            "downloadModified": "Save modified save file",
             "outputPlaceholder": "Please select a save file."
         },
         "arc": {

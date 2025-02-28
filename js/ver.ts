@@ -20,13 +20,13 @@ export function getVer(type?: string): Version {
     switch (type) {
         case "le":
             // LCE Extractor
-            return { "version": "1.2.01", "date": new Date(1731317440977)};
+            return { "version": "1.2.02", "date": new Date(1731317440977)};
         case "qd":
             // QMG Header Parser
             return { "version": "1.2.20", "date": new Date(1728655681160)};
         case "default":
         default:
-            return { "version": "1.5.10", "date": new Date(1733452674043)};
+            return { "version": "1.5.11", "date": new Date(1733452674043)};
     }
 }
 

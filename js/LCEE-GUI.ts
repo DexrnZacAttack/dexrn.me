@@ -10,6 +10,7 @@ import JSZip from "jszip";
 import { readNBTfromFile, isReadable } from "./modules/NBT.js";
 import { showNBTCard } from "../LCETools/index.js";
 import { downloadZip } from "./LCEE-Core.js";
+import {Savegame} from "liblce";
 
 // todo: don't use 2 functions to do the same stuff, am just doing this to get SOMETHING working as someone seems to want to use this.
 
@@ -27,7 +28,7 @@ function genRandString(len: number) {
   return result;
 }
 
-export async function renderBasicContainer(files: Container[], origFileName: string, container: HTMLDivElement, center: HTMLDivElement): Promise<void> {
+export async function renderBasicContainer(files: Container[], save: Savegame, origFileName: string, container: HTMLDivElement, center: HTMLDivElement): Promise<void> {
   let downloadZipBtn: HTMLButtonElement = document.querySelector("#downloadArchiveButton")!;
   downloadZipBtn?.remove();
   (document.querySelector("#saveLog") as HTMLDivElement)!.style.display = "none";
@@ -91,20 +92,36 @@ export async function renderBasicContainer(files: Container[], origFileName: str
     cFile.download = fileName!;
     fileContainer.appendChild(cFile);
   
-    if ((await isReadable(containerFile)) == true) {
-      var viewNBTButton = document.createElement("button");
-      viewNBTButton.onclick = async () => {
-        showNBTCard(await readNBTfromFile(containerFile));
-      };
-      
-      viewNBTButton.innerText = "View NBT";
-      viewNBTButton.className = "button";
-      viewNBTButton.style.padding = "unset";
-      viewNBTButton.style.marginTop = "unset";
-      viewNBTButton.style.marginBottom = "unset";
-      viewNBTButton.style.marginLeft = "auto";
-      fileContainer.appendChild(viewNBTButton);
-    }
+    // if ((await isReadable(containerFile)) == true) {
+      // var viewNBTButton = document.createElement("button");
+      // viewNBTButton.onclick = async () => {
+      //   showNBTCard(await readNBTfromFile(containerFile));
+      // };
+      //
+      // viewNBTButton.innerText = "View NBT";
+      // viewNBTButton.className = "button";
+      // viewNBTButton.style.padding = "unset";
+      // viewNBTButton.style.marginTop = "unset";
+      // viewNBTButton.style.marginBottom = "unset";
+      // viewNBTButton.style.marginLeft = "auto";
+      // fileContainer.appendChild(viewNBTButton);
+    // }
+
+    var removeButton = document.createElement("button");
+
+    removeButton.onclick = async () => {
+      save.fileIndex.splice(save.fileIndex.findIndex(sv => sv.name === containerFile.name), 1);
+      files.splice(files.indexOf(containerFile), 1);
+      parentFolder.removeChild(fileContainer);
+    };
+
+    removeButton.innerText = "Remove";
+    removeButton.className = "button";
+    removeButton.style.padding = "unset";
+    removeButton.style.marginTop = "unset";
+    removeButton.style.marginBottom = "unset";
+    removeButton.style.marginLeft = "auto";
+    fileContainer.appendChild(removeButton);
 
     zip.file(containerFile.name, containerFile.data);
     container.style.display = "flex";

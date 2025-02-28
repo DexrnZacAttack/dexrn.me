@@ -53,10 +53,10 @@ function setBGTime(): void {
     let hour = now.getHours();
     if (hour >= 6 && hour < 20) {
         bgElement.style.backgroundImage =
-            `url('https://dexrn.duckdns.org/panorama?time=day&ver=${getVer().version};${getVer().date.getTime()}')`;
+            `url('https://dexrn.duckdns.org/api/v1/panorama?time=day&ver=${getVer().version};${getVer().date.getTime()}')`;
     } else {
         bgElement.style.backgroundImage =
-            `url('https://dexrn.duckdns.org/panorama?time=night&ver=${getVer().version};${getVer().date.getTime()}')`;
+            `url('https://dexrn.duckdns.org/api/v1/panorama?time=night&ver=${getVer().version};${getVer().date.getTime()}')`;
     }
 }
 
@@ -158,7 +158,7 @@ export async function loadBG(shouldLoadBg: boolean | Event): Promise<void> {
             // now we can use timezone stuffs to get time which should be more accurate I think?
             // if not then I can exclude timestamp iirc and the server should localize its timestamp to the provided timezone automatically
             if (Date?.now() && Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone)
-                bgElement.style.backgroundImage = `url("https://dexrn.duckdns.org/panorama?timestamp=${Date.now()}&timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone}&ver=${getVer().version};${getVer().date.getTime()}")`;
+                bgElement.style.backgroundImage = `url("https://dexrn.duckdns.org/api/v1/panorama?timestamp=${Date.now()}&timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone}&ver=${getVer().version};${getVer().date.getTime()}")`;
             else
                 setBGTime();
 
