@@ -1,0 +1,96 @@
+{
+	"blog": {
+		"fetchingPost": "Loading post...",
+		"fetchingPosts": "Loading posts...",
+		"loadingPost": "Loading post \"{name}\"..."
+	},
+	"buttons": {
+		"home": {
+			"pages": {
+				"blog": "Blog"
+			},
+			"projects": {
+				"lce": "LCE Decomp",
+				"lodestone": "Project Lodestone"
+			}
+		}
+	},
+	"cardTop": {
+		"goBack": "<-- {back}"
+	},
+	"common": {
+		"back": "Go back",
+		"exit": "Exit",
+		"home": "Go home"
+	},
+	"error": {
+		"message": "An error...? what happened... where are we?",
+		"reason": "Error {status} ({message})"
+	},
+	"errors": {
+		"bgFetchFailed": "Couldn't get the background panorama... Maybe your device has lost access to the internet.",
+		"getCtxFailed": "Failed to get canvas context",
+		"postFetchFailed": "Couldn't get post... Maybe your device has lost access to the Internet.",
+		"postRenderFailed": "Couldn't render body of post \"{name}\"... Please report this on the site's GitHub.",
+		"postsFetchFailed": "Couldn't get posts... Maybe your device has lost access to the Internet."
+	},
+	"home": {
+		"discordStatus": {
+			"username": "Dexrn ZacAttack"
+		}
+	},
+	"lanyard": {
+		"platforms": {
+			"browser": "Web Browser",
+			"desktop": "Desktop",
+			"mobile": "Mobile"
+		},
+		"status": {
+			"dnd": "Do Not Disturb",
+			"idle": "Idle",
+			"offline": "Offline",
+			"online": "Online",
+			"unknown": "Unknown"
+		}
+	},
+	"loadingScreen": {
+		"goBack": "Go back",
+		"goHome": "Go home",
+		"loading": "Loading..."
+	},
+	"path": {
+		"blog": {
+			"path": "@Dexrn > Blog",
+			"post": "@Dexrn > Blog > {title}"
+		},
+		"error": "@Dexrn > ???",
+		"home": {
+			"discordActivity": "@Dexrn > Discord Activity",
+			"discordStatus": "@Dexrn > Discord Status",
+			"pages": "@Dexrn > Pages",
+			"projects": "@Dexrn > Projects"
+		},
+		"settings": "@Dexrn > Settings"
+	},
+	"platforms": {
+		"discord": "Discord",
+		"github": "GitHub",
+		"wdw": "Wet Dry World",
+		"youtube": "YouTube"
+	},
+	"settings": {
+		"doNotScrollPanorama": {
+			"info": "Disables panorama scrolling, may be beneficial for people on a low-end device.",
+			"title": "Disable background animation"
+		},
+		"noSleep": {
+			"info": "Makes animations and other tasks not sleep. NOTE: May break loading text in some places.",
+			"title": "Use fast animations"
+		},
+		"saving": "Saving...",
+		"useLightMode": {
+			"info": "Uses light mode instead of dark mode.",
+			"title": "Use Light Mode"
+		}
+	}
+}

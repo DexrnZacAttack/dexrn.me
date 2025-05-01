@@ -1,8 +1,6 @@
-
 ## DexrnZacAttack.github.io
 
 Just my personal site that I work on whenever I am bored or dream up something...
-I also host some stuff such as a Minecraft LCE Save extractor, MSSCMP extractor, ARC extractor, oh and my blog.
 
 ## Credits
 
