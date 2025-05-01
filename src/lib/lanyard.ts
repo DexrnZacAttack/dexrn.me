@@ -147,43 +147,45 @@ async function setStatus(lyData: LanyardAPI): Promise<void> {
 	}
 }
 
-const ws = new WebSocket('wss://api.lanyard.rest/socket');
-ws.onmessage = async function (res) {
-	await waitLocale();
-	try {
-		const packet: LanyardPacket = JSON.parse(res.data);
-		switch (packet.op) {
-			// relogic style
-			case PID.HelloS2C: {
-				ws.send(
-					JSON.stringify({
-						op: PID.InitC2S,
-						d: { subscribe_to_id: USERID }
-					})
-				);
+if (typeof WebSocket !== 'undefined') {
+	const ws = new WebSocket('wss://api.lanyard.rest/socket');
+	ws.onmessage = async function (res) {
+		await waitLocale();
+		try {
+			const packet: LanyardPacket = JSON.parse(res.data);
+			switch (packet.op) {
+				// relogic style
+				case PID.HelloS2C: {
+					ws.send(
+						JSON.stringify({
+							op: PID.InitC2S,
+							d: { subscribe_to_id: USERID }
+						})
+					);
 
-				const heartbeat = (packet.d as LanyardHelloPacket).heartbeat_interval;
+					const heartbeat = (packet.d as LanyardHelloPacket).heartbeat_interval;
 
-				// https://lanyard.eggsy.xyz/api/working-with-websockets | Heartbeat
-				setInterval(() => {
-					ws.send(JSON.stringify({ op: PID.HeartbeatC2S }));
-				}, heartbeat);
+					// https://lanyard.eggsy.xyz/api/working-with-websockets | Heartbeat
+					setInterval(() => {
+						ws.send(JSON.stringify({ op: PID.HeartbeatC2S }));
+					}, heartbeat);
 
-				break;
+					break;
+				}
+				case PID.EventBD: {
+					const event: LanyardAPI = packet.d as LanyardAPI;
+					await setAvatarFrame(event);
+					await setAvatar(event);
+					await setStatus(event);
+					activities.set(event.activities);
+					break;
+				}
+				default:
+					console.log(`RECEIVED UNKNOWN PACKET! ID: ${packet.d || 'UNKNOWN'}`);
+					break;
 			}
-			case PID.EventBD: {
-				const event: LanyardAPI = packet.d as LanyardAPI;
-				await setAvatarFrame(event);
-				await setAvatar(event);
-				await setStatus(event);
-				activities.set(event.activities);
-				break;
-			}
-			default:
-				console.log(`RECEIVED UNKNOWN PACKET! ID: ${packet.d || 'UNKNOWN'}`);
-				break;
+		} catch (e) {
+			console.error(e);
 		}
-	} catch (e) {
-		console.error(e);
-	}
-};
+	};
+}
