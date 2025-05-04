@@ -6,6 +6,8 @@
 	--alt-bg-color: rgba(50, 50, 50, 0.6);
 	--prim-control-color: rgba(0, 0, 0, 0.5);
 	--prim-border-color: rgba(100, 100, 100, 0.2);
+	--prim-inverse-bg-color: rgba(255, 255, 255, 0.6);
+	--alt-inverse-bg-color: rgba(255, 255, 255, 0.3);
 	--alt-bg-color-2: rgba(0, 0, 0, 0.2);
 	--prim-img-border-color: rgba(15, 15, 15, 0.3);
 	--prim-border-hover-color: rgba(255, 255, 255, 0.8);

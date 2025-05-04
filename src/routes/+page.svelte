@@ -13,6 +13,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import validator from 'validator';
 	import { status } from '$lib/loadingScreen';
+	import pkg from '../../package.json';
 
 	onMount(async () => {
 		await waitLocale();
@@ -20,6 +21,11 @@
 		await zoomIn(getCanvas());
 	});
 </script>
+
+<svelte:head>
+	<title>Dexrn's Website</title>
+	<meta name="generator" content="SvelteKit {pkg.devDependencies['@sveltejs/kit'].substring(1)}" />
+</svelte:head>
 
 {#if !$status.transitioning && !$status.loading}
 	<div

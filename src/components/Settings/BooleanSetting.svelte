@@ -26,11 +26,3 @@
 		{$t(`settings.${id}.title`)}
 	</label>
 </div>
-
-<style>
-	.setting {
-		/*display: flex;*/
-		/*align-items: center;*/
-		/*gap: 5px;*/
-	}
-</style>

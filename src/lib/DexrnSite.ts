@@ -45,19 +45,22 @@ export namespace DexrnSite {
 		history.back();
 	}
 
-	export function timeSince(now: number, time: number) {
-		const diff = now - time;
+	export function toTimeString(ts: number): string {
+		if (ts > 0) {
+			const seconds = Math.floor(ts / 1000) % 60;
+			const minutes = Math.floor(ts / (1000 * 60)) % 60;
+			const hours = Math.floor(ts / (1000 * 60 * 60));
 
-		if (diff > 0) {
-			const seconds = Math.floor(diff / 1000) % 60;
-			const minutes = Math.floor(diff / (1000 * 60)) % 60;
-			const hours = Math.floor(diff / (1000 * 60 * 60));
-
-			return `${hours.toString().padStart(2, '0')}:${minutes
+			return `${hours != 0 ? `${hours.toString().padStart(2, '0')}:` : ''}${minutes
 				.toString()
 				.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+		} else {
+			return '';
 		}
-		return '';
+	}
+
+	export function timeSince(now: number, time: number) {
+		return DexrnSite.toTimeString(now - time);
 	}
 
 	export const BACKEND_URL = 'https://dexrn.dedyn.io';
@@ -77,9 +80,12 @@ export namespace DexrnSite {
 		if (settings.get<boolean>('useLightMode')) {
 			root.style.setProperty('--prim-bg-color', 'rgba(255, 255, 255, 0.3)');
 			root.style.setProperty('--alt-bg-color', 'rgba(200, 200, 200, 0.3)');
+			root.style.setProperty('--prim-inverse-bg-color', 'rgba(0, 0, 0, 0.6)');
+			root.style.setProperty('--alt-inverse-bg-color', 'rgba(0, 0, 0, 0.3)');
 			root.style.setProperty('--prim-control-color', 'rgba(255, 255, 255, 0.5)');
 			root.style.setProperty('--prim-border-color', 'rgba(255, 255, 255, 0.2)');
 			root.style.setProperty('--prim-img-border-color', 'rgba(15, 15, 15, 0.3)');
+			root.style.setProperty('--alt-bg-color-2', 'rgba(150, 150, 150, 0.2)');
 			root.style.setProperty('--prim-moreopaque-border-color', 'rgba(200, 200, 200, 0.5)');
 			root.style.setProperty('--prim-control-border-color', 'rgba(200, 200, 200, 0.2)');
 			root.style.setProperty('--prim-other-bg-color', 'rgba(255, 255, 255, 0.2)');
@@ -97,6 +103,9 @@ export namespace DexrnSite {
 		} else {
 			root.style.setProperty('--prim-bg-color', 'rgba(0, 0, 0, 0.6)');
 			root.style.setProperty('--alt-bg-color', 'rgba(50, 50, 50, 0.6)');
+			root.style.setProperty('--prim-inverse-bg-color', 'rgba(255, 255, 255, 0.6)');
+			root.style.setProperty('--alt-inverse-bg-color', 'rgba(255, 255, 255, 0.3)');
+			root.style.setProperty('--alt-bg-color-2', 'rgba(0, 0, 0, 0.2)');
 			root.style.setProperty('--prim-control-color', 'rgba(0, 0, 0, 0.5)');
 			root.style.setProperty('--prim-border-color', 'rgba(100, 100, 100, 0.2)');
 			root.style.setProperty('--prim-img-border-color', 'rgba(15, 15, 15, 0.3)');

@@ -20,6 +20,11 @@
 	};
 </script>
 
+<svelte:head>
+	<title>@Dexrn | Settings</title>
+	<meta property="twitter:title" content="Dexrn's Website | Settings" />
+</svelte:head>
+
 {#if !$status.transitioning && !$status.loading}
 	<div
 		class="Page"

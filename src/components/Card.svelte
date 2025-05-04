@@ -13,7 +13,7 @@
 
 <style>
 	.card {
-		backdrop-filter: blur(30px);
+		backdrop-filter: blur(40px);
 		border-radius: 10px;
 		padding: 12px;
 		width: 50%;

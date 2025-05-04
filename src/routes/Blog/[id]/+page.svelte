@@ -18,11 +18,20 @@
 
 	let body: string;
 	onMount(async () => {
-		await DexrnSite.sleep(200);
+		// for loading text
+		await DexrnSite.sleep(100);
 		LoadingScreen.loadingStatus = true;
 		LoadingScreen.loadingText = $t('blog.fetchingPost');
 
-		post = await loadPostByTitle(page.params.id);
+		try {
+			post = await loadPostByTitle(page.params.id);
+		} catch {
+			await LoadingScreen.setShowLoadingScreenError(
+				true,
+				$t('errors.postNotFound', { values: { name: page.params.id } })
+			);
+			return;
+		}
 
 		if (!post) {
 			await LoadingScreen.setShowLoadingScreenError(true, $t('errors.postFetchFailed'));
@@ -46,6 +55,20 @@
 		LoadingScreen.loadingStatus = false;
 	});
 </script>
+
+<svelte:head>
+	<meta property="og:title" content="@Dexrn | {post?.title ?? 'Loading post...'}" />
+	<meta property="og:type" content="article" />
+	<meta property="og:description" content={post?.body ? `${post?.body.substring(0, 25)}...` : ''} />
+	<meta property="article:published_time" content={post?.timestamp.toString() ?? 0} />
+	<meta property="article:author" content="Dexrn ZacAttack" />
+	<title>@Dexrn | {post?.title ?? 'Loading post...'}</title>
+	<meta property="twitter:title" content="Dexrn's Website | {post?.title ?? 'Loading post...'}" />
+	<meta
+		property="twitter:description"
+		content={post?.body ? `${post?.body.substring(0, 25)}...` : ''}
+	/>
+</svelte:head>
 
 {#if !$status.transitioning && !$status.loading}
 	<div

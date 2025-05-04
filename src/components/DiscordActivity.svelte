@@ -3,6 +3,7 @@
 	import { DexrnSite } from '$lib/DexrnSite.js';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import TimeElapsedProgress from './TimeElapsedProgress.svelte';
 
 	export let activity: LanyardActivity;
 
@@ -21,52 +22,68 @@
 </script>
 
 <div class="activity" transition:fade>
-	{#if activity.assets?.large_image}
-		<div class="activityImages">
+	<!-- MainActivity.java -->
+	<div class="mainActivity">
+		{#if activity.assets?.large_image}
+			<div class="activityImages">
+				<img
+					class="largeImage"
+					width="96"
+					height="96"
+					title={activity.assets?.large_text}
+					src={getImage(activity.assets?.large_image, activity.application_id)}
+				/>
+				{#if activity.assets?.small_image}
+					<img
+						class="smallImage"
+						width="32"
+						height="32"
+						title={activity.assets?.small_text}
+						src={getImage(activity.assets?.small_image, activity.application_id)}
+					/>
+				{/if}
+			</div>
+		{:else if activity.assets?.small_image}
+			<img
+				class="smallImageEx"
+				width="96"
+				height="96"
+				title={activity.assets?.small_text}
+				src={getImage(activity.assets?.small_image, activity.application_id)}
+			/>
+		{:else if activity.application_id}
 			<img
 				class="largeImage"
 				width="96"
 				height="96"
 				title={activity.assets?.large_text}
-				src={getImage(activity.assets?.large_image, activity.application_id)}
+				src={`https://dcdn.dstn.to/app-icons/${activity.application_id}.png?size=96`}
 			/>
-			{#if activity.assets?.small_image}
-				<img
-					class="smallImage"
-					width="32"
-					height="32"
-					title={activity.assets?.small_text}
-					src={getImage(activity.assets?.small_image, activity.application_id)}
-				/>
+		{/if}
+		<div class="activityDetails">
+			<p class="activityName">{activity.name}</p>
+			<p class="activityDetail">{activity.details}</p>
+			<p class="activityState">{activity.state}</p>
+			{#if activity.timestamps?.start && !activity.timestamps?.end}
+				<p class="activityTimer">
+					{DexrnSite.timeSince(now, activity.timestamps.start)}
+				</p>
 			{/if}
 		</div>
-	{:else if activity.assets?.small_image}
-		<img
-			class="smallImageEx"
-			width="96"
-			height="96"
-			title={activity.assets?.small_text}
-			src={getImage(activity.assets?.small_image, activity.application_id)}
-		/>
-	{:else if activity.application_id}
-		<img
-			class="largeImage"
-			width="96"
-			height="96"
-			title={activity.assets?.large_text}
-			src={`https://dcdn.dstn.to/app-icons/${activity.application_id}.png?size=96`}
-		/>
-	{/if}
-	<div class="activityDetails">
-		<p class="activityName">{activity.name}</p>
-		<p class="activityDetail">{activity.details}</p>
-		<p class="activityState">{activity.state}</p>
-		{#if activity.timestamps?.start}
-			<p class="activityTimer">
-				{DexrnSite.timeSince(activity.timestamps?.end ?? now, activity.timestamps?.start)}
-			</p>
-		{/if}
 	</div>
+	{#if activity.timestamps?.start && activity.timestamps?.end}
+		<div class="activityTimeElapsedBar">
+			<span class="activityTimeStart">{DexrnSite.timeSince(now, activity.timestamps?.start)}</span>
+			<TimeElapsedProgress
+				class="activityElapsed"
+				end={activity.timestamps.end}
+				start={activity.timestamps.start}
+			/>
+			<span class="activityTimeEnd"
+				>{DexrnSite.timeSince(activity.timestamps?.end, activity.timestamps?.start)}</span
+			>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -75,7 +92,13 @@
 		border: var(--alt-border-size) solid var(--prim-border-color);
 		border-radius: 20px;
 		display: flex;
+		flex-direction: column;
 		min-height: 128px;
+	}
+
+	.mainActivity {
+		display: flex;
+		flex-direction: row;
 	}
 
 	.activityDetails {
@@ -83,6 +106,7 @@
 		flex-direction: column;
 		margin-left: 10px;
 		margin-top: 5px;
+		max-height: 96px;
 	}
 
 	.activityName,
@@ -119,5 +143,24 @@
 		border: var(--prim-border-size) solid var(--prim-border-color);
 		background: var(--alt-bg-color);
 		border-radius: 50%;
+	}
+
+	.activityTimeElapsedBar {
+		display: flex;
+		flex-direction: row;
+		gap: 5px;
+		text-align: left;
+		align-items: center;
+		width: 100%;
+		margin-left: 10px;
+		margin-top: 15px;
+	}
+
+	:global(.activityElapsed) {
+		flex: 1;
+	}
+
+	.activityTimeEnd {
+		padding-right: 20px;
 	}
 </style>

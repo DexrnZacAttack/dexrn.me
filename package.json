@@ -1,7 +1,7 @@
 {
 	"name": "dexrnwebsite",
 	"private": true,
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"type": "module",
 	"license": "MIT",
 	"repository": "https://github.com/DexrnZacAttack/DexrnZacAttack.github.io",
@@ -11,7 +11,7 @@
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"postbuild": "npx svelte-sitemap --domain https://dexrnzacattack.github.io",
+		"postbuild": "npx svelte-sitemap --domain https://dexrnzacattack.github.io && tvkit build ./build --out ./dist --browser \"Chrome 50, Firefox 30\" --force",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint ."
@@ -32,14 +32,17 @@
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
 		"svelte-sitemap": "^2.7.0",
+		"terser": "^5.39.0",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.20.0",
 		"vite": "^6.2.5"
 	},
 	"dependencies": {
+		"@vitejs/plugin-legacy": "^6.1.1",
 		"marked": "^15.0.9",
 		"prettier-plugin-organize-imports": "^4.1.0",
 		"svelte-i18n": "^4.0.1",
+		"tvkit": "^0.18.0",
 		"validator": "^13.15.0"
 	}
 }

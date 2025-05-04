@@ -31,6 +31,7 @@
 		"bgFetchFailed": "Couldn't get the background panorama... Maybe your device has lost access to the internet.",
 		"getCtxFailed": "Failed to get canvas context",
 		"postFetchFailed": "Couldn't get post... Maybe your device has lost access to the Internet.",
+		"postNotFound": "Couldn't find post \"{name}\". Does it exist?",
 		"postRenderFailed": "Couldn't render body of post \"{name}\"... Please report this on the site's GitHub.",
 		"postsFetchFailed": "Couldn't get posts... Maybe your device has lost access to the Internet."
 	},

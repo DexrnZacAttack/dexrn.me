@@ -17,7 +17,7 @@
 
 	onMount(async () => {
 		// for loading text
-		await DexrnSite.sleep(200);
+		await DexrnSite.sleep(100);
 		LoadingScreen.loadingStatus = true;
 		LoadingScreen.loadingText = $t('blog.fetchingPosts');
 		posts.set(await fetchPosts());
@@ -33,6 +33,11 @@
 		LoadingScreen.loadingStatus = false;
 	});
 </script>
+
+<svelte:head>
+	<meta property="og:site_name" content="@Dexrn | Blog" />
+	<title>@Dexrn | Blog</title>
+</svelte:head>
 
 {#if !$status.transitioning && !$status.loading}
 	<div

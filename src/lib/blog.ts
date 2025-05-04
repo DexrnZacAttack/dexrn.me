@@ -36,6 +36,8 @@ export async function loadPost(post: PostInfo): Promise<Post> {
 		})
 	).json();
 
+	if (!res.success) throw new Error(res.error?.message);
+
 	return res.result;
 }
 
@@ -48,6 +50,8 @@ export async function loadPostByTitle(title: string): Promise<Post> {
 			}
 		})
 	).json();
+
+	if (!res.success) throw new Error(res.error?.message);
 
 	return res.result;
 }

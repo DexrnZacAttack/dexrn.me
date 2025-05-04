@@ -16,13 +16,10 @@ export async function zoomOut(ref: HTMLElement) {
 	ref.style.width = `calc(var(--vw) - 100px * ${DexrnSite.settings.zoomPercentage} / 100)`;
 	ref.style.height = `calc(var(--vh) - 100px * ${DexrnSite.settings.zoomPercentage} / 100)`;
 	ref.style.borderWidth = 'var(--alt-border-size)';
-	// wait
-	await DexrnSite.sleep(1000);
 }
 
 export async function zoomIn(ref: HTMLElement) {
-	// wait for everything to hide
-	await DexrnSite.sleep(900);
+	await DexrnSite.sleep(900); // we can shorten this if not going to /
 
 	// zoom in
 	zoom.target = 0;

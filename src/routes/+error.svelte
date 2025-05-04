@@ -9,11 +9,15 @@
 	import { DexrnSite } from '$lib/DexrnSite';
 
 	onMount(async () => {
-		await DexrnSite.sleep(1500);
+		await DexrnSite.sleep(200);
 		LoadingScreen.loadingStatus = false;
 		LoadingScreen.transitionStatus = false;
 	});
 </script>
+
+<svelte:head>
+	<title>@Dexrn | {page?.error?.message}</title>
+</svelte:head>
 
 {#if !$status.transitioning && !$status.loading}
 	<div

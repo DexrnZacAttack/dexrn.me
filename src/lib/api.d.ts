@@ -7,9 +7,15 @@ export interface PostInfo {
 	hidden: boolean;
 }
 
+export interface ApiError {
+	code: number;
+	message: string;
+}
+
 export interface ApiResponse<T> {
 	success: boolean;
 	result: T;
+	error?: ApiError;
 }
 
 export interface Post {
