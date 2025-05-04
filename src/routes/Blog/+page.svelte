@@ -35,7 +35,7 @@
 </script>
 
 <svelte:head>
-	<meta property="og:site_name" content="@Dexrn | Blog" />
+	<meta property="og:title" content="Dexrn's Website | Blog" />
 	<title>@Dexrn | Blog</title>
 </svelte:head>
 

@@ -17,6 +17,7 @@
 
 <svelte:head>
 	<title>@Dexrn | {page?.error?.message}</title>
+	<meta property="og:title" content="Dexrn's Website | {page?.error?.message}" />
 </svelte:head>
 
 {#if !$status.transitioning && !$status.loading}

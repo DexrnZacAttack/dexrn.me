@@ -23,6 +23,7 @@
 <svelte:head>
 	<title>@Dexrn | Settings</title>
 	<meta property="twitter:title" content="Dexrn's Website | Settings" />
+	<meta property="og:title" content="Dexrn's Website | Settings" />
 </svelte:head>
 
 {#if !$status.transitioning && !$status.loading}

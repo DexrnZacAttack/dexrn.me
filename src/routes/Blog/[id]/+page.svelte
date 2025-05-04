@@ -57,7 +57,7 @@
 </script>
 
 <svelte:head>
-	<meta property="og:title" content="@Dexrn | {post?.title ?? 'Loading post...'}" />
+	<meta property="og:title" content="Dexrn's Website | {post?.title ?? 'Loading post...'}" />
 	<meta property="og:type" content="article" />
 	<meta property="og:description" content={post?.body ? `${post?.body.substring(0, 25)}...` : ''} />
 	<meta property="article:published_time" content={post?.timestamp.toString() ?? 0} />
