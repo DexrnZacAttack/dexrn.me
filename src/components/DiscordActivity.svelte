@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getImage } from '$lib/lanyard.js';
+	import { DiscordActivityType, getImage } from '$lib/lanyard.js';
 	import { DexrnSite } from '$lib/DexrnSite.js';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
@@ -64,16 +64,38 @@
 			<p class="activityName">{activity.name}</p>
 			<p class="activityDetail">{activity.details}</p>
 			<p class="activityState">{activity.state}</p>
+			{#if activity.type === DiscordActivityType.Listening}
+				<p class="activityLargeText">{activity.assets?.large_text}</p>
+			{/if}
 			{#if activity.timestamps?.start && !activity.timestamps?.end}
 				<p class="activityTimer">
 					{DexrnSite.timeSince(now, activity.timestamps.start)}
 				</p>
 			{/if}
 		</div>
+		<!-- Playing activity can't be trusted as it's the default -->
+		<p class="type">
+			<i
+				class="bi"
+				title={DexrnSite.getTitleFromActivityType(activity.type, activity.name)}
+				class:bi-music-note-list={activity.type === DiscordActivityType.Listening}
+				class:bi-person-video3={activity.type === DiscordActivityType.Watching}
+				class:bi-record-btn={activity.type === DiscordActivityType.Streaming}
+				class:bi-dpad-fill={activity.type === DiscordActivityType.Playing}
+				class:bi-keyboard-fill={activity.type === DiscordActivityType.Competing}
+				class:bi-window={activity.type === DiscordActivityType.Custom}
+			>
+			</i>
+		</p>
 	</div>
 	{#if activity.timestamps?.start && activity.timestamps?.end}
 		<div class="activityTimeElapsedBar">
-			<span class="activityTimeStart">{DexrnSite.timeSince(now, activity.timestamps?.start)}</span>
+			<span class="activityTimeStart"
+				>{DexrnSite.timeSince(
+					Math.min(activity.timestamps.end, now),
+					activity.timestamps.start
+				)}</span
+			>
 			<TimeElapsedProgress
 				class="activityElapsed"
 				end={activity.timestamps.end}
@@ -112,7 +134,8 @@
 	.activityName,
 	.activityDetail,
 	.activityState,
-	.activityTimer {
+	.activityTimer,
+	.activityLargeText {
 		margin: 0;
 	}
 
@@ -162,5 +185,21 @@
 
 	.activityTimeEnd {
 		padding-right: 20px;
+	}
+
+	.type {
+		padding: 5px;
+		background-color: var(--prim-bg-color);
+		margin: 10px 10px 0 auto;
+		border-radius: 10px;
+		border: var(--prim-border-size) solid var(--prim-border-color);
+		position: sticky;
+		width: 2.5rem;
+		height: 2.5rem;
+		font-size: 1.2rem;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
 	}
 </style>

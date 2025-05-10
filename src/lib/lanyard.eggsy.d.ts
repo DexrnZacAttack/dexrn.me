@@ -7,26 +7,50 @@ declare interface DiscordAvatarDecorationData {
 	expires?: number;
 }
 
+// bc guild id can be a number sometimes in one case
+declare interface DiscordClan<T> {
+	tag: string;
+	identity_guild_id: T;
+	badge: string;
+	identity_enabled: boolean;
+}
+
+declare interface DiscordTimestamps {
+	/** When the activity started */
+	start: number;
+	/** When the activity should end */
+	end?: number;
+}
+
 declare interface DiscordUser {
 	id: string;
 	username: string;
 	avatar: string;
 	discriminator: string;
+	clan?: DiscordClan<string>;
 	bot: boolean;
 	global_name: number;
+	primary_guild?: DiscordClan<number>;
 	avatar_decoration_data?: DiscordAvatarDecorationData;
+	collectibles: any; // unk
 	display_name: number;
 	public_flags: number;
+}
+
+declare interface LanyardSpotify {
+	timestamps: DiscordTimestamps;
+	album_art_url: string;
+	album: string;
+	artist: string;
+	song: string;
+	track_id: string;
 }
 
 declare interface LanyardAPI {
 	kv: {
 		lanyardOwner: string;
 	};
-	spotify: {
-		album_art_url: string;
-		album: string;
-	} | null;
+	spotify?: LanyardSpotify;
 	discord_user: DiscordUser;
 	activities: LanyardActivity[];
 	discord_status: 'online' | 'dnd' | 'idle' | 'offline';
@@ -40,6 +64,8 @@ declare interface LanyardAPI {
 declare type LanyardActivity = LanyardActivityLike;
 
 declare interface LanyardActivityLike {
+	flags?: number;
+	session_id?: string;
 	/** The activity's ID */
 	id: string;
 	/** The activity's name */
@@ -75,12 +101,7 @@ declare interface LanyardActivityLike {
 		large_text?: string;
 	};
 	/** The activity's timestamps */
-	timestamps: {
-		/** When the activity started */
-		start: number;
-		/** When the activity should end */
-		end?: number;
-	};
+	timestamps: DiscordTimestamps;
 	/** In-game party info */
 	party?: {
 		// exists with Lanyard?

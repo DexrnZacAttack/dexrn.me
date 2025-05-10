@@ -1,17 +1,17 @@
 {
 	"name": "dexrnwebsite",
 	"private": true,
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"type": "module",
 	"license": "MIT",
 	"repository": "https://github.com/DexrnZacAttack/DexrnZacAttack.github.io",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "prettier --write . && vite build",
+		"build": "npx tsx scripts/prebuild.ts && prettier --write . && vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"postbuild": "npx svelte-sitemap --domain https://dexrnzacattack.github.io && tvkit build ./build --out ./dist --browser \"Chrome 50, Firefox 30\" --force",
+		"postbuild": "npx svelte-sitemap --domain https://dexrnzacattack.github.io && tvkit build ./build --out ./dist --browser \"Chrome 50, Firefox 30\" --force && npx tsx scripts/postbuild.ts",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint ."

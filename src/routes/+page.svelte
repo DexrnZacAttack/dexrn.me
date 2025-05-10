@@ -70,8 +70,15 @@
 					<p class="onlineStatus" style="color: {$onlineState.style.color}">{$onlineState.text}</p>
 					{#if $customStatus.status || $customStatus.emoji}
 						<div class="customStatus" transition:fade>
-							{#if $customStatus.emoji}
+							{#if $customStatus.emoji && !$customStatus.em_id}
 								<p class="statusEmoji">{$customStatus.emoji}</p>
+							{:else if $customStatus.em_id}
+								<img
+									src="https://cdn.discordapp.com/emojis/{$customStatus.em_id}.png?size=64"
+									class="statusEmojiImg"
+									alt={$customStatus.emoji}
+									title=":{$customStatus.emoji}:"
+								/>
 							{/if}
 							<p class="status">{validator.escape($customStatus?.status ?? '')}</p>
 						</div>
@@ -153,10 +160,11 @@
 		gap: 5px;
 		align-items: center;
 		border-radius: 5px;
-		background: var(--alt-bg-color);
+		background: var(--alt-bg-color-2);
 		border: var(--prim-border-size) solid var(--prim-border-color);
 		width: fit-content;
 		padding: 5px;
+		margin-top: 15px;
 	}
 
 	.status,
@@ -167,6 +175,10 @@
 
 	.statusEmoji {
 		font-size: 1.5em;
+	}
+
+	.statusEmojiImg {
+		height: 2em;
 	}
 
 	.displayName {

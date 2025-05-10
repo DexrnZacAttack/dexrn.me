@@ -6,7 +6,7 @@ export default defineConfig({
 	server: {
 		allowedHosts: ['dexrnzacattack.github.io'],
 		fs: {
-			allow: ['package.json']
+			allow: ['package.json', 'build.json']
 		}
 	}
 });

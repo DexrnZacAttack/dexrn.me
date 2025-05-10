@@ -16,6 +16,6 @@ export const zoom = new Tween(0, {
 export const lyIsOnMobile = writable(false);
 export const lyIsOnDesktop = writable(false);
 export const lyIsOnBrowser = writable(false);
-export const lyIsOnConsole = writable(false); // Is not exposed by Lanyard
+export const lyIsOnConsole = writable(false);
 
 export const posts = writable<PostInfo[]>([]);

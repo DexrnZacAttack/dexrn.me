@@ -1,6 +1,8 @@
+import { DiscordActivityType } from '$lib/lanyard';
 import { Settings } from '$lib/settings';
 import { t } from 'svelte-i18n';
 import { get } from 'svelte/store';
+import { postBuild } from '../../build.json';
 import { version } from '../../package.json';
 
 // Core commons
@@ -19,8 +21,31 @@ export namespace DexrnSite {
 		BG_UNKNOWN_HOST
 	}
 
+	export function getPostBuildTime(): number {
+		return postBuild.timestamp;
+	}
+
 	export function getVersion(): string {
 		return version;
+	}
+
+	export function getTitleFromActivityType(type: DiscordActivityType, title: string) {
+		switch (type) {
+			// could make this reflect but this is easier for now
+			case DiscordActivityType.Playing:
+				return tr('lanyard.activityType.playing', { values: { name: title } });
+			case DiscordActivityType.Listening:
+				return tr('lanyard.activityType.listening', { values: { name: title } });
+			case DiscordActivityType.Streaming:
+				return tr('lanyard.activityType.streaming', { values: { name: title } });
+			case DiscordActivityType.Watching:
+				return tr('lanyard.activityType.watching', { values: { name: title } });
+			case DiscordActivityType.Competing:
+				return tr('lanyard.activityType.competing');
+			case DiscordActivityType.Custom:
+			default:
+				return tr('lanyard.activityType.custom');
+		}
 	}
 
 	export const OUTER_ROUTES = ['/Settings'];

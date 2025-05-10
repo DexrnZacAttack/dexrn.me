@@ -31,7 +31,9 @@ export enum DiscordActivityType {
 export function getImage(url: string, appId: string) {
 	const imageLink = url.includes('external')
 		? `https://media.discordapp.net/external/${url.split('mp:external/')[1]}`
-		: `https://cdn.discordapp.com/app-assets/${validator.escape(appId)}/${validator.escape(url)}.png?quality=lossless`;
+		: url.startsWith('spotify:')
+			? `https://i.scdn.co/image/${url.substring(8)}` // I don't use spotify
+			: `https://cdn.discordapp.com/app-assets/${validator.escape(appId)}/${validator.escape(url)}.png?quality=lossless`;
 
 	return imageLink;
 }
@@ -49,6 +51,7 @@ type WritableText = {
 type WritableStatus = {
 	status?: string;
 	emoji?: string;
+	em_id?: string;
 };
 
 const USERID = '485504221781950465';
@@ -140,7 +143,7 @@ async function setStatus(lyData: LanyardAPI): Promise<void> {
 		);
 		if (status) {
 			const { state, emoji } = status;
-			customStatus.set({ status: state, emoji: emoji?.name });
+			customStatus.set({ status: state, emoji: emoji?.name, em_id: emoji?.id });
 		} else {
 			customStatus.set({ status: undefined, emoji: undefined });
 		}

@@ -40,7 +40,7 @@
 			</div>
 			<button on:click={DexrnSite.back} class="button">{$t('common.exit')}</button>
 		</Card>
-		<p class="version" title="Version">{DexrnSite.getVersion()}</p>
+		<p class="version" title={$t('settings.version', { values: { ver: DexrnSite.getVersion(), date: new Date(DexrnSite.getPostBuildTime()).toString() } })}>{DexrnSite.getVersion()}</p>
 	</div>
 {/if}
 
