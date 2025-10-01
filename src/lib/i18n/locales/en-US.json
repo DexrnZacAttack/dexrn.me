@@ -10,6 +10,7 @@
         "blog": "Blog"
       },
       "projects": {
+        "libLCE": "libLCE",
         "lce": "LCE Decomp",
         "lodestone": "Project Lodestone"
       }

@@ -108,7 +108,7 @@
 				</div>
 			</div>
 		</Card>
-		{#if $activities}
+		{#if $activities && $activities.filter(a => a.type !== DiscordActivityType.Custom).length !== 0}
 			<Card cardTitle={$t('path.home.discordActivity')}>
 				<div class="activities" transition:fade>
 					{#each $activities as activity}
@@ -126,6 +126,9 @@
 				<div class="buttons">
 					<a href="https://team-lodestone.github.io" class="button"
 						>{$t('buttons.home.projects.lodestone')}</a
+					>
+					<a href="https://dexrnzacattack.github.io/libLCE" class="button"
+					>{$t('buttons.home.projects.libLCE')}</a
 					>
 					<a href="https://github.com/GRAnimated/MinecraftLCE" class="button"
 						>{$t('buttons.home.projects.lce')}</a
@@ -261,7 +264,7 @@
 	.links {
 		display: flex;
 		flex-direction: row;
-		width: 50%;
+		width: 55%;
 		gap: 20px;
 	}
 

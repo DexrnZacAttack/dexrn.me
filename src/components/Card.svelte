@@ -16,7 +16,7 @@
 		backdrop-filter: blur(40px);
 		border-radius: 10px;
 		padding: 12px;
-		width: 50%;
+		width: 55%;
 		border: var(--prim-border-size) solid var(--prim-border-color);
 		background: var(--prim-bg-color);
 		box-shadow: 0 0 10px 5px var(--prim-shadow-color);
