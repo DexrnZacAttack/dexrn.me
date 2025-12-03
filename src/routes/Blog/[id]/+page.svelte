@@ -1,67 +1,34 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import { loadPostByTitle } from '$lib/blog.js';
-	import { parse } from 'marked';
 	import Card from '../../../components/Card.svelte';
-	import { onMount } from 'svelte';
 	import { t } from 'svelte-i18n';
 	import { fade } from 'svelte/transition';
-	import { zoomIn } from '$lib/background';
-	import { getCanvas } from '../../../components/Background.svelte';
 	import { cubicOut } from 'svelte/easing';
+	import { onMount } from 'svelte';
 	import CardTop from '../../../components/CardTop.svelte';
-	import { status, LoadingScreen } from '$lib/loadingScreen';
-	import { DexrnSite } from '$lib/DexrnSite';
+	import { getCanvas } from '../../../components/Background.svelte';
+	import { LoadingScreen, status } from '$lib/loadingScreen';
 	import type { Post } from '$lib/api';
+	import { zoomIn } from '$lib/background';
 
-	let post: Post;
-
-	let body: string;
 	onMount(async () => {
-		// for loading text
-		await DexrnSite.sleep(100);
-		LoadingScreen.loadingStatus = true;
-		LoadingScreen.loadingText = $t('blog.fetchingPost');
-
-		try {
-			post = await loadPostByTitle(page.params.id);
-		} catch {
-			await LoadingScreen.setShowLoadingScreenError(
-				true,
-				$t('errors.postNotFound', { values: { name: page.params.id } })
-			);
-			return;
-		}
-
-		if (!post) {
-			await LoadingScreen.setShowLoadingScreenError(true, $t('errors.postFetchFailed'));
-			return;
-		}
-
-		LoadingScreen.loadingText = $t('blog.loadingPost', { values: { name: post.title } });
-
-		body = await parse(post.body);
-
-		if (!body) {
-			await LoadingScreen.setShowLoadingScreenError(
-				true,
-				$t('errors.postRenderFailed', { values: { name: post.title } })
-			);
-			return;
-		}
-
+		LoadingScreen.loadingText = `Loading post '${data?.post?.title ?? ''}''`;
 		await zoomIn(getCanvas());
 		LoadingScreen.resetLoadingScreenText();
 		LoadingScreen.loadingStatus = false;
 	});
+
+	export let data: { post?: Post; body?: string };
+	const post = data?.post;
+	const body = data?.body;
 </script>
 
 <svelte:head>
 	<meta property="og:title" content="Dexrn's Website | {post?.title ?? 'Loading post...'}" />
 	<meta property="og:type" content="article" />
 	<meta property="og:description" content={post?.body ? `${post?.body.substring(0, 25)}...` : ''} />
-	<meta property="article:published_time" content={post?.timestamp.toString() ?? 0} />
+	<meta property="article:published_time" content={post?.timestamp?.toString() ?? '0'} />
 	<meta property="article:author" content="Dexrn ZacAttack" />
+	<meta name="fediverse:creator" content="@zach@wetdry.world" />
 	<title>@Dexrn | {post?.title ?? 'Loading post...'}</title>
 	<meta property="twitter:title" content="Dexrn's Website | {post?.title ?? 'Loading post...'}" />
 	<meta
@@ -73,8 +40,8 @@
 {#if !$status.transitioning && !$status.loading}
 	<div
 		class="Page"
-		in:fade={{ delay: 200, duration: 200, easing: cubicOut }}
-		out:fade={{ duration: 200, easing: cubicOut }}
+		in:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
+		out:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
 	>
 		{#if post}
 			<CardTop></CardTop>

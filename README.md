@@ -1,4 +1,4 @@
-## DexrnZacAttack.github.io
+## dexrn.me
 
 Just my personal site that I work on whenever I am bored or dream up something...
 

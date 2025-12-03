@@ -30,8 +30,8 @@
 {#if !$status.transitioning && !$status.loading}
 	<div
 		class="Page"
-		in:fade={{ delay: 200, duration: 200, easing: cubicOut }}
-		out:fade={{ duration: 200, easing: cubicOut }}
+		in:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
+		out:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
 	>
 		<Card cardTitle={$t('path.home.discordStatus')}>
 			<div class="lanyard">
@@ -100,6 +100,7 @@
 							title={$t('platforms.youtube')}><i class="bi bi-youtube"></i></a
 						>
 						<a
+							rel="me"
 							href="https://wetdry.world/@zach"
 							aria-label={$t('platforms.wdw')}
 							title={$t('platforms.wdw')}><i class="bi bi-mastodon"></i></a
@@ -108,7 +109,7 @@
 				</div>
 			</div>
 		</Card>
-		{#if $activities && $activities.filter(a => a.type !== DiscordActivityType.Custom).length !== 0}
+		{#if $activities && $activities.filter((a) => a.type !== DiscordActivityType.Custom).length !== 0}
 			<Card cardTitle={$t('path.home.discordActivity')}>
 				<div class="activities" transition:fade>
 					{#each $activities as activity}
@@ -127,9 +128,7 @@
 					<a href="https://team-lodestone.github.io" class="button"
 						>{$t('buttons.home.projects.lodestone')}</a
 					>
-					<a href="https://dexrnzacattack.github.io/libLCE" class="button"
-					>{$t('buttons.home.projects.libLCE')}</a
-					>
+					<a href="https://liblce.dexrn.me" class="button">{$t('buttons.home.projects.libLCE')}</a>
 					<a href="https://github.com/GRAnimated/MinecraftLCE" class="button"
 						>{$t('buttons.home.projects.lce')}</a
 					>
@@ -137,7 +136,9 @@
 			</Card>
 			<Card cardTitle={$t('path.home.pages')}>
 				<div class="buttons">
-					<a href="/Blog" class="button">{$t('buttons.home.pages.blog')}</a>
+					<a href="/Blog" class="button" data-sveltekit-preload-data="hover"
+						>{$t('buttons.home.pages.blog')}</a
+					>
 				</div>
 			</Card>
 		</div>

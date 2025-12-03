@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2024 DexrnZacAttack
- * This file is part of DexrnZacAttack.github.io.
- * https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ * This file is part of dexrn.me.
+ * https://github.com/DexrnZacAttack/dexrn.me
  *
  * Licensed under the MIT License. See LICENSE file for details.
  */
@@ -11,6 +11,32 @@ import { t, waitLocale } from 'svelte-i18n';
 import { get, writable } from 'svelte/store';
 import validator from 'validator';
 const $t = get(t);
+
+export enum UserFlags {
+	STAFF = 1 << 0 /**< Is the user a Discord employee */,
+	PARTNER = 1 << 1 /**< Is the user a partnered server owner */,
+	HYPESQUAD = 1 << 2 /**< Is the user in HypeSquad */,
+	BUG_HUNTER_LEVEL_1 = 1 << 3 /**< Is the user bug hunter lvl 1 */,
+	HYPESQUAD_HOUSE_BRAVERY = 1 << 5 /**< Is the user in the HypeSquad House of Bravery */,
+	HYPESQUAD_HOUSE_BRILLIANCE = 1 << 6 /**< Is the user in the HypeSquad House of Brilliance */,
+	HYPESQUAD_HOUSE_BALANCE = 1 << 7 /**< Is the user in the HypeSquad House of Balance */,
+	EARLY_SUPPORTER = 1 << 8 /**< Is the user an early nitro supporter */,
+	TEAM_USER = 1 << 9 /**< Is the user in a developer team */,
+	BUG_HUNTER_LEVEL_2 = 1 << 14 /**< Is the user bug hunter lvl 2 */,
+	VERIFIED_BOT = 1 << 16 /**< Is the user a verified bot */,
+	EARLY_VERIFIED_BOT_DEVELOPER = 1 << 17 /**< Is the user an early verified bot developer */,
+	CERTIFIED_MODERATOR = 1 << 18 /**< Is the user in the Moderator Programs Alumni */,
+	BOT_HTTP_INTERACTIONS = 1 <<
+		19 /**< Whether the user only uses HTTP interactions and is shown in the online member list */,
+	ACTIVE_DEVELOPER = 1 << 22 /**< Is the user an Active Developer */
+}
+
+export enum NitroType {
+	NONE,
+	NITRO_CLASSIC,
+	NITRO,
+	NITRO_BASIC
+}
 
 enum PID {
 	EventBD, // s <-> c
@@ -33,7 +59,7 @@ export function getImage(url: string, appId: string) {
 		? `https://media.discordapp.net/external/${url.split('mp:external/')[1]}`
 		: url.startsWith('spotify:')
 			? `https://i.scdn.co/image/${url.substring(8)}` // I don't use spotify
-			: `https://cdn.discordapp.com/app-assets/${validator.escape(appId)}/${validator.escape(url)}.png?quality=lossless`;
+			: `https://cdn.discordapp.com/app-assets/${validator.escape(appId)}/${validator.escape(url)}.webp?quality=lossless`;
 
 	return imageLink;
 }
@@ -78,11 +104,17 @@ export const onlineState = writable<WritableText>({
 
 export const activities = writable<Array<LanyardActivity>>();
 
+// tbh might be helpful to start wrapping some of these fields in classes that have helpers such as these
+function avatarIsAnimated(avatar: string): boolean {
+	return avatar.startsWith('a_');
+}
+
 async function setAvatar(lyData: LanyardAPI): Promise<void> {
 	const {
 		discord_user: { avatar }
 	} = lyData;
-	const fullUrl = `https://cdn.discordapp.com/avatars/${USERID}/${avatar}.webp?size=512`;
+
+	const fullUrl = `https://cdn.discordapp.com/avatars/${USERID}/${avatar}.webp?size=512&animated=true&quality=lossless`;
 	pfp.update((s) => ({
 		...s,
 		image: fullUrl

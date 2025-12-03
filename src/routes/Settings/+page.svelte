@@ -29,8 +29,8 @@
 {#if !$status.transitioning && !$status.loading}
 	<div
 		class="Page"
-		in:fade={{ delay: 200, duration: 200, easing: cubicOut }}
-		out:fade={{ duration: 200, easing: cubicOut }}
+		in:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
+		out:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
 	>
 		<Card cardTitle={$t('path.settings')}>
 			<div class="settings">
@@ -40,7 +40,17 @@
 			</div>
 			<button on:click={DexrnSite.back} class="button">{$t('common.exit')}</button>
 		</Card>
-		<p class="version" title={$t('settings.version', { values: { ver: DexrnSite.getVersion(), date: new Date(DexrnSite.getPostBuildTime()).toString() } })}>{DexrnSite.getVersion()}</p>
+		<p
+			class="version"
+			title={$t('settings.version', {
+				values: {
+					ver: DexrnSite.getVersion(),
+					date: new Date(DexrnSite.getPostBuildTime()).toString()
+				}
+			})}
+		>
+			{DexrnSite.getVersion()}
+		</p>
 	</div>
 {/if}
 

@@ -88,7 +88,8 @@ export namespace DexrnSite {
 		return DexrnSite.toTimeString(now - time);
 	}
 
-	export const BACKEND_URL = 'https://dexrn.dedyn.io';
+	export const LOCAL_BACKEND_URL = 'http://localhost:6173'; // for serverside rendering
+	export const BACKEND_URL = 'https://api.dexrn.me';
 	export let settings: Settings;
 
 	// please tell me there is some better way to do this

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2024 DexrnZacAttack
- * This file is part of DexrnZacAttack.github.io.
- * https://github.com/DexrnZacAttack/DexrnZacAttack.github.io
+ * This file is part of dexrn.me.
+ * https://github.com/DexrnZacAttack/dexrn.me
  *
  * Licensed under the MIT License. See LICENSE file for details.
  */
@@ -11,7 +11,7 @@ import { DexrnSite } from './DexrnSite';
 
 export async function fetchPosts(): Promise<PostInfo[]> {
 	const res: ApiResponse<PostInfo[]> = await (
-		await fetch(`${DexrnSite.BACKEND_URL}/api/v1/blog`, {
+		await fetch(`${DexrnSite.LOCAL_BACKEND_URL}/api/v1/blog`, {
 			method: 'GET',
 			headers: {
 				dzVersion: `${DexrnSite.getVersion()}`
@@ -28,7 +28,7 @@ export async function fetchPosts(): Promise<PostInfo[]> {
 
 export async function loadPost(post: PostInfo): Promise<Post> {
 	const res: ApiResponse<Post> = await (
-		await fetch(DexrnSite.BACKEND_URL + post.postURL, {
+		await fetch(DexrnSite.LOCAL_BACKEND_URL + post.postURL, {
 			method: 'GET',
 			headers: {
 				dzVersion: `${DexrnSite.getVersion()}`
@@ -43,7 +43,7 @@ export async function loadPost(post: PostInfo): Promise<Post> {
 
 export async function loadPostByTitle(title: string): Promise<Post> {
 	const res: ApiResponse<Post> = await (
-		await fetch(`${DexrnSite.BACKEND_URL}/api/v1/blog/get?post=` + title, {
+		await fetch(`${DexrnSite.LOCAL_BACKEND_URL}/api/v1/blog/get?post=` + title, {
 			method: 'GET',
 			headers: {
 				dzVersion: `${DexrnSite.getVersion()}`
