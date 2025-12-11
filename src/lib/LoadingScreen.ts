@@ -4,7 +4,7 @@ import { writable } from 'svelte/store';
 import { DexrnSite } from './DexrnSite';
 
 // also our entrypoint for some reason
-await main();
+main();
 
 interface Status {
 	transitioning: boolean; // whether we are currently transitioning
@@ -21,7 +21,7 @@ export class LoadingScreen {
 		loading: true,
 		bgLoading: true,
 		transitioning: true,
-		loadingScreenText: DexrnSite.TRANSLATE('loadingScreen.loading'),
+		loadingScreenText: "Loading...",
 		loadingError: false
 	});
 
