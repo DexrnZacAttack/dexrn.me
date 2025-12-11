@@ -15,7 +15,7 @@ export class DexrnSite {
 	public static instance: DexrnSite;
 
 	public static readonly LOCAL_STARLIE_URL = 'http://localhost:6173'; // for serverside rendering
-	public static readonly STARLIE_URL = 'http://10.0.1.1:6173';
+	public static readonly STARLIE_URL = 'http://api.dexrn.me';
 	public static readonly OUTER_ROUTES = ['/Settings'];
 
 	public static readonly TRANSLATE = get(t);

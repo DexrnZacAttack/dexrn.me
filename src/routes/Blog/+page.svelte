@@ -36,9 +36,9 @@
 	>
 		<CardTop classes="blogCard"></CardTop>
 		<Card cardTitle={$t('path.blog.path')} classes="blogCard">
-			<div class="posts">
-				{#if data.posts}
-					{#if data.posts.length > 0}
+			{#if data.posts}
+				{#if data.posts.length > 0}
+					<div class="posts">
 						{#each data.posts as post (post.id)}
 							<a
 								data-sveltekit-preload-data="hover"
@@ -63,20 +63,20 @@
 								</div>
 							</a>
 						{/each}
-					{:else}
-						<div class="error">
-							<h1 class="errorText">No posts were returned.</h1>
-						</div>
-					{/if}
-				{:else if data.error}
-					<div class="error">
-						<h2 class="errorText">Couldn't fetch posts as the API returned an error</h2>
-						<code class="codeblock">{ResponseError.toString(data.error)}</code>
-					</div>
-				{:else}
-					<h2 class="errorText">Couldn't fetch posts! This is a bug.</h2>
-				{/if}
 			</div>
+				{:else}
+					<div class="error">
+						<h1 class="errorText">No posts were returned.</h1>
+					</div>
+				{/if}
+			{:else if data.error}
+				<div class="error">
+					<h2 class="errorText">Couldn't fetch posts as the API returned an error</h2>
+					<code class="codeblock">{ResponseError.toString(data.error)}</code>
+				</div>
+			{:else}
+				<h2 class="errorText">Couldn't fetch posts! This is a bug.</h2>
+			{/if}
 		</Card>
 	</div>
 {/if}
