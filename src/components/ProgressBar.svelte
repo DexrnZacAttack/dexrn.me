@@ -6,7 +6,7 @@
 	export let barStyle = '';
 </script>
 
-<div {...$$restProps} class="prog">
+<div class="prog" {...$$restProps}>
 	<div class="bar" style="width: {value / max * 100}%; background-color: {color};{barStyle}"></div>
 </div>
 

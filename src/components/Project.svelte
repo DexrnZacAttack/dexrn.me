@@ -76,9 +76,7 @@
   .title {
     margin: 0;
     padding: 0;
-  }
 
-  .title {
     cursor: help;
 
     &.discontinued {
