@@ -1,73 +1,112 @@
 <script lang="ts">
 	import Card from '../components/Card.svelte';
-	import { pfp, customStatus, activities, onlineState } from '$lib/lanyard.js';
-	import { DexrnSite } from '$lib/DexrnSite';
-	import { lyIsOnBrowser, lyIsOnDesktop, lyIsOnMobile } from '$lib/store';
+	import { Lanyard } from '$lib/lanyard/Lanyard.js';
 	import { blur, fade } from 'svelte/transition';
-	import { DiscordActivityType } from '$lib/lanyard.js';
+	import { DiscordActivityType } from '$lib/lanyard/discord';
 	import DiscordActivity from '../components/DiscordActivity.svelte';
-	import { onMount } from 'svelte';
-	import { t, waitLocale } from 'svelte-i18n';
-	import { zoomIn } from '$lib/background';
-	import { getCanvas } from '../components/Background.svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
+	import { t } from 'svelte-i18n';
+	import { PanoramaBackground } from '$lib/PanoramaBackground';
 	import { cubicOut } from 'svelte/easing';
 	import validator from 'validator';
-	import { status } from '$lib/loadingScreen';
 	import pkg from '../../package.json';
+	import { LoadingScreen } from '$lib/LoadingScreen';
+	import { StringUtils } from '$lib/util/StringUtils';
+	import type { Project } from '$lib/api/starlie';
+	import CardTitle from '../components/CardTitle.svelte';
+
+	const loadingStatus = LoadingScreen.Instance.Status;
+	const lanyard = new Lanyard('485504221781950465');
+
+	const pfp = lanyard.pfp;
+	const onlineState = lanyard.onlineState;
+	const customStatus = lanyard.customStatus;
+	const activities = lanyard.activities;
+
+	const onlineDesktop = lanyard.userOnDesktop;
+	const onlineMobile = lanyard.userOnMobile;
+	const onlineWeb = lanyard.userOnBrowser;
+
+	let projectsCard: HTMLDivElement;
+	let projects: HTMLElement[] = [];
+
+	function onResize() {
+		projects.forEach(p => {
+			if (p.offsetLeft + p.getBoundingClientRect().width > projectsCard.clientWidth) {
+				p.classList.add('invisible');
+				return;
+			}
+
+			p.classList.remove('invisible');
+		});
+	}
 
 	onMount(async () => {
-		await waitLocale();
-		await import('$lib/lanyard.js');
-		await zoomIn(getCanvas());
+		await lanyard.start();
+		await PanoramaBackground.instance.transitionIn();
+
+		await tick();
+		onResize();
+		window.onresize = onResize;
 	});
+
+	onDestroy(() => {
+		window.onresize = null;
+	});
+
+	export let data: { projects?: Project[] };
 </script>
 
 <svelte:head>
 	<title>Dexrn's Website</title>
-	<meta name="generator" content="SvelteKit {pkg.devDependencies['@sveltejs/kit'].substring(1)}" />
+	<meta content="SvelteKit {pkg.devDependencies['@sveltejs/kit'].substring(1)}" name="generator" />
 </svelte:head>
 
-{#if !$status.transitioning && !$status.loading}
+{#if !$loadingStatus.transitioning && !$loadingStatus.loading}
 	<div
 		class="Page"
-		in:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
-		out:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
+		transition:fade={{ delay: 200, duration: 200, easing: cubicOut }}
 	>
 		<Card cardTitle={$t('path.home.discordStatus')}>
 			<div class="lanyard">
 				<div class="online">
 					<img
-						src={$pfp.image || 'https://avatars.githubusercontent.com/DexrnZacAttack'}
+						src={$pfp.image || 'https://github.com/DexrnZacAttack.png'}
 						width="128"
 						height="128"
 						class="pfp"
-						style={`${DexrnSite.styleToString($pfp.style)}`}
-						title={$onlineState.text}
+						style={`${StringUtils.styleToString($pfp.style)}`}
+						alt={$t("home.discordStatus.profilePicture.title", { values: { displayName: $t("home.discordStatus.username"), status: $onlineState.text } })}
+						title={$t("home.discordStatus.profilePicture.title", { values: { displayName: $t("home.discordStatus.username"), status: $onlineState.text } })}
 					/>
 					<div class="devices" transition:fade>
 						<i
 							class="bi bi-display statusIcon"
-							title={$lyIsOnDesktop ? $onlineState.text : $t('lanyard.status.offline')}
-							style="color: {$lyIsOnDesktop ? $onlineState.style.color : '#747e8c'}"
+							title={$onlineDesktop ? $onlineState.text : $t('lanyard.status.offline')}
+							style="color: {$onlineDesktop ? $onlineState.style.color : '#747e8c'}"
 							transition:blur
 						></i>
 						<i
 							class="bi bi-globe-americas statusIcon"
-							title={$lyIsOnBrowser ? $onlineState.text : $t('lanyard.status.offline')}
-							style="color: {$lyIsOnBrowser ? $onlineState.style.color : '#747e8c'}"
+							title={$onlineWeb ? $onlineState.text : $t('lanyard.status.offline')}
+							style="color: {$onlineWeb ? $onlineState.style.color : '#747e8c'}"
 							transition:blur
 						></i>
 						<i
 							class="bi bi-phone statusIcon"
-							title={$lyIsOnMobile ? $onlineState.text : $t('lanyard.status.offline')}
-							style="color: {$lyIsOnMobile ? $onlineState.style.color : '#747e8c'}"
+							title={$onlineMobile ? $onlineState.text : $t('lanyard.status.offline')}
+							style="color: {$onlineMobile ? $onlineState.style.color : '#747e8c'}"
 							transition:blur
 						></i>
 					</div>
 				</div>
 				<div class="details">
-					<p class="displayName">{$t('home.discordStatus.username')}</p>
-					<p class="onlineStatus" style="color: {$onlineState.style.color}">{$onlineState.text}</p>
+					<div class="username">
+						<p class="displayName">{$t('home.discordStatus.username')}</p>
+						{#if $onlineState.text}
+							<p class="onlineStatus" style="color: {$onlineState.style.color}">{$onlineState.text}</p>
+						{/if}
+					</div>
 					{#if $customStatus.status || $customStatus.emoji}
 						<div class="customStatus" transition:fade>
 							{#if $customStatus.emoji && !$customStatus.em_id}
@@ -84,11 +123,10 @@
 						</div>
 					{/if}
 					<div class="platforms">
-						<a
-							href="https://github.com/DexrnZacAttack"
-							aria-label={$t('platforms.github')}
-							title={$t('platforms.github')}><i class="bi bi-github"></i></a
-						>
+						<a href="https://github.com/DexrnZacAttack" aria-label={$t('platforms.github')}
+							 title={$t('platforms.github')}>
+							<i class="bi bi-github"></i>
+						</a>
 						<a
 							href="https://discord.com/users/485504221781950465"
 							aria-label={$t('platforms.discord')}
@@ -112,7 +150,7 @@
 		{#if $activities && $activities.filter((a) => a.type !== DiscordActivityType.Custom).length !== 0}
 			<Card cardTitle={$t('path.home.discordActivity')}>
 				<div class="activities" transition:fade>
-					{#each $activities as activity}
+					{#each $activities as activity (activity.id)}
 						{#if activity.type !== DiscordActivityType.Custom}
 							<div transition:fade>
 								<DiscordActivity {activity} />
@@ -122,22 +160,32 @@
 				</div>
 			</Card>
 		{/if}
-		<div class="links">
-			<Card cardTitle={$t('path.home.projects')}>
+		<div class="links cardFitToCenter">
+			<Card class="card linkCard" bind:root={projectsCard}>
+				<CardTitle>
+					{$t('path.home.projects.path')}
+					<a href="/Projects" class="moreButton" data-sveltekit-preload-data="hover"
+						 aria-label={$t('path.home.projects.more.title')} title={$t('path.home.projects.more.title')}>
+						...
+					</a>
+				</CardTitle>
 				<div class="buttons">
-					<a href="https://team-lodestone.github.io" class="button"
-						>{$t('buttons.home.projects.lodestone')}</a
-					>
-					<a href="https://liblce.dexrn.me" class="button">{$t('buttons.home.projects.libLCE')}</a>
-					<a href="https://github.com/GRAnimated/MinecraftLCE" class="button"
-						>{$t('buttons.home.projects.lce')}</a
-					>
+					{#if data.projects}
+						{#each data.projects as project, index (project.id)}
+							<a href="{project.projectUrl}" bind:this={projects[index]} class="button">{project.name}</a>
+						{/each}
+					{:else}
+						<p style="margin: auto;">Couldn't fetch projects, is the API down?</p>
+					{/if}
 				</div>
 			</Card>
-			<Card cardTitle={$t('path.home.pages')}>
+			<Card cardTitle={$t('path.home.pages')} class="card linkCard">
 				<div class="buttons">
 					<a href="/Blog" class="button" data-sveltekit-preload-data="hover"
-						>{$t('buttons.home.pages.blog')}</a
+					>{$t('buttons.home.pages.blog')}</a
+					>
+					<a href="/Projects" class="button" data-sveltekit-preload-data="hover"
+					>{$t('buttons.home.pages.projects')}</a
 					>
 				</div>
 			</Card>
@@ -145,154 +193,176 @@
 	</div>
 {/if}
 
-<style>
-	.lanyard {
-		display: flex;
-		flex-direction: row;
-	}
+<style lang="scss">
+  @use '$lib/stylesheets/components/card' as Card;
 
-	.details {
-		margin: 0 0 0 15px;
-		display: flex;
-		flex-direction: column;
-		max-width: 310px;
-	}
+  .lanyard {
+    display: flex;
+    flex-direction: row;
+  }
 
-	.customStatus {
-		display: flex;
-		flex-direction: row;
-		gap: 5px;
-		align-items: center;
-		border-radius: 5px;
-		background: var(--alt-bg-color-2);
-		border: var(--prim-border-size) solid var(--prim-border-color);
-		width: fit-content;
-		padding: 5px;
-		margin-top: 15px;
-	}
+  .username {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
 
-	.status,
-	.statusEmoji {
-		text-wrap: wrap;
-		margin: 0;
-	}
+  .moreButton {
+    text-decoration: none;
+    margin-left: auto;
+    color: var(--prim-text-color);
+    opacity: 100% !important;
+  }
 
-	.statusEmoji {
-		font-size: 1.5em;
-	}
+  .details {
+    margin: 0 0 0 15px;
+    display: flex;
+    flex-direction: column;
+    max-width: 310px;
+  }
 
-	.statusEmojiImg {
-		height: 2em;
-	}
+  .customStatus {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    border-radius: 5px;
+    background: var(--alt-bg-color-2);
+    border: var(--prim-border-size) solid var(--prim-border-color);
+    width: fit-content;
+    padding: 5px;
+  }
 
-	.displayName {
-		margin: 0;
-		font-size: 28px;
-		font-weight: bold;
-	}
+  .status,
+  .statusEmoji {
+    text-wrap: wrap;
+    margin: 0;
+  }
 
-	.pfp {
-		border-radius: 10px;
-	}
+  .statusEmoji {
+    font-size: 1.5em;
+  }
 
-	.online {
-		display: flex;
-		flex-direction: column;
-	}
+  .statusEmojiImg {
+    height: 2em;
+  }
 
-	.devices {
-		display: flex;
-		flex-direction: row;
-		margin-top: 15px;
-		background-color: var(--alt-bg-color-2);
-		justify-content: flex-start;
-		align-content: center;
-		border-radius: 10px;
-		padding-left: 5px;
-		padding-right: 5px;
-		border: var(--prim-border-size) solid var(--prim-border-color);
-		gap: 10px;
-	}
+  .displayName {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+  }
 
-	.buttons {
-		display: flex;
-		flex-direction: row;
-		gap: 20px;
-	}
+  .pfp {
+    border-radius: 10px;
+  }
 
-	.statusIcon {
-		font-size: 2em;
-	}
+  .online {
+    display: flex;
+    flex-direction: column;
+  }
 
-	.activities {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-		max-height: 150px; /* just enough for mobile user to see that they can scroll */
-		overflow-y: auto;
-		overflow-x: hidden;
-	}
+  .devices {
+    display: flex;
+    flex-direction: row;
+    margin-top: 15px;
+    background-color: var(--alt-bg-color-2);
+    justify-content: flex-start;
+    align-content: center;
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: var(--prim-border-size) solid var(--prim-border-color);
+    gap: 10px;
+  }
 
-	@media (min-height: 870px) {
-		.activities {
-			max-height: 300px;
-		}
-	}
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
 
-	@media (min-height: 1010px) {
-		.activities {
-			max-height: 450px;
-		}
-	}
+  .statusIcon {
+    font-size: 2em;
+  }
 
-	.platforms {
-		display: flex;
-		flex-direction: row;
-		background-color: var(--alt-bg-color-2);
-		border-radius: 10px;
-		border: var(--prim-border-size) solid var(--prim-border-color);
-		padding-left: 5px;
-		margin-top: auto;
-		gap: 10px;
-		max-width: 210px;
-	}
+  .activities {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 150px; /* just enough for mobile user to see that they can scroll */
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 
-	.platforms a i {
-		font-size: 2em;
-		color: var(--prim-text-color);
-	}
+  @media (min-height: 870px) {
+    .activities {
+      max-height: 300px;
+    }
+  }
 
-	.links {
-		display: flex;
-		flex-direction: row;
-		width: 55%;
-		gap: 20px;
-	}
+  @media (min-height: 1010px) {
+    .activities {
+      max-height: 450px;
+    }
+  }
 
-	@media (max-width: 1465px) {
-		.links {
-			width: 60%;
-		}
-	}
+  .platforms {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--alt-bg-color-2);
+    border-radius: 10px;
+    border: var(--prim-border-size) solid var(--prim-border-color);
+    padding-left: 5px;
+    margin-top: auto;
+    gap: 10px;
+    max-width: 210px;
+  }
 
-	@media (max-width: 1221px) {
-		.links {
-			width: 80%;
-		}
-	}
+  .platforms a i {
+    font-size: 2em;
+    color: var(--prim-text-color);
+  }
 
-	.onlineStatus {
-		padding: 0;
-		margin: 0;
-	}
+  .links {
+    box-sizing: border-box;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
 
-	.pfp,
-	.onlineStatus,
-	.statusIcon {
-		transition:
-			color 0.3s ease-out,
-			border-color 0.3s ease-out,
-			box-shadow 0.3s ease-out,
-			background 0.3s ease-out;
-	}
+  :global(.linkCard) {
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  @media (max-width: Card.$card-level-2-device-width) {
+    .links {
+			justify-content: center;
+			align-items: center;
+      flex-direction: column !important;
+      width: 100%;
+    }
+  }
+
+  .onlineStatus {
+    margin: 0;
+    background-color: var(--alt-bg-color-2);
+    padding: 5px;
+    border-radius: 20px;
+    border: 1px solid var(--prim-border-color);
+  }
+
+  .pfp,
+  .onlineStatus,
+  .statusIcon {
+    transition: color 0.3s ease-out,
+    border-color 0.3s ease-out,
+    box-shadow 0.3s ease-out,
+    background 0.3s ease-out;
+  }
 </style>

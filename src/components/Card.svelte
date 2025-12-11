@@ -2,9 +2,12 @@
 	import CardTitle from './CardTitle.svelte';
 
 	export let cardTitle = '';
+	export let classes = '';
+
+	export let root: HTMLDivElement = null!;
 </script>
 
-<div class="card" {...$$props} on:click>
+<div {...$$restProps} bind:this={root} class="card cardFitToCenter {classes}" on:click>
 	{#if cardTitle}
 		<CardTitle>{cardTitle}</CardTitle>
 	{/if}
@@ -12,30 +15,16 @@
 </div>
 
 <style>
-	.card {
-		backdrop-filter: blur(40px);
-		border-radius: 10px;
-		padding: 12px;
-		width: 55%;
-		border: var(--prim-border-size) solid var(--prim-border-color);
-		background: var(--prim-bg-color);
-		box-shadow: 0 0 10px 5px var(--prim-shadow-color);
-		color: var(--prim-text-color);
-		transition:
-			background-color 0.25s,
-			box-shadow 0.25s,
-			color 0.25s;
-	}
-
-	@media (max-width: 1465px) {
-		.card {
-			width: 60%;
-		}
-	}
-
-	@media (max-width: 1221px) {
-		.card {
-			width: 80%;
-		}
-	}
+    .card {
+        backdrop-filter: blur(40px);
+        border-radius: 10px;
+        padding: 12px;
+        border: var(--prim-border-size) solid var(--prim-border-color);
+        background: var(--prim-bg-color);
+        box-shadow: 0 0 10px 5px var(--prim-shadow-color);
+        color: var(--prim-text-color);
+        transition: background-color 0.25s,
+        box-shadow 0.25s,
+        color 0.25s;
+    }
 </style>

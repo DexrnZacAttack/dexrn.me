@@ -7,7 +7,7 @@ export default defineConfig({
 		port: 5173,
 		allowedHosts: ['dexrn.me', 'dev.dexrn.me'],
 		fs: {
-			allow: ['package.json', 'build.json']
+			allow: ['package.json']
 		}
 	}
 });

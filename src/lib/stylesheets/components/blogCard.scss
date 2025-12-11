@@ -1,0 +1,33 @@
+$blog-card-min-width: 1276px;
+
+$blog-card-level-1-width: 960px;
+$blog-card-level-1-device-width: 1335px;
+
+$blog-card-level-2-width: 644px;
+$blog-card-level-2-device-width: 1080px;
+
+$blog-card-level-3-width: 95%;
+$blog-card-level-3-device-width: 700px;
+
+$blog-card-max-width: 330px;
+$blog-card-max-device-width: 678px;
+
+.blogCard {
+  width: $blog-card-min-width;
+
+  @media (max-width: $blog-card-level-1-device-width) {
+    width: $blog-card-level-1-width;
+  }
+
+  @media (max-width: $blog-card-level-2-device-width) {
+    width: $blog-card-level-2-width;
+  }
+
+  @media (max-width: $blog-card-level-3-device-width) {
+    width: $blog-card-level-3-width;
+  }
+
+  @media (max-width: $blog-card-max-device-width) {
+    width: $blog-card-max-width;
+  }
+}

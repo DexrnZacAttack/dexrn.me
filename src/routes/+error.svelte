@@ -5,22 +5,24 @@
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { t } from 'svelte-i18n';
-	import { status, LoadingScreen } from '$lib/loadingScreen';
+	import { LoadingScreen } from '$lib/LoadingScreen';
 	import { DexrnSite } from '$lib/DexrnSite';
+
+	const loadingStatus = LoadingScreen.Instance.Status;
 
 	onMount(async () => {
 		await DexrnSite.sleep(200);
-		LoadingScreen.loadingStatus = false;
-		LoadingScreen.transitionStatus = false;
+		LoadingScreen.Instance.loadingStatus = false;
+		LoadingScreen.Instance.transitionStatus = false;
 	});
 </script>
 
 <svelte:head>
 	<title>@Dexrn | {page?.error?.message}</title>
-	<meta property="og:title" content="Dexrn's Website | {page?.error?.message}" />
+	<meta content="Dexrn's Website | {page?.error?.message}" property="og:title" />
 </svelte:head>
 
-{#if !$status.transitioning && !$status.loading}
+{#if !$loadingStatus.transitioning && !$loadingStatus.loading}
 	<div
 		class="Page"
 		in:fade={{ delay: 200, duration: 200, easing: cubicOut }}

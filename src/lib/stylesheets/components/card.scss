@@ -1,0 +1,40 @@
+$card-min-width: 55%;
+
+$card-level-1-width: 60%;
+$card-level-1-device-width: 1465px;
+
+$card-level-2-width: 80%;
+$card-level-2-device-width: 1221px;
+
+$card-level-3-width: 90%;
+$card-level-3-device-width: 620px;
+
+$card-level-4-width: 95%;
+$card-level-4-device-width: 555px;
+
+$card-max-width: 98%;
+$card-max-device-width: 525px;
+
+.cardFitToCenter {
+  width: $card-min-width;
+
+  @media (max-width: $card-level-1-device-width) {
+    width: $card-level-1-width;
+  }
+
+  @media (max-width: $card-level-2-device-width) {
+    width: $card-level-2-width;
+  }
+
+  @media (max-width: $card-level-3-device-width) {
+    width: $card-level-3-width;
+  }
+
+  @media (max-width: $card-level-4-device-width) {
+    width: $card-level-4-width;
+  }
+
+  @media (max-width: $card-max-device-width) {
+    width: $card-max-width;
+  }
+}

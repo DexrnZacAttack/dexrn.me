@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import '$lib/i18n';
+import '$lib/i18n/I18N';
 import { marked, Renderer, type Token } from 'marked';
 import { locale, waitLocale } from 'svelte-i18n';
 import type { LayoutLoad } from './$types';

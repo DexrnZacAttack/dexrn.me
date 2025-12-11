@@ -5,39 +5,39 @@
 	import { cubicOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
 	import CardTop from '../../../components/CardTop.svelte';
-	import { getCanvas } from '../../../components/Background.svelte';
-	import { LoadingScreen, status } from '$lib/loadingScreen';
-	import type { Post } from '$lib/api';
-	import { zoomIn } from '$lib/background';
+	import { LoadingScreen } from '$lib/LoadingScreen';
+	import type { ApiPost } from '$lib/api/starlie';
+	import { PanoramaBackground } from '$lib/PanoramaBackground';
+
+	const loadingStatus = LoadingScreen.Instance.Status;
 
 	onMount(async () => {
-		LoadingScreen.loadingText = `Loading post '${data?.post?.title ?? ''}''`;
-		await zoomIn(getCanvas());
-		LoadingScreen.resetLoadingScreenText();
-		LoadingScreen.loadingStatus = false;
+		await PanoramaBackground.instance.transitionIn();
+		LoadingScreen.Instance.resetLoadingScreenText();
+		LoadingScreen.Instance.loadingStatus = false;
 	});
 
-	export let data: { post?: Post; body?: string };
+	export let data: { post?: ApiPost, body?: string };
 	const post = data?.post;
 	const body = data?.body;
 </script>
 
 <svelte:head>
-	<meta property="og:title" content="Dexrn's Website | {post?.title ?? 'Loading post...'}" />
-	<meta property="og:type" content="article" />
-	<meta property="og:description" content={post?.body ? `${post?.body.substring(0, 25)}...` : ''} />
-	<meta property="article:published_time" content={post?.timestamp?.toString() ?? '0'} />
-	<meta property="article:author" content="Dexrn ZacAttack" />
-	<meta name="fediverse:creator" content="@zach@wetdry.world" />
+	<meta content="Dexrn's Website | {post?.title ?? 'Loading post...'}" property="og:title" />
+	<meta content="article" property="og:type" />
+	<meta content={post?.content ? `${post?.content.substring(0, 25)}...` : ''} property="og:description" />
+	<meta content={new Date(post?.created ?? 0)?.getTime() ?? '0'} property="article:published_time" />
+	<meta content="Dexrn ZacAttack" property="article:author" />
+	<meta content="@zach@wetdry.world" name="fediverse:creator" />
 	<title>@Dexrn | {post?.title ?? 'Loading post...'}</title>
-	<meta property="twitter:title" content="Dexrn's Website | {post?.title ?? 'Loading post...'}" />
+	<meta content="Dexrn's Website | {post?.title ?? 'Loading post...'}" property="twitter:title" />
 	<meta
+		content={post?.content ? `${post?.content.substring(0, 25)}...` : ''}
 		property="twitter:description"
-		content={post?.body ? `${post?.body.substring(0, 25)}...` : ''}
 	/>
 </svelte:head>
 
-{#if !$status.transitioning && !$status.loading}
+{#if !$loadingStatus.transitioning && !$loadingStatus.loading}
 	<div
 		class="Page"
 		in:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
@@ -59,25 +59,16 @@
 {/if}
 
 <style>
-	.Page {
-		height: 100%;
-		justify-content: unset; /* makes element taller than I can scroll if set */
-		overflow-y: auto;
-		padding-bottom: 15px; /* overflow breaks shadows */
-	}
+    .Page {
+        height: 100%;
+        justify-content: unset; /* makes element taller than I can scroll if set */
+        overflow-y: auto;
+        padding-bottom: 15px; /* overflow breaks shadows */
+    }
 
-	.blogCard {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
-		height: 100%;
-		min-height: 100%;
-	}
-
-	:global .content p img {
-		height: 250px;
-		object-fit: contain;
-		max-width: 50%;
-	}
+    :global .content p img {
+        height: 250px;
+        object-fit: contain;
+        max-width: 50%;
+    }
 </style>

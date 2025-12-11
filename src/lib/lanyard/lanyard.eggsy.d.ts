@@ -1,41 +1,4 @@
 // https://lanyard.eggsy.xyz/api/getting-user-presence
-// https://discord.com/developers/docs/resources/user
-
-declare interface DiscordAvatarDecorationData {
-	asset: string;
-	sku_id: string;
-	expires?: number;
-}
-
-// bc guild id can be a number sometimes in one case
-declare interface DiscordClan<T> {
-	tag: string;
-	identity_guild_id: T;
-	badge: string;
-	identity_enabled: boolean;
-}
-
-declare interface DiscordTimestamps {
-	/** When the activity started */
-	start: number;
-	/** When the activity should end */
-	end?: number;
-}
-
-declare interface DiscordUser {
-	id: string;
-	username: string;
-	avatar: string;
-	discriminator: string;
-	clan?: DiscordClan<string>;
-	bot: boolean;
-	global_name: number;
-	primary_guild?: DiscordClan<number>;
-	avatar_decoration_data?: DiscordAvatarDecorationData;
-	collectibles: any; // unk
-	display_name: number;
-	public_flags: number;
-}
 
 declare interface LanyardSpotify {
 	timestamps: DiscordTimestamps;
@@ -57,6 +20,7 @@ declare interface LanyardAPI {
 	active_on_discord_web: boolean;
 	active_on_discord_desktop: boolean;
 	active_on_discord_mobile: boolean;
+	active_on_discord_embedded: boolean;
 	listening_to_spotify: boolean;
 	user_id?: string;
 }

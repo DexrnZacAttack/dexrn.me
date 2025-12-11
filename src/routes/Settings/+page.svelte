@@ -3,34 +3,40 @@
 	import BooleanSetting from '../../components/Settings/BooleanSetting.svelte';
 	import { DexrnSite } from '$lib/DexrnSite';
 	import { onMount } from 'svelte';
-	import { speed } from '$lib/store';
 	import { cubicOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
-	import { t } from 'svelte-i18n';
-	import { status, LoadingScreen } from '$lib/loadingScreen';
+	import { t, waitLocale } from 'svelte-i18n';
+	import { LoadingScreen } from '$lib/LoadingScreen';
+	import { PanoramaBackground } from '$lib/PanoramaBackground';
+	import { Utils } from '$lib/util/Utils';
+	import type { VersionResponse } from '$lib/api/starlie';
+
+	const loadingStatus = LoadingScreen.Instance.Status;
 
 	onMount(async () => {
+		await waitLocale();
 		await DexrnSite.sleep(200, true); // race condition
-		LoadingScreen.loadingStatus = false;
-		LoadingScreen.transitionStatus = false;
+		LoadingScreen.Instance.loadingStatus = false;
+		LoadingScreen.Instance.transitionStatus = false;
 	});
 
 	const changeBg = async (active: boolean) => {
-		await speed.set(!active ? 1 : 0);
+		await PanoramaBackground.instance.speed.set(!active ? 1 : 0);
 	};
+
+	export let data: { version: VersionResponse };
 </script>
 
 <svelte:head>
 	<title>@Dexrn | Settings</title>
-	<meta property="twitter:title" content="Dexrn's Website | Settings" />
-	<meta property="og:title" content="Dexrn's Website | Settings" />
+	<meta content="Dexrn's Website | Settings" property="twitter:title" />
+	<meta content="Dexrn's Website | Settings" property="og:title" />
 </svelte:head>
 
-{#if !$status.transitioning && !$status.loading}
+{#if !$loadingStatus.transitioning && !$loadingStatus.loading}
 	<div
 		class="Page"
-		in:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
-		out:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
+		transition:fade|global={{ delay: 200, duration: 200, easing: cubicOut }}
 	>
 		<Card cardTitle={$t('path.settings')}>
 			<div class="settings">
@@ -38,41 +44,41 @@
 				<BooleanSetting id="noSleep" />
 				<BooleanSetting id="doNotScrollPanorama" onChange={changeBg} />
 			</div>
-			<button on:click={DexrnSite.back} class="button">{$t('common.exit')}</button>
+			<button on:click={Utils.back} class="button">{$t('common.exit')}</button>
 		</Card>
 		<p
 			class="version"
 			title={$t('settings.version', {
 				values: {
 					ver: DexrnSite.getVersion(),
-					date: new Date(DexrnSite.getPostBuildTime()).toString()
+					starlieVer: data.version.version
 				}
 			})}
 		>
-			{DexrnSite.getVersion()}
+			v{DexrnSite.getVersion()} | v{data.version.version}
 		</p>
 	</div>
 {/if}
 
 <style>
-	.settings {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-		margin-bottom: 10px;
-	}
+    .settings {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
 
-	.Page {
-		padding-top: 6%;
-	}
+    .Page {
+        padding-top: 6%;
+    }
 
-	.version {
-		position: absolute;
-		top: calc(var(--vh) - 150px);
-		right: calc(var(--vw) - 145px);
-		background: var(--alt-bg-color);
-		padding: 5px;
-		border: var(--prim-border-size) solid var(--prim-border-color);
-		border-radius: 5px;
-	}
+    .version {
+        position: absolute;
+        top: calc(var(--vh) - 150px);
+        right: calc(var(--vw) - 220px);
+        background: var(--alt-bg-color);
+        padding: 5px;
+        border: var(--prim-border-size) solid var(--prim-border-color);
+        border-radius: 5px;
+    }
 </style>

@@ -1,0 +1,24 @@
+:root {
+  --behind-background-line-size: 1.5px;
+  --behind-background-grid-size: 30px;
+  --behind-background-scroll-speed: 100s;
+
+  --behind-background-color: #111111;
+  --behind-background-line-color: rgba(255, 255, 255, 0.05);
+}
+
+body {
+  background-image: repeating-linear-gradient(45deg, var(--behind-background-line-color) 0, var(--behind-background-line-color) var(--behind-background-line-size), transparent var(--behind-background-line-size), transparent var(--behind-background-grid-size)),
+  repeating-linear-gradient(-45deg, var(--behind-background-line-color) 0, var(--behind-background-line-color) var(--behind-background-line-size), transparent var(--behind-background-line-size), transparent var(--behind-background-grid-size));
+  background-color: var(--behind-background-color);
+  background-size: 200% 200%;
+  background-repeat: repeat;
+  animation: scroll var(--behind-background-scroll-speed) linear infinite;
+  will-change: background-position, background;
+}
+
+@keyframes scroll {
+  100% {
+    background-position: 100% 100%;
+  }
+}

@@ -1,0 +1,36 @@
+$button-hover-scale: 1.1;
+$button-active-scale: 0.9;
+
+.button:hover {
+  box-shadow: 0 0 32px 0 var(--prim-hover-color);
+  transform: scale($button-hover-scale);
+}
+
+.button.nogrow:hover {
+  box-shadow: 0 0 32px 0 var(--prim-hover-color);
+  transform: none !important;
+}
+
+.button:active {
+  box-shadow: 0 0 0 0 var(--prim-hover-color);
+  background: var(--prim-hover-color);
+  transform: scale($button-active-scale) !important;
+}
+
+.button {
+  border: var(--prim-border-size) solid var(--prim-control-border-color);
+  color: var(--prim-text-color);
+  background-color: var(--alt-bg-color-2);
+  /*backdrop-filter: blur(1000px);*/
+  transition: box-shadow 0.2s ease,
+  transform 0.1s ease,
+  background-color 0.3s ease;
+  padding: 12px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  /*margin: 1%;*/
+}
