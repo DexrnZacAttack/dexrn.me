@@ -1,6 +1,8 @@
 import { BlogApi } from '$lib/api/BlogApi';
 import { ResponseError } from '$lib/error/ResponseError';
 
+export const prerender = false;
+
 export const load = async () => {
 	try {
 		const posts = await BlogApi.fetchFullPosts();

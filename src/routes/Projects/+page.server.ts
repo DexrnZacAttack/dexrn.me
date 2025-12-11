@@ -1,6 +1,8 @@
 import { ProjectsApi, ProjectStage, ProjectType } from '$lib/api/ProjectsApi';
 import { ResponseError } from '$lib/error/ResponseError';
 
+export const prerender = false;
+
 export const load = async () => {
 	try {
 		const p = await ProjectsApi.fetchProjects();

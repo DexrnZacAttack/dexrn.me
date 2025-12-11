@@ -13,7 +13,7 @@ export const load = async ({ params }: { params: Record<string, string> }) => {
 		post = await BlogApi.fetchPost(title);
 	} catch (e) {
 		const ee = e as ResponseError;
-		throw error(ee.code, ee.message);
+		throw error(ee.code ?? 500, ee.message);
 	}
 
 	if (!post) {
